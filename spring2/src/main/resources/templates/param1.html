@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<h2>[GET method로 parameter 전달]</h2>
+
+	<form action="input1" method="GET">
+		<p>
+			이름 <input type="text" name="name" />
+		</p>
+		<p>
+			전화번호 
+			<input type="radio" name="telecom" value="kt" checked="checked">KT
+			<input type="radio" name="telecom" value="sk">SK 
+			<input type="radio" name="telecom" value="lg">LG <br>
+			<input type="text" name="phonenum" /> <br> 
+		</p>
+		
+		<p>
+			<input type="submit" value="전송">
+			<input type="reset" value="초기화">
+		</p>
+	</form>
+	
+	<!-- form : 서버로 전송되는 단위.
+	submit 버튼까지 form 안에 들어와 있어야 함. 
+	전송 버튼 클릭 시 action으로 감. (Controller에서 정의한 mapping 경로.
+	
+	* 전송 방식 : GET / POST-->
+
+</body>
+</html>

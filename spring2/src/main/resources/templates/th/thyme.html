@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" th:href="@{/css/cssMain.css}">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<p th:text="${str}">기본문자열</p>
+
+	<h3>연산자</h3>
+	<p>[[${num -1}]]</p>
+	<p>[[${num > 1}]]</p>
+	<p>[[${num ne 100}]]</p>
+	<p>[[${num ge 1 and num le 100}]]</p>
+	<p>[[${num % 1 == 0 or num %5 == 0}]]</p>
+
+	<h3>객체 출력</h3>
+	<p th:text="${member}"></p>
+	<p th:text="${member.id}"></p>
+	<p th:text="${member.name}"></p>
+
+	<ul th:object="${member}">
+		<li th:text="*{id}">아이디</li>
+		<li th:text="*{name}">이름</li>
+		<li th:text="*{pw}">비밀번호</li>
+	</ul>
+
+	<h3>경로 생성과 하이퍼링크</h3>
+	<p>
+		<a href="http://www.naver.com">네이버</a>
+	</p>
+	<p>
+		<a href="${url}" th:href=${url}>모델 링크</a>
+	</p>
+	<p>절대경로 생성 : [[@{/param/param1}]]</p>
+	<p>
+		<a href="/param/param1" th:href="@{/param/param1}">페이지 이동</a>
+	</p>
+	<p>
+		<img th:src="@{/img/github.png}" alt="이미지" onclick="callAlert()">
+	</p>
+
+	<!-- 
+	1. 이미지 파일을 /static/img 폴더에 저장하고 불러온다.
+	2. css 파일을 /static/css 폴더에 저장하고 불러온다
+	 -->
+
+	<h3>포맷 지정하기</h3>
+	<p th:text=${inum}></p>
+	<p th:text=${dnum}></p>
+	<p th:text=${date}></p>
+
+	<p th:text="${#numbers.formatInteger(inum,10)}"></p>
+	<p th:text="${#numbers.formatInteger(inum,3,'COMMA')}"></p>
+	<p th:text="${#numbers.formatDecimal(dnum,3,'COMMA',2,'POINT')}"></p>
+	<p th:text="${#numbers.formatDecimal(dnum,0,2)}"></p>
+	<p th:text="${#numbers.format(date,'yyyy/MM/dd HH:mm')}"></p>
+	
+	<script th:src="@{/js/jsMain.js}"></script>
+</body>
+</html>
