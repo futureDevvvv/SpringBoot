@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head th:replace="fragments/config :: configFragment">
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script th:src="@{js/jquery-3.6.0.min.js}"></script>
+<script>
+alert('aa');
+	$(function() {
+		$("#sidebarToggle, #sidebarToggleTop").on('click', function(e) {
+			$("body").toggleClass("sidebar-toggled");
+			$(".sidebar").toggleClass("toggled");
+			if ($(".sidebar").hasClass("toggled")) {
+				$('.sidebar .collapse').collapse('hide');
+			}
+			;
+		});
+
+	})
+</script>
+</head>
+<body>
+
+	<div id="wrapper">
+		<!-- content 시작 -->
+		<th:block th:replace="fragments/sidebar :: sidebar"></th:block>
+		<!-- content 끝 -->
+
+		<div id="content-wrapper" class="d-flex flex-column">
+			<!-- header 시작 -->
+			<th:block th:replace="fragments/header :: navFragment"></th:block>
+			
+			<div>
+				<h2>새로운 컨텐츠</h2>
+			</div>
+			<!-- header 끝 -->
+			<!-- footer 시작 -->
+			<th:block th:replace="fragments/footer :: footerFragment"></th:block>
+			<!-- footer 끝 -->
+		</div>
+	</div>
+
+
+
+</body>
+</html>
