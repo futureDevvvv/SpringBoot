@@ -8,17 +8,26 @@
 </head>
 <body>
 
-	<!-- header 시작 -->
-	<th:block th:replace="fragments/header :: navFragment"></th:block>
-	<!-- header 끝 -->
+	<div id="wrapper">
+		<!-- content 시작 -->
+		<th:block th:replace="fragments/sidebar :: sidebar"></th:block>
+		<!-- content 끝 -->
 
-	<!-- content 시작 -->
-	<th:block layout:fragment="content"></th:block>
-	<!-- content 끝 -->
+		<div id="content-wrapper" class="d-flex flex-column">
+			<!-- header 시작 -->
+			<th:block th:replace="fragments/header :: navFragment"></th:block>
+			
+			<div>
+				<h2>새로운 컨텐츠</h2>
+			</div>
+			<!-- header 끝 -->
+			<!-- footer 시작 -->
+			<th:block th:replace="fragments/footer :: footerFragment"></th:block>
+			<!-- footer 끝 -->
+		</div>
+	</div>
 
-	<!-- footer 시작 -->
-	<th:block th:replace="fragments/footer :: footerFragment"></th:block>
-	<!-- footer 끝 -->
+
 
 </body>
 </html>
