@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/config :: configFragment">
+<head th:replace="/fragments/config :: configFragment">
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <!-- Custom styles for this template
-<link href="css/sb-admin-2.min.css" rel="stylesheet">-->
+<link href="/css/sb-admin-2.min.css" rel="stylesheet">-->
 
 <script>
 $(function() {
@@ -61,8 +61,9 @@ $(function() {
 				<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo"
 					data-parent="#accordionSidebar">
 					<div class="bg-white py-2 collapse-inner rounded">
-						<a class="collapse-item" href="buttons.html">업무</a> <a
-							class="collapse-item" href="cards.html">대시보드</a>
+						<a class="collapse-item" href="buttons.html">업무</a> 
+						<a	class="collapse-item" href="cards.html">대시보드</a>
+						<a	class="collapse-item" href="cards.html">공지사항</a>
 					</div>
 				</div></li>
 

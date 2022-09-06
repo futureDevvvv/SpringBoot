@@ -35,12 +35,14 @@ public class WebSecurityConfig {
         .antMatchers("").hasAnyAuthority("member", "PM")
         .anyRequest().authenticated()
         .and()
+        
         .formLogin()
         .loginPage("/member/login")
         .loginProcessingUrl("/member/loginaction").permitAll()
-        .usernameParameter("memberid")
-        .passwordParameter("memberpw")
+        .usernameParameter("memb_mail")
+        .passwordParameter("memb_pwd")
         .and()
+        
         .logout()
         .logoutUrl("/member/logout")
         .logoutSuccessUrl("/").permitAll()
@@ -59,14 +61,14 @@ public class WebSecurityConfig {
         .dataSource(dataSource)
         // 인증 (로그인)
         .usersByUsernameQuery(
-        		"select memberid username, memberpw password, enabled " +
+        		"select memb_mail username, memb_pwd password, enabled " +
                 "from market_member " +
-                "where memberid = ?")
+                "where memb_mail = ?")
         // 권한
         .authoritiesByUsernameQuery(
-        		"select memberid username, rolename role_name " +
+        		"select memb_mail username, rolename role_name " +
                 "from market_member " +
-                "where memberid = ?");
+                "where memb_mail = ?");
     }
 
     // 단방향 비밀번호 암호화
