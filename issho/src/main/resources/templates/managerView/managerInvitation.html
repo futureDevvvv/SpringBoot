@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lagn="ko" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head th:replace="fragmentsManager/config :: configFragment">
+<meta charset="UTF-8">
+<title>관리자 페이지</title>
+
+</head>
+<body>
+
+	<div id="wrapper">
+		<!-- content 시작 -->
+		<th:block th:replace="fragmentsManager/sidebar :: sidebar"></th:block>
+		<!-- content 끝 -->
+
+		<div id="content-wrapper" class="d-flex flex-column">
+			<!-- header 시작 -->
+			<th:block th:replace="fragmentsManager/header :: navFragment"></th:block>
+			
+			<div>
+				<h2>초대 관리</h2>
+			</div>
+			<!-- header 끝 -->
+			<!-- footer 시작 -->
+			<th:block th:replace="fragmentsManager/footer :: footerFragment"></th:block>
+			<!-- footer 끝 -->
+		</div>
+	</div>
+
+
+
+</body>
+</html>
