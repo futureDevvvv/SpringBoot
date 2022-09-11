@@ -6,7 +6,13 @@
 <meta charset="UTF-8" />
 <!-- 공통으로 쓰이는 css파일을 넣는다.-->
 <link rel="stylesheet" th:href="@{css/sb-admin-2.min.css}">
+
+<!--   all.min.css css버전때문에 오류남 확인바람
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" />
+-->
+    <!-- Custom fonts for this template-->
+    <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+
 <style>
 .headerDiv {
 	border: 3px solid blueviolet;
@@ -28,8 +34,6 @@
 
 <!-- 컨텐츠페이지의 스크립트 영역이 들어감 -->
 <th:block layout:fragment="script"></th:block>
-
-
 
 </head>
 
