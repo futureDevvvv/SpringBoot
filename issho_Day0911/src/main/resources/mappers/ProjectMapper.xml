@@ -1,0 +1,37 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="net.softsociety.issho.dao.ProjectDAO">
+
+<!-- 프로젝트 생성 -->
+
+<insert id="insert" parameterType="Project">
+    insert into projects (
+		prj_domain
+		, prj_name
+		, prj_date
+		, prj_enabled
+	) 
+    values (
+		#{prj_domain}
+		, #{prj_name}
+		, sysdate
+		, 1				<!-- prj_enabled : 어디서 활성화 시켜 줄 것인지 정리 필요 -->
+	)
+</insert>
+
+<insert id="insertProjectMember" parameterType="ProjectMember">
+    insert into ProjectMember (
+		prj_domain
+		, memb_mail
+		, pjmb_right
+	) 
+    values (
+		#{prj_domain}
+		, #{memb_mail}
+		, #{pjmb_right}
+	)
+</insert>
+
+</mapper>

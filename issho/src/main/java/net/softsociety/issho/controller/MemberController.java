@@ -36,8 +36,11 @@ public class MemberController {
 	public String register(Member member) {
 	log.debug("----- POST : /member/register");
 	log.debug("----- PARAM : member {}", member);
-	  
-	log.debug("----- 호출 : /memberView/register"); return "/memberView/register";
+	 
+	
+	
+	log.debug("----- 호출 : /memberView/register"); 
+	return "/memberView/register";
 	}
 	 
 	
