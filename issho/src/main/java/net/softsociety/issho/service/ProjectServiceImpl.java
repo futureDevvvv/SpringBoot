@@ -27,7 +27,7 @@ public class ProjectServiceImpl implements ProjectService{
 	
 		int result = 0;
 		//1. DB 멤버(관리자) 생성
-		result = memberDAO.insert(member);
+		result = memberDAO.insertMember(member);
 		if(result == 0) return result;
 		
 		//2. DB 프로젝트 생성

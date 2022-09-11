@@ -6,5 +6,7 @@ import net.softsociety.issho.domain.Member;
 
 @Mapper
 public interface MemberDAO {
-	public int insert(Member member);
+	public int insertMember(Member member);
+	
+	public Member selectMember(String memb_mail);
 }

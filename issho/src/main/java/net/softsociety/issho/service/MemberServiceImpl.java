@@ -22,9 +22,16 @@ public class MemberServiceImpl implements MemberService{
 		log.debug("----- MemberServiceImpl : insertMember");
 		log.debug("----- PARAM : member {}", member);
 		
-		int result = memberDAO.insert(member);
+		int result = memberDAO.insertMember(member);
 
 		return result;
+	}
+	
+	public Member selectMember(String memb_mail) {
+		log.debug("----- MemberServiceImpl : selectMember");
+		
+		Member member = memberDAO.selectMember(memb_mail);
+		return member;
 	}
 		
 }

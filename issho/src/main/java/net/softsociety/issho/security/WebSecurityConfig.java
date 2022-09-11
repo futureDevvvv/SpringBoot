@@ -1,22 +1,23 @@
 package net.softsociety.issho.security;
 
 import javax.sql.DataSource;
-/*
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-*/
+
 /**
  * @brief Security 설정
  * @author 윤영혜
-
+**/
 @Configuration
 public class WebSecurityConfig {
+	
     @Autowired
     private DataSource dataSource;
 
@@ -27,17 +28,22 @@ public class WebSecurityConfig {
         .authorizeRequests()
         .antMatchers(
         		"/",
-                "/image/**",
+                "/favicon.ico",
+                "/img/**",
                 "/css/**",
-                "/js/**"
+                "/js/**",
+                "/vendor/**",
+//                "/project/newProject",
+                "/member/login"
                ).permitAll()
-        .antMatchers("").hasAuthority("PM")
-        .antMatchers("").hasAnyAuthority("member", "PM")
+//        .antMatchers("").hasAuthority("PM")
+//        .antMatchers("").hasAnyAuthority("member", "PM")
         .anyRequest().authenticated()
         .and()
         
         .formLogin()
-        .loginPage("/member/login")
+        .loginPage("/member/loginForm")
+        .defaultSuccessUrl("/project/mainHome")
         .loginProcessingUrl("/member/loginaction").permitAll()
         .usernameParameter("memb_mail")
         .passwordParameter("memb_pwd")
@@ -62,19 +68,25 @@ public class WebSecurityConfig {
         // 인증 (로그인)
         .usersByUsernameQuery(
         		"select memb_mail username, memb_pwd password, enabled " +
-                "from market_member " +
+                "from members " +
                 "where memb_mail = ?")
         // 권한
         .authoritiesByUsernameQuery(
         		"select memb_mail username, rolename role_name " +
-                "from market_member " +
+                "from members " +
                 "where memb_mail = ?");
     }
 
     // 단방향 비밀번호 암호화
+    @SuppressWarnings("deprecation")
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    	//[SHHONG] 테스트를 위해 평문 저장 암호 사용
+    	return NoOpPasswordEncoder.getInstance();
+    	
+    	//[SHHONG] 테스트 완료 후 일정 시점에서 활성화 필요
+    	//        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
+
 }
- */
+ 

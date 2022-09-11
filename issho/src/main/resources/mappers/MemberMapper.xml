@@ -5,7 +5,7 @@
 <mapper namespace="net.softsociety.issho.dao.MemberDAO">
 
 <!-- 회원가입 -->
-<insert id="insert" parameterType="Member">
+<insert id="insertMember" parameterType="Member">
     insert into members (
 		memb_mail
 		, memb_name
@@ -37,5 +37,10 @@
 		, 'ROLE_USER'
 	)
 </insert>
+
+<select id="selectMember" resultType="Member">
+	select * from members
+	where memb_mail = #{memb_mail}
+</select>
 
 </mapper>
