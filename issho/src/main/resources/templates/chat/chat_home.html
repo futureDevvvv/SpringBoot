@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/config :: configFragment">
+<body>
+	<button type="button" class="btn btn-primary" onclick="openNewChat();">새로운
+		채팅방</button>
+</body>
+
+
+<script>
+	function openNewChat() {
+		window.open("multiRoom/chatHome", "메신저",
+				"width=500, height=700, top=10, left=10");
+	}
+</script>
+</html>
