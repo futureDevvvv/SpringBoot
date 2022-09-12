@@ -1,59 +1,96 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
-<head th:replace="fragments/config :: configFragment">
-<meta charset="UTF-8">
-<title>Insert title here</title>
-<script th:src="@{js/jquery-3.6.0.min.js}"></script>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="">
+<meta name="author" content="">
+
+<title>SB Admin 2 - Login</title>
+
+<!-- Custom fonts for this template-->
+<link th:href="@{/vendor/fontawesome-free/css/all.min.css}"
+	rel="stylesheet" type="text/css">
+<link
+	href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+	rel="stylesheet">
+
+<!-- Custom styles for this template-->
+<link th:href="@{/css/sb-admin-2.min.css}" rel="stylesheet">
+
+<style>
+	#newPj {
+		margin-top : 30px;
+		padding-left : 75px;
+	}
+	
+	
+</style>
 
 </head>
-<body>
 
-	<div id="wrapper">
-		<!-- content 시작 -->
-		<th:block th:replace="fragments/sidebar :: sidebar"></th:block>
-		<!-- content 끝 -->
+<body class="bg-gradient-primary">
 
-		<div id="content-wrapper" class="d-flex flex-column">
-			<!-- header 시작 -->
-			<th:block th:replace="fragments/header :: navFragment"></th:block>
+	<div class="container">
 
-			<button type="button" class="btn btn-primary" onclick="showPop();">메신저 열기</button>
+		<!-- Outer Row -->
+		<div class="row justify-content-center">
 
-			<div>
-				<div class="col-xl-3 col-md-6 mb-4">
-	<div class="card border-left-primary shadow h-100 py-2">
-						<div class="card-body">
-							<div class="row no-gutters align-items-center">
-								<div class="col mr-2">
-									<div
-										class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-										수정했어요</div>
-									<div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
-								</div>
-								<div class="col-auto">
-									<i class="fas fa-calendar fa-2x text-gray-300"></i>
+			<div class="col-xl-10 col-lg-12 col-md-9">
+
+				<div class="card o-hidden border-0 shadow-lg my-5">
+					<div class="card-body p-0">
+						<!-- Nested Row within Card Body -->
+						<div class="row">
+							<div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
+							<div class="col-lg-6">
+								<div class="p-5">
+									<div class="text-center">
+										<h1 class="h4 text-gray-900 mb-4">Dive into Issho!</h1>
+									</div>
+									<form class="user" th:action="@{/project/main}"
+										method="GET">
+										<div class="form-group">
+											<input type="text" class="form-control form-control-user"
+												id="prj_domain" name="prj_domain" required
+												aria-describedby="emailHelp" placeholder="프로젝트 도메인을 입력해주세요">
+										</div>
+
+										<button type="submit"
+											class="btn btn-primary btn-user btn-block">입력</button>
+									</form>
+																		
+									<div id="newPj">
+										<a href="project/newPj" id="newPjBtn" class="btn btn-success btn-user btn-icon-split"> <span
+											class="icon text-white-50"> <i
+												class="fas fa-arrow-right"></i>
+										</span> <span class="text">새로운 프로젝트 생성</span>
+										</a>
+									</div>
+									
+									
+
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-
-                         
 			</div>
-			<!-- header 끝 -->
-			<!-- footer 시작 -->
-			<th:block th:replace="fragments/footer :: footerFragment"></th:block>
-			<!-- footer 끝 -->
 		</div>
 	</div>
-	
-	<script>
-		function showPop() {
-			window.open("multiRoom/chatHome", "메신저",
-					"width=500, height=700, top=10, left=10");
-		}
-	</script>
+
+	<!-- Bootstrap core JavaScript-->
+	<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+	<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+
+	<!-- Core plugin JavaScript-->
+	<script th:src="@{/vendor/jquery-easing/jquery.easing.min.js}"></script>
+
+	<!-- Custom scripts for all pages-->
+	<script th:src="@{/js/sb-admin-2.min.js}"></script>
 
 </body>
+
 </html>

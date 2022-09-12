@@ -11,4 +11,10 @@
 	WHERE memb_mail = #{memb_mail} 
 </select>
 
+<!-- 회원가입 -->
+<insert id="memberJoin" parameterType="Members">
+	INSERT INTO members(memb_mail, memb_name, memb_pwd, memb_ogfile, memb_savedfile, memb_work, memb_phone, enabled)
+	VALUES(#{memb_mail}, #{memb_name}, #{memb_pwd}, #{memb_ogfile}, #{memb_savedfile}, #{memb_work}, #{memb_phone}, 1)
+</insert>
+
 </mapper>
