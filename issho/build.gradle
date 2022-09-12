@@ -19,13 +19,16 @@ repositories {
 }
 
 dependencies {
+	// https://mavenlibs.com/maven/dependency/com.sun.xml.bind/jaxb-impl
+	implementation 'com.sun.xml.bind:jaxb-impl:4.0.0'
+
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	
 	//dependencies for security
-	//implementation 'org.springframework.boot:spring-boot-starter-security'
-	//implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
 	
 	//dependencies for websocket
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
@@ -43,7 +46,7 @@ dependencies {
 	
 	//testImplementation
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	//testImplementation 'org.springframework.security:spring-security-test'
+	testImplementation 'org.springframework.security:spring-security-test'
 }
 
 tasks.named('test') {

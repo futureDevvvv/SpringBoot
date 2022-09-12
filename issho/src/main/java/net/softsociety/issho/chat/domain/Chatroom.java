@@ -9,6 +9,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Chatroom {
 
+	//chatroom
 	private String chatroom_seq;
 	private String chatroom_name;
+	
+	//chatmember
+	private String chat_member;
+	
+	//chatmsg
+	private String chatmsg_recipient;
+	private String chatmsg_sendDate;
+	private String chatmsg_content;
 }
