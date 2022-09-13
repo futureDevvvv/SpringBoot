@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/config :: configFragment">
+<body>
+	<button type="button" class="btn btn-primary" onclick="openNewChat();">새로운
+		채팅방</button>
+</body>
+
+
+<script>
+	
+	//팝업 여러 개 띄우기 어떻게??
+	
+	function openNewChat() {
+		window.open("multiRoom/newChat", "메신저",
+				"width=500, height=500, top=10, left=10");
+	}
+</script>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lagn="ko" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/config :: configFragment">
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	
+
+	<h1>새로운 채팅방 열기</h1>
+	
+	<h3>채팅방명</h3>
+	<input type="text">
+	
+	<!-- 멤버 리스트 + ajax 검색 + 선택 시 리스트 추가-->
+	
+	
+	<!-- 리스트로 받아서 넘기기 -->
+
+	<form action="openNewChat" method="GET">
+		
+		<input type="text">
+		
+		<div id="chatMem">
+			<ul>
+				<li id="chatMem-one">one</li>
+				<li id="chatMem-two">two</li>
+				<li id="chatMem-three">three</li>
+			</ul>
+		</div>
+
+	
+		
+		<button type="submit">채팅방 오픈</button>
+		
+	</form>
+	
+	<script>
+		let mem = [];
+		let list = document.getElementById("chatMem")
+				.getElementsByTagName("li");
+
+		for (let i = 0; i < list.length; i++) {
+			mem.push(list[i].id);
+		}
+	</script>
+</body>
+</html>

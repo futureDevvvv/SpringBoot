@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script th:src="@{/webjars/sockjs-client/sockjs.min.js}"></script>
+<script th:inline="javascript">
+	let roomId = [[${roomId}]];
+	let sock = new SockJS("../ws/multiRoom");
+	
+	//console.log(sock);
+	//console.log(roomId);
+	
+	/*onopen 함수는 페이지가 로드되면 자동실행됨*/
+	sock.onopen = function() {
+		console.log('실행됨');
+		sock.send(JSON.stringify({
+			chatRoomId : roomId,
+			type : "JOIN"
+		}));
+	}
+	/*onmessage 함수는 메시지가 오면 자동실행됨*/
+	sock.onmessage = function(e) {
+		console.log("onmsg 실행");
+		var content = JSON.parse(e.data);
+		var message = content.message;
+		var type = content.type;
+		var chatLog = document.getElementById("chatLog");
+		if (type == "SEND")
+			chatLog.innerHTML = chatLog.innerHTML + "<p>" + message + "</p>";
+	}
+
+	function send() {
+		console.log("send 실행");
+		var textarea = document.getElementById("textarea");
+		var myMessage = textarea.value;
+		console.log(myMessage);
+		
+		sock.send(JSON.stringify({
+			chatRoomId : roomId,
+			type : "SEND",
+			message : myMessage
+		}));
+	}
+</script>
+</head>
+<body>
+
+	<h1>대화방</h1>
+	<div id="chatLog"></div>
+	<textarea id="textarea"></textarea>
+	<input type="button" value="전송" onclick="send()">
+</body>
+</html>
