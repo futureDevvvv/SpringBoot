@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.extern.slf4j.Slf4j;
-import net.softsociety.issho.manager.domain.Members;
 import net.softsociety.issho.manager.service.MailSenderService;
-import net.softsociety.issho.manager.service.MembersService;
+import net.softsociety.issho.manager.service.ManagerService;
 import net.softsociety.issho.manager.util.PageNavigator;
+import net.softsociety.issho.member.domain.Members;
 
 @Slf4j
 @Controller
@@ -24,7 +24,7 @@ import net.softsociety.issho.manager.util.PageNavigator;
 public class ManagerController {
 	
 	@Autowired
-	MembersService service;
+	ManagerService service;
 	
 	@Autowired
 	MailSenderService mailSenderService;
@@ -53,7 +53,7 @@ public class ManagerController {
 		
 		//현재 페이지 글 정보
 		//DB에서 게시판의 모든 글을 조회.ArrayList 타입으로 리턴받음.
-		ArrayList<Members> list = service.listMembers(navi,searchWord);
+		ArrayList<Members> list = service.listManager(navi, searchWord);
 		log.debug("list 결과: {}",list);
 		
 		//리스트를 모델에 저장하고 HTML에서 출력
@@ -75,7 +75,7 @@ public class ManagerController {
 		
 		//현재 페이지 글 정보
 		//DB에서 게시판의 모든 글을 조회.ArrayList 타입으로 리턴받음.
-		ArrayList<Members> list = service.listMembers(navi,searchWord);
+		ArrayList<Members> list = service.listManager(navi,searchWord);
 		log.debug("list 결과: {}",list);
 		
 		//리스트를 모델에 저장하고 HTML에서 출력
@@ -98,7 +98,7 @@ public class ManagerController {
 		
 		//현재 페이지 글 정보
 		//DB에서 게시판의 모든 글을 조회.ArrayList 타입으로 리턴받음.
-		ArrayList<Members> list = service.listMembers(navi,searchWord);
+		ArrayList<Members> list = service.listManager(navi,searchWord);
 		log.debug("list 결과: {}",list);
 		
 		//리스트를 모델에 저장하고 HTML에서 출력
@@ -120,7 +120,7 @@ public class ManagerController {
 		
 		//현재 페이지 글 정보
 		//DB에서 게시판의 모든 글을 조회.ArrayList 타입으로 리턴받음.
-		ArrayList<Members> list = service.listMembers(navi,searchWord);
+		ArrayList<Members> list = service.listManager(navi,searchWord);
 		log.debug("list 결과: {}",list);
 		
 		//리스트를 모델에 저장하고 HTML에서 출력

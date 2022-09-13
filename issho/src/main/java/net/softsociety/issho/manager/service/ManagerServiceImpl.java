@@ -7,18 +7,18 @@ import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import net.softsociety.issho.manager.dao.MembersDAO;
-import net.softsociety.issho.manager.domain.Members;
+import net.softsociety.issho.manager.dao.ManagerDAO;
 import net.softsociety.issho.manager.util.PageNavigator;
+import net.softsociety.issho.member.domain.Members;
 
 @Service
-public class MembersServiceImpl implements MembersService {
+public class ManagerServiceImpl implements ManagerService {
 
 	@Autowired
-	private MembersDAO membersDAO;
+	private ManagerDAO membersDAO;
 	
 	@Override
-	public ArrayList<Members> listMembers(PageNavigator navi, String searchWord) {
+	public ArrayList<Members> listManager(PageNavigator navi, String searchWord) {
 		HashMap<String, String> map = new HashMap<>();
 		map.put("searchWord", searchWord);
 		RowBounds rb = new RowBounds(navi.getStartRecord(),navi.getCountPerPage());
@@ -39,5 +39,7 @@ public class MembersServiceImpl implements MembersService {
 		
 		PageNavigator navi = new PageNavigator(pagePerGroup, countPerPage, page, total);
 		return navi;
-	}	
+	}
+
+
 }
