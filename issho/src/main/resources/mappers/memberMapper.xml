@@ -24,5 +24,13 @@
 		</if>
 		#{memb_work}, #{memb_phone}, 1)
 	</insert>
+	
+	<!-- 관리자 페이지에서 멤버 삭제 -->
+	<delete id="deleteMember" parameterType="String">
+		DELETE FROM members
+		where
+		memb_mail=#{memb_mail}
+		
+	</delete>
 
 </mapper>

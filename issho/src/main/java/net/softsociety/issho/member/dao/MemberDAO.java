@@ -11,5 +11,11 @@ public interface MemberDAO {
 
 	public void memberJoin(Members members);
 
+	public int deleteMember(Members members);
+
+	
+
+
+
 	
 }
