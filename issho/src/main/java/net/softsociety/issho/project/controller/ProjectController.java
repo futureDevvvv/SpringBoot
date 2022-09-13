@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -46,6 +47,10 @@ public class ProjectController {
 	public int domainCheck(String prj_domain) {
 
 		int result = pjservice.domainCheck(prj_domain);
+		
+		log.debug("도메인 : {}", prj_domain);
+		
+		log.debug("결과 : {}", result);
 
 		return result;
 	}
@@ -79,7 +84,11 @@ public class ProjectController {
 	 * @return
 	 */
 	@GetMapping("/main/{prj_domain}")
-	public String enterPj(@PathVariable String prj_domain) {
+	public String enterPj(@PathVariable String prj_domain, Model model) {
+		
+		Projects project = pjservice.searchOne(prj_domain);
+		
+		model.addAttribute("project", project);
 		
 		return "project/project_main";
 	}
