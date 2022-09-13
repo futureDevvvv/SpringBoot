@@ -16,9 +16,11 @@ select
 	,memb_phone
 	,rolename
 from members
+<where>
 <if test="searchWord != null">
 	memb_name like '%' || #{searchWord} || '%'	
 </if>
+</where>
 order by 
 	1 desc
 </select>
@@ -28,9 +30,11 @@ order by
 select 
 	count(*)
 from members
+<where>
 <if test="searchWord != null">
 	memb_name like '%' || #{searchWord} || '%'	
 </if>
+</where>
 </select>
 
 

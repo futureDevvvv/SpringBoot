@@ -6,12 +6,7 @@
 <title>구성원 페이지</title>
 
 <script>
-function pagingFormSubmit(currentPage) {
-	var form = document.getElementById('pagingForm');
-	var page = document.getElementById('page');
-	page.value = currentPage;
-	form.submit();
-}
+
 </script>
 
 </head>
@@ -53,8 +48,9 @@ function pagingFormSubmit(currentPage) {
 								<p><span th:text="|${navi.currentPage}/${navi.totalPageCount} page|"></span></p>
                                 <label>Search:
                                 <input type="text" class="form-control form-control-sm" name="searchWord" th:value="${searchWord}">
-								<input type="button" onclick="pagingFormSubmit(1)" value="검색">
-                                <!-- <input type="search" class="form-control form-control-sm" placeholder="" aria-controls="dataTable"> -->
+                                <button class="btn btn-primary" type="button" onclick="pagingFormSubmit(1)">
+				                     <i class="fas fa-search fa-sm"></i>
+				                   </button>
                                 </label>
                                 </form>
                                 </div>
@@ -62,6 +58,11 @@ function pagingFormSubmit(currentPage) {
                                 </div>
                                 <div class="row">
                                 <div class="col-sm-12">
+                                	<!-- 삭제시 전송할 폼 -->
+								<form th:action="@{/manager/deleteMember}" method="get" id="deleteForm">
+									<input type="hidden" name="email" id="email"> 
+								</form>
+								
                                 <form action="">
                                 <table class="table table-bordered dataTable" id="dataTable" width="100%" cellspacing="0" role="grid" aria-describedby="dataTable_info" style="width: 100%;">
                                     <thead>
@@ -76,13 +77,15 @@ function pagingFormSubmit(currentPage) {
                                     </thead>
                                     <tbody>
                                     <tr class="odd" th:each="l:${list}">
-                                    <td class="sorting_1" th:text=${l.memb_name}>
+                                    <td class="sorting_1" th:text=${l.memb_name} id="email">
                                     			홍길동</td>
                                             <td th:text=${l.rolename}></td>
                                             <td th:text=${l.memb_mail}></td>
                                             <td th:text=${l.memb_work}></td>
                                             <td th:text=${l.memb_phone}></td>
-                                            <td><input type="button" value="탈퇴"></td>
+                                            <td><input type="button" value="탈퇴" th:email="${l.memb_mail}"
+                                            			th:onclick="deleteMember(this.getAttribute('email'))">
+                                            			</td>
                                         </tr>
                                         </tbody>
                                       
@@ -105,39 +108,7 @@ function pagingFormSubmit(currentPage) {
 								<br><br>
 								
 								</div>
-                                <div class="row">
-                                <div class="col-sm-12 col-md-5">
-                                <div class="dataTables_info" id="dataTable_info" role="status" aria-live="polite">Showing 1 to 10 of 57 entries
-                                </div>
-                                </div>
-                                <div class="col-sm-12 col-md-7">
-                                <div class="dataTables_paginate paging_simple_numbers" id="dataTable_paginate">
-                                <ul class="pagination"><li class="paginate_button page-item previous disabled" id="dataTable_previous">
-                                <a href="#" aria-controls="dataTable" data-dt-idx="0" tabindex="0" class="page-link">Previous</a></li>
-                                <li class="paginate_button page-item active"><a href="#" aria-controls="dataTable" data-dt-idx="1" tabindex="0" class="page-link">1</a>
-                                </li>
-                                <li class="paginate_button page-item ">
-                                <a href="#" aria-controls="dataTable" data-dt-idx="2" tabindex="0" class="page-link">2</a>
-                                </li><li class="paginate_button page-item ">
-                                <a href="#" aria-controls="dataTable" data-dt-idx="3" tabindex="0" class="page-link">3</a>
-                                </li><li class="paginate_button page-item ">
-                                <a href="#" aria-controls="dataTable" data-dt-idx="4" tabindex="0" class="page-link">4</a>
-                                </li><li class="paginate_button page-item ">
-                                <a href="#" aria-controls="dataTable" data-dt-idx="5" tabindex="0" class="page-link">5</a>
-                                </li><li class="paginate_button page-item ">
-                                <a href="#" aria-controls="dataTable" data-dt-idx="6" tabindex="0" class="page-link">6</a>
-                                </li><li class="paginate_button page-item next" id="dataTable_next">
-                                <a href="#" aria-controls="dataTable" data-dt-idx="7" tabindex="0" class="page-link">Next</a>
-                                </li>
-                                </ul>
-                                </div>
-                                </div>
-                                </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
+                             
                 </div>
 			
 			<!-- footer 시작 -->
@@ -146,143 +117,26 @@ function pagingFormSubmit(currentPage) {
 		</div>
 	</div>
 
+<script>
+function deleteMember(Memail){
+	let email = document.getElementById('email');
+	let form = document.getElementById('deleteForm');
+	
+	if(confirm('탈퇴 시키겠습니까?')) {
+		email.value = Memail;
+		form.submit();
+	}
+}
 
+function pagingFormSubmit(currentPage) {
+	var form = document.getElementById('pagingForm');
+	var page = document.getElementById('page');
+	page.value = currentPage;
+	form.submit();
+}
+
+</script>
 
 </body>
 </html>
-			
-	<!-- 		<div class="container-fluid">
-			Page Heading
-			<h1 class="h3 mb-2 text-gray-800">구성원 관리</h1>
-		<div class="card shadow mb-4">
-                        <div class="card-header py-3">
-                            <h3 class="m-0 font-weight-bold text-primary">멤버 리스트</h3>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
-                                <div class="row"><div class="col-sm-12 col-md-6">
-                                <div class="dataTables_length" id="dataTable_length">
-                                <label>Show 
-                                <select name="dataTable_length" aria-controls="dataTable" class="custom-select custom-select-sm form-control form-control-sm">
-                                <option value="10">10</option>
-                                <option value="25">25</option>
-                                <option value="50">50</option>
-                                <option value="100">100</option></select> 
-                                entries</label></div></div><div class="col-sm-12 col-md-6">
-                                <div id="dataTable_filter" class="dataTables_filter">
-                                <label>Search:<input type="search" class="form-control form-control-sm" placeholder="" aria-controls="dataTable"></label>
-                                </div></div></div><div class="row">
-                                <div class="col-sm-12"><table class="table table-bordered dataTable" id="dataTable" width="100%" cellspacing="0" role="grid" aria-describedby="dataTable_info" style="width: 100%;">
-                          <thead>
-                                        <tr>
-                                            <th>사진</th>
-                                            <th>이름</th>
-                                            <th>권한</th>
-                                            <th>이메일</th>
-                                            <th>담당업무</th>
-                                            <th>휴대전화</th>
-                                            <th>탈퇴</th>
-                                        </tr>
-                                    </thead>
-                                    <tfoot>
-                                        <tr>
-                                            <th>사진1.jpg</th>
-                                            <th>홍길동</th>
-                                            <th>멤버</th>
-                                            <th>홍길동@email.com</th>
-                                            <th>DB관리</th>
-                                            <th>010-1234-5678</th>
-                                            <th><input type="button" value="탈퇴"></th>
-                                        </tr>
-                                    </tfoot>
-                                    <tbody>
-                                        <tr>
-                                            <th>사진1.jpg</th>
-                                            <th>홍길동</th>
-                                            <th>멤버</th>
-                                            <th>홍길동@email.com</th>
-                                            <th>DB관리</th>
-                                            <th>010-1234-5678</th>
-                                            <th><input type="button" value="탈퇴"></th>
-                                        </tr>
-                                        <tr>
-                                            <th>사진1.jpg</th>
-                                            <th>홍길동</th>
-                                            <th>멤버</th>
-                                            <th>홍길동@email.com</th>
-                                            <th>DB관리</th>
-                                            <th>010-1234-5678</th>
-                                            <th><input type="button" value="탈퇴"></th>
-                                        </tr>
-                                        <tr>
-                                            <th>사진1.jpg</th>
-                                            <th>홍길동</th>
-                                            <th>멤버</th>
-                                            <th>홍길동@email.com</th>
-                                            <th>DB관리</th>
-                                            <th>010-1234-5678</th>
-                                            <th><input type="button" value="탈퇴"></th>
-                                        </tr>
-                                        <tr>
-                                            <th>사진1.jpg</th>
-                                            <th>홍길동</th>
-                                            <th>멤버</th>
-                                            <th>홍길동@email.com</th>
-                                            <th>DB관리</th>
-                                            <th>010-1234-5678</th>
-                                            <th><input type="button" value="탈퇴"></th>
-                                        </tr>
-                                       <tr>
-                                            <th>사진1.jpg</th>
-                                            <th>홍길동</th>
-                                            <th>멤버</th>
-                                            <th>홍길동@email.com</th>
-                                            <th>DB관리</th>
-                                            <th>010-1234-5678</th>
-                                            <th><input type="button" value="탈퇴"></th>
-                                        </tr>
-                                        <tr>
-                                            <th>사진1.jpg</th>
-                                            <th>홍길동</th>
-                                            <th>멤버</th>
-                                            <th>홍길동@email.com</th>
-                                            <th>DB관리</th>
-                                            <th>010-1234-5678</th>
-                                            <th><input type="button" value="탈퇴"></th>
-                                        </tr>
-                                        <tr>
-                                            <th>사진1.jpg</th>
-                                            <th>홍길동</th>
-                                            <th>멤버</th>
-                                            <th>홍길동@email.com</th>
-                                            <th>DB관리</th>
-                                            <th>010-1234-5678</th>
-                                            <th><input type="button" value="탈퇴"></th>
-                                        </tr>
-                                        <tr>
-                                            <th>사진1.jpg</th>
-                                            <th>홍길동</th>
-                                            <th>멤버</th>
-                                            <th>홍길동@email.com</th>
-                                            <th>DB관리</th>
-                                            <th>010-1234-5678</th>
-                                            <th><input type="button" value="탈퇴"></th>
-                                        </tr>
-                                        <tr>
-                                            <th>사진1.jpg</th>
-                                            <th>홍길동</th>
-                                            <th>멤버</th>
-                                            <th>홍길동@email.com</th>
-                                            <th>DB관리</th>
-                                            <th>010-1234-5678</th>
-                                            <th><input type="button" value="탈퇴"></th>
-                                        </tr>
-                                    </tbody>
-                                </table></div></div><div class="row"><div class="col-sm-12 col-md-5"><div class="dataTables_info" id="dataTable_info" role="status" aria-live="polite">Showing 1 to 10 of 57 entries</div></div><div class="col-sm-12 col-md-7"><div class="dataTables_paginate paging_simple_numbers" id="dataTable_paginate"><ul class="pagination"><li class="paginate_button page-item previous disabled" id="dataTable_previous"><a href="#" aria-controls="dataTable" data-dt-idx="0" tabindex="0" class="page-link">Previous</a></li><li class="paginate_button page-item active"><a href="#" aria-controls="dataTable" data-dt-idx="1" tabindex="0" class="page-link">1</a></li><li class="paginate_button page-item "><a href="#" aria-controls="dataTable" data-dt-idx="2" tabindex="0" class="page-link">2</a></li><li class="paginate_button page-item "><a href="#" aria-controls="dataTable" data-dt-idx="3" tabindex="0" class="page-link">3</a></li><li class="paginate_button page-item "><a href="#" aria-controls="dataTable" data-dt-idx="4" tabindex="0" class="page-link">4</a></li><li class="paginate_button page-item "><a href="#" aria-controls="dataTable" data-dt-idx="5" tabindex="0" class="page-link">5</a></li><li class="paginate_button page-item "><a href="#" aria-controls="dataTable" data-dt-idx="6" tabindex="0" class="page-link">6</a></li><li class="paginate_button page-item next" id="dataTable_next"><a href="#" aria-controls="dataTable" data-dt-idx="7" tabindex="0" class="page-link">Next</a></li></ul></div></div></div></div>
-                            </div>
-                        </div>
-                    </div>
- -->
-			
-			<!-- footer 시작 -->
+	

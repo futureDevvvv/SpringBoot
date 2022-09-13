@@ -37,4 +37,12 @@ public class MemberServiceImpl implements MemberService {
 		
 	}
 
+	@Override
+	public int deleteMember(Members members) {
+		
+		int result = memDao.deleteMember(members);
+		
+		return result;
+	}
+
 }
