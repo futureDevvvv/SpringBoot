@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="net.softsociety.issho.manager.dao.MembersDAO">
+
+<select id="listMembers" parameterType="Map" resultType="Members">
+select
+	memb_mail
+	,memb_name
+	,memb_ogFile
+	,memb_savedFile
+	,memb_work
+	,memb_phone
+	,rolename
+from members
+<if test="searchWord != null">
+	memb_name like '%' || #{searchWord} || '%'	
+</if>
+order by 
+	1 desc
+</select>
+
+
+<select id="count" parameterType="Map" resultType="int">
+select 
+	count(*)
+from members
+<if test="searchWord != null">
+	memb_name like '%' || #{searchWord} || '%'	
+</if>
+</select>
+
+
+</mapper>

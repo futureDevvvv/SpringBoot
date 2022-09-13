@@ -30,12 +30,12 @@ function pagingFormSubmit(currentPage) {
 			<div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">구성원 관리</h1>
+                    <h1 class="h3 mb-2 text-gray-800">업무 관리</h1>
 
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">멤버 리스트</h6>
+                            <h6 class="m-0 font-weight-bold text-primary">멤버별 업무 리스트</h6>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -47,10 +47,8 @@ function pagingFormSubmit(currentPage) {
                                 </div>
                                 <div class="col-sm-12 col-md-6">
                                 <div id="dataTable_filter" class="dataTables_filter">
-                                <form id="pagingForm" method="get" th:action="@{/manager/member}">
+                                <form id="pagingForm" method="get" th:action="@{/manager/invitation}">
                                 <input type="hidden" name="page" id="page" >
-                                 <p>전체 글 수 : <span th:text="${navi.totalRecordsCount}"></span></p>
-								<p><span th:text="|${navi.currentPage}/${navi.totalPageCount} page|"></span></p>
                                 <label>Search:
                                 <input type="text" class="form-control form-control-sm" name="searchWord" th:value="${searchWord}">
 								<input type="button" onclick="pagingFormSubmit(1)" value="검색">
@@ -66,23 +64,23 @@ function pagingFormSubmit(currentPage) {
                                 <table class="table table-bordered dataTable" id="dataTable" width="100%" cellspacing="0" role="grid" aria-describedby="dataTable_info" style="width: 100%;">
                                     <thead>
                                         <tr role="row">
-                                        <th class="sorting sorting_asc" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-sort="ascending" style="width: 133px;">이름</th>
+                                        <th class="sorting sorting_asc" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-sort="ascending" style="width: 133px;">이메일</th>
                                         <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 50px;">권한</th>
-                                        <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 50px;">이메일</th>
-                                        <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 50px;">담당업무</th>
-                                        <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 50px;">휴대전화</th>
-                                        <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1"  style="width: 50px;">탈퇴</th>
+                                        <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 50px;">초대자</th>
+                                        <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 50px;">초대일</th>
+                                        <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 50px;">초대상태</th>
+                                        <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1"  style="width: 50px;">비고</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                     <tr class="odd" th:each="l:${list}">
-                                    <td class="sorting_1" th:text=${l.memb_name}>
-                                    			홍길동</td>
+                                    <td class="sorting_1" th:text=${l.memb_mail}>
+                                    			</td>
                                             <td th:text=${l.rolename}></td>
                                             <td th:text=${l.memb_mail}></td>
-                                            <td th:text=${l.memb_work}></td>
-                                            <td th:text=${l.memb_phone}></td>
-                                            <td><input type="button" value="탈퇴"></td>
+                                            <td>초대날짜</td>
+                                            <td>초대중</td>
+                                            <td></td>
                                         </tr>
                                         </tbody>
                                       
@@ -90,7 +88,7 @@ function pagingFormSubmit(currentPage) {
                                 </form>
                                 </div>
                                 </div>
-                                <div id="navigator">
+                                
                                 <a th:href="|javascript:pagingFormSubmit(${navi.currentPage - navi.pagePerGroup})|">◁◁</a>
 								<a th:href="|javascript:pagingFormSubmit(${navi.currentPage - 1})|">◀</a> 
 
@@ -103,8 +101,6 @@ function pagingFormSubmit(currentPage) {
 								<a th:href="|javascript:pagingFormSubmit(${navi.currentPage + 1})|">▶</a> 
 								<a th:href="|javascript:pagingFormSubmit(${navi.currentPage + navi.pagePerGroup})|">▷▷</a>
 								<br><br>
-								
-								</div>
                                 <div class="row">
                                 <div class="col-sm-12 col-md-5">
                                 <div class="dataTables_info" id="dataTable_info" role="status" aria-live="polite">Showing 1 to 10 of 57 entries
