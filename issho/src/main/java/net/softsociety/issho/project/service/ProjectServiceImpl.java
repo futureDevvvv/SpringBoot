@@ -35,4 +35,12 @@ public class ProjectServiceImpl implements ProjectService{
 		
 	}
 
+	@Override
+	public Projects searchOne(String prj_domain) {
+
+		Projects project = pjDao.searchOne(prj_domain);
+		
+		return project;
+	}
+
 }

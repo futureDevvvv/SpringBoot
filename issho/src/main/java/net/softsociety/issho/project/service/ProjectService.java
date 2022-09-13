@@ -11,4 +11,6 @@ public interface ProjectService {
 
 	void grantPM(ProjectMember pjmb);
 
+	Projects searchOne(String prj_domain);
+
 }
