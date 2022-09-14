@@ -31,6 +31,28 @@
                             <h6 class="m-0 font-weight-bold text-primary">프로젝트 리스트</h6>
                             
                         </div>
+                        
+                                <div class="col-sm-12 col-md-6">
+                                <div id="dataTable_filter" class="dataTables_filter">
+                                <form id="pagingForm" method="get" th:action="@{/manager/project}">
+                                <input type="hidden" name="page" id="page" >
+     							<div class="listTop">
+                               	
+                                <p>전체 프로젝트 수 : <span th:text="${navi.totalRecordsCount}"></span></p>
+								
+								
+                                <label class="listTop1">Search:
+                                <input type="text" class="listTop1" name="searchWord" th:value="${searchWord}">
+                                <button class="btn btn-primary" type="button" onclick="pagingFormSubmit(1)">
+				                     <i class="fas fa-search fa-sm"></i>
+				                   </button>
+                                </label>
+                                
+                             	</div>
+                                </form>
+                                </div>
+                                </div>
+                        
                         <div class="card-body">
                             <div class="table-responsive">
                                 <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
@@ -39,23 +61,7 @@
                               
                                 </div>
                                 </div>
-                                <div class="col-sm-12 col-md-6">
-                                <div id="dataTable_filter" class="dataTables_filter">
-                                <form id="pagingForm" method="get" th:action="@{/manager/project}">
-                                <input type="hidden" name="page" id="page" >
-                                <p>전체 글 수 : <span th:text="${navi.totalRecordsCount}"></span></p>
-								<p><span th:text="|${navi.currentPage}/${navi.totalPageCount} page|"></span></p>
-								
-                                <label>Search:
-                                <input type="text" class="form-control form-control-sm" name="searchWord" th:value="${searchWord}">
-								<button class="btn btn-primary" type="button" onclick="pagingFormSubmit(1)">
-				                <i class="fas fa-search fa-sm"></i>
-								</button>
-                                <!-- <input type="search" class="form-control form-control-sm" placeholder="" aria-controls="dataTable"> -->
-                                </label>
-                                </form>
-                                </div>
-                                </div>
+
                                 </div>
                                 <div class="row">
                                 <div class="col-sm-12">
@@ -88,7 +94,7 @@
                                 </div>
                                 </div>
                                 
-                                <div id="navigator">
+                                <div class="navigator">
                                 <a th:href="|javascript:pagingFormSubmit(${navi.currentPage - navi.pagePerGroup})|">◁◁</a>
 								<a th:href="|javascript:pagingFormSubmit(${navi.currentPage - 1})|">◀</a> 
 
