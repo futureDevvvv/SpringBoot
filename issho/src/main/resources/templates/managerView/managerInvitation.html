@@ -82,6 +82,8 @@
 															aria-controls="dataTable" rowspan="1" colspan="1"
 															aria-sort="ascending" style="width: 133px;">이메일</th>
 														<th class="sorting" tabindex="0" aria-controls="dataTable"
+															rowspan="1" colspan="1" style="width: 50px;">이름</th>
+														<th class="sorting" tabindex="0" aria-controls="dataTable"
 															rowspan="1" colspan="1" style="width: 50px;">권한</th>
 														<th class="sorting" tabindex="0" aria-controls="dataTable"
 															rowspan="1" colspan="1" style="width: 50px;">초대자</th>
@@ -89,18 +91,18 @@
 															rowspan="1" colspan="1" style="width: 50px;">초대일</th>
 														<th class="sorting" tabindex="0" aria-controls="dataTable"
 															rowspan="1" colspan="1" style="width: 50px;">초대상태</th>
-														<th class="sorting" tabindex="0" aria-controls="dataTable"
-															rowspan="1" colspan="1" style="width: 50px;">비고</th>
+													
 													</tr>
 												</thead>
 												<tbody>
 													<tr class="odd" th:each="l:${list}">
 														<td class="sorting_1" th:text=${l.memb_mail}></td>
+														<td th:text=${l.memb_name}></td>
 														<td th:text=${l.rolename}></td>
 														<td th:text=${l.memb_mail}></td>
 														<td>초대날짜</td>
 														<td>초대중</td>
-														<td></td>
+														
 													</tr>
 												</tbody>
 

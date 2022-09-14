@@ -89,14 +89,15 @@
                                     <tbody>
                                     <tr class="odd" th:each="l:${list}">
                                     <td class="sorting_1" th:text=${l.memb_name} id="email">
-                                    			홍길동</td>
+                                    			</td>
                                             <td th:text=${l.rolename}></td>
-                                            <td th:text=${l.memb_mail}></td>
+                                            <td th:text=${l.memb_mail} id="email"></td>
                                             <td th:text=${l.memb_work}></td>
                                             <td th:text=${l.memb_phone}></td>
-                                            <td><input type="button" value="탈퇴" th:email="${l.memb_mail}"
+                                            <td><input class="btn btn-danger btn-icon-split" type="button" value="탈퇴" th:email="${l.memb_mail}"
                                             			th:onclick="deleteMember(this.getAttribute('email'))">
                                             			</td>
+                                       
                                         </tr>
                                         </tbody>
                                       

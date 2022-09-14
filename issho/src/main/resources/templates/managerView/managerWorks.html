@@ -48,6 +48,9 @@
 				                   </button>
                                 </label>
                                 
+                                <input type="button" value="PDF">
+                                <input type="button" value="excel">
+                                
                              	</div>
                                 </form>
                                 </div>
@@ -74,23 +77,25 @@
                                 <table class="table table-bordered dataTable" id="dataTable" width="100%" cellspacing="0" role="grid" aria-describedby="dataTable_info" style="width: 100%;">
                                     <thead>
                                         <tr role="row">
-                                        <th class="sorting sorting_asc" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-sort="ascending" style="width: 133px;">이메일</th>
+                                        <th class="sorting sorting_asc" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-sort="ascending" style="width: 133px;">선택</th>
+                                        <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 50px;">이메일</th>
+                                        <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 50px;">이름</th>
                                         <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 50px;">권한</th>
-                                        <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 50px;">초대자</th>
-                                        <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 50px;">초대일</th>
-                                        <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 50px;">초대상태</th>
-                                        <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1"  style="width: 50px;">비고</th>
+                                        <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 50px;">작업량(개인별)</th>
+                                        <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 50px;">작업량(업무별)</th>
+                                        <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1"  style="width: 50px;">업무능률</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                     <tr class="odd" th:each="l:${list}">
-                                    <td class="sorting_1" th:text=${l.memb_mail}>
-                                    			</td>
-                                            <td th:text=${l.rolename}></td>
+                                    <td class="sorting_1" id="selectWorks">
+                                    			<input type="checkbox"></td>
                                             <td th:text=${l.memb_mail}></td>
-                                            <td>초대날짜</td>
-                                            <td>초대중</td>
-                                            <td></td>
+                                            <td th:text=${l.memb_name}></td>
+                                            <td th:text=${l.rolename}></td>
+                                            <td>개인별작업량표시</td>
+                                            <td>업무별작업량표시</td>
+                                            <td>업무능률표시</td>
                                         </tr>
                                         </tbody>
                                       
