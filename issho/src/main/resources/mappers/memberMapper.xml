@@ -18,7 +18,8 @@
 			memb_ogfile, memb_savedfile,
 		</if>
 		memb_work, memb_phone, enabled)
-		VALUES(#{memb_mail}, #{memb_name}, #{memb_pwd},
+		VALUES(#{memb_mail}, #{memb_name},
+		#{memb_pwd},
 		<if test="memb_ogfile != null and memb_ogfile != ''">
 			#{memb_ogfile}, #{memb_savedfile},
 		</if>
@@ -31,5 +32,16 @@
 		where
 		memb_mail=#{memb_mail}
 	</delete>
+
+	<!-- 프로젝트멤버 리스트 -->
+	<select id="searchPjMem" parameterType="String"
+		resultType="Members">
+		SELECT m.memb_mail as memb_mail, m.memb_name as memb_name,
+		m.memb_ogfile as memb_ogfile, m.memb_savedfile as memb_savedfile,
+		m.memb_work as memb_work, m.memb_phone as memb_phone, p.prj_domain as
+		prj_domain, p.pjmb_right as pjmb_right
+		FROM members m, projectmember p
+		WHERE p.memb_mail = m.memb_mail AND p.prj_domain = #{prj_domain}
+	</select>
 
 </mapper>

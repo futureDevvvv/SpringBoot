@@ -1,5 +1,8 @@
 package net.softsociety.issho.member.service;
 
+import java.util.ArrayList;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -38,6 +41,16 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
+	public ArrayList<Members> searchPjMem(String prj_domain) {
+		// TODO Auto-generated method stub
+
+		ArrayList<Members> pjMemList = memDao.searchPjMem(prj_domain);
+		
+		return pjMemList;
+	
+	}
+
+
 	public int deleteMember(Members members) {
 		
 		int result = memDao.deleteMember(members);
