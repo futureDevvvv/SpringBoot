@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<script th:src="@{/js/jquery-3.6.0.js}"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 <!-- CSS only -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
 <!-- JavaScript Bundle with Popper -->
@@ -24,17 +24,20 @@
       </div>
 
       <div class="modal-body p-5 pt-0">
-        <form action="mailSender" method="post">
+        <form action="mailSender" id="mailForm" method="post" >
           <div class="form-floating mb-3">
             <input type="text" name="domain" class="form-control rounded-3" id="floatingPassword" placeholder="Password">
             <label for="floatingPassword">Project Name</label>
           </div>
           <div class="form-floating mb-3">
-            <input type="email" name="email" class="form-control rounded-3" id="floatingInput" placeholder="name@example.com">
+            <input type="email" name="memb_mail" class="form-control rounded-3" id="memb_mail" placeholder="name@example.com">
             <label for="floatingInput">Email address</label>
+            <button type="button"
+			class="btn btn-info btn-user btn-block w-25"
+			onclick="idCheck()">중복확인</button>
           </div>
-          <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="submit">전송</button>
-
+          <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="button" id="submit" onclick="submitForm()">전송</button>
+			<div id="idVal"></div>
 
         </form>
       </div>
@@ -43,7 +46,84 @@
 </div>
 
 <script>
+//모든 공백 체크 정규식
+var empJ = /\s/g;
+//아이디 정규식
+var idJ = /^[a-z0-9][a-z0-9_\-]{4,19}$/;
+// 비밀번호 정규식
+var pwJ = /^[A-Za-z0-9]{8,16}$/;
+// 이름 정규식
+var nameJ = /^[가-힣]{2,4}|[a-zA-Z]{2,10}\s[a-zA-Z]{2,10}$/;
+// 이메일 검사 정규식
+var mailJ = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
+// 휴대폰 번호 정규식
+var phoneJ = /^01([016789])([0-9]{3,4})([0-9]{4})$/;
 
+var inval_Arr = new Array(5).fill(false);
+
+//아이디 중복체크 [0]
+function idCheck() {
+
+	let memb_mail = $("#memb_mail").val();
+
+
+	if (inval_Arr[1]) {
+		$.ajax({
+			url : "mailIdCheck",
+			type : "POST",
+			data : {
+				memb_mail : memb_mail
+			},
+			dataType : 'json',
+			success : function(result) {
+				if (result == 0) {
+					$("#idVal").html("초대 가능한 신규 아이디입니다.")
+					$("#idVal").attr('color', 'green');
+					inval_Arr[0] = true;
+				} else {
+					$("#idVal").html("이미 초대한 아이디입니다.")
+					$("#idVal").attr('color', 'red');
+					inval_Arr[0] = true;
+				}
+			}
+		});
+	} else {
+
+		$("#idVal").html("이메일 형식이 올바르지 않습니다.")
+	}
+
+}
+
+//이메일 확인 [1]
+$("#memb_mail").keyup(function() {
+	if (mailJ.test($('#memb_mail').val())) {
+		$("#idVal").html("");
+		inval_Arr[1] = true;
+
+		if (inval_Arr[0] == false) {
+			$("#idVal").html("초대 이메일 중복체크를 해주세요")
+		}
+	} else {
+		$("#idVal").html("이메일 형식이 올바르지 않습니다.")
+		inval_Arr[1] = false;
+	}
+}); 
+
+
+
+	function submitForm(){
+		
+		
+		$("#mailForm").submit();
+		
+		  setTimeout(function() {   
+	             window.close();
+
+	          }, 3000);
+		
+		
+		
+	}
 </script>
 </body>
 </html>

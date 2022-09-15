@@ -50,6 +50,12 @@ public class MemberServiceImpl implements MemberService {
 	
 	}
 
-	
+
+	public int deleteMember(Members members) {
+		
+		int result = memDao.deleteMember(members);
+		
+		return result;
+	}
 
 }

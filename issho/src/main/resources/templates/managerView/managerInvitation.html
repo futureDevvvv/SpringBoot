@@ -32,23 +32,14 @@
 					<div class="card-header py-3">
 						<h6 class="m-0 font-weight-bold text-primary">초대 리스트</h6>
 					</div>
-					<div class="card-body">
-						<div class="table-responsive">
-							<div id="dataTable_wrapper"
-								class="dataTables_wrapper dt-bootstrap4">
-								<div class="row">
-									<div class="col-sm-12 col-md-6">
-										<div class="dataTables_length" id="dataTable_length"></div>
-									</div>
-									
-									
-
-									<div class="searchAndButton">
+						<div class="listTop">
 										<div id="dataTable_filter" class="dataTables_filter">
 											<form id="pagingForm" method="get"
 												th:action="@{/manager/invitation}">
-												<input type="hidden" name="page" id="page"> <label>Search:
-													<input type="text" class="form-control form-control-sm" name="searchWord" th:value="${searchWord}"> 
+												
+												<p>전체 초대인원 수 : <span th:text="${navi.totalRecordsCount}"></span></p>
+												<input type="hidden" name="page" id="page"> <label class="listTop1" style="margin-left:10px">Search:
+													<input type="text" class="listTop1" name="searchWord" th:value="${searchWord}"> 
 													
 												<button class="btn btn-primary" type="button" onclick="pagingFormSubmit(1)">
 				                                    <i class="fas fa-search fa-sm"></i>
@@ -63,6 +54,20 @@
 			                                    </a>
 											</form>
 										</div>
+										</div>
+					<div class="card-body">
+						<div class="table-responsive">
+							<div id="dataTable_wrapper"
+								class="dataTables_wrapper dt-bootstrap4">
+								<div class="row">
+									<div class="col-sm-12 col-md-6">
+										<div class="dataTables_length" id="dataTable_length"></div>
+									</div>
+									
+									</div>
+									</div>
+
+								
 									</div>
 								</div>
 								<div class="row">
@@ -77,6 +82,8 @@
 															aria-controls="dataTable" rowspan="1" colspan="1"
 															aria-sort="ascending" style="width: 133px;">이메일</th>
 														<th class="sorting" tabindex="0" aria-controls="dataTable"
+															rowspan="1" colspan="1" style="width: 50px;">이름</th>
+														<th class="sorting" tabindex="0" aria-controls="dataTable"
 															rowspan="1" colspan="1" style="width: 50px;">권한</th>
 														<th class="sorting" tabindex="0" aria-controls="dataTable"
 															rowspan="1" colspan="1" style="width: 50px;">초대자</th>
@@ -84,18 +91,18 @@
 															rowspan="1" colspan="1" style="width: 50px;">초대일</th>
 														<th class="sorting" tabindex="0" aria-controls="dataTable"
 															rowspan="1" colspan="1" style="width: 50px;">초대상태</th>
-														<th class="sorting" tabindex="0" aria-controls="dataTable"
-															rowspan="1" colspan="1" style="width: 50px;">비고</th>
+													
 													</tr>
 												</thead>
 												<tbody>
 													<tr class="odd" th:each="l:${list}">
 														<td class="sorting_1" th:text=${l.memb_mail}></td>
+														<td th:text=${l.memb_name}></td>
 														<td th:text=${l.rolename}></td>
 														<td th:text=${l.memb_mail}></td>
 														<td>초대날짜</td>
 														<td>초대중</td>
-														<td></td>
+														
 													</tr>
 												</tbody>
 
@@ -104,72 +111,23 @@
 									</div>
 								</div>
 
-								<a
-									th:href="|javascript:pagingFormSubmit(${navi.currentPage - navi.pagePerGroup})|">◁◁</a>
-								<a
-									th:href="|javascript:pagingFormSubmit(${navi.currentPage - 1})|">◀</a>
+                                <div class="navigator">
+                                <a th:href="|javascript:pagingFormSubmit(${navi.currentPage - navi.pagePerGroup})|">◁◁</a>
+								<a th:href="|javascript:pagingFormSubmit(${navi.currentPage - 1})|">◀</a> 
 
-								<span
-									th:each="counter : ${#numbers.sequence(navi.startPageGroup, navi.endPageGroup)}">
-									<th:block th:if="${counter == navi.currentPage}">
-										<b>
-									</th:block> <a th:text="${counter}"
-									th:href="|javascript:pagingFormSubmit(${counter})|"></a>&nbsp;
-									<th:block th:if="${counter == navi.currentPage}">
-										</b>
-									</th:block>
-								</span> <a
-									th:href="|javascript:pagingFormSubmit(${navi.currentPage + 1})|">▶</a>
-								<a
-									th:href="|javascript:pagingFormSubmit(${navi.currentPage + navi.pagePerGroup})|">▷▷</a>
-								<br>
-								<br>
-								<div class="row">
-									<div class="col-sm-12 col-md-5">
-										<div class="dataTables_info" id="dataTable_info" role="status"
-											aria-live="polite">Showing 1 to 10 of 57 entries</div>
-									</div>
-									<div class="col-sm-12 col-md-7">
-										<div class="dataTables_paginate paging_simple_numbers"
-											id="dataTable_paginate">
-											<ul class="pagination">
-												<li class="paginate_button page-item previous disabled"
-													id="dataTable_previous"><a href="#"
-													aria-controls="dataTable" data-dt-idx="0" tabindex="0"
-													class="page-link">Previous</a></li>
-												<li class="paginate_button page-item active"><a
-													href="#" aria-controls="dataTable" data-dt-idx="1"
-													tabindex="0" class="page-link">1</a></li>
-												<li class="paginate_button page-item "><a href="#"
-													aria-controls="dataTable" data-dt-idx="2" tabindex="0"
-													class="page-link">2</a></li>
-												<li class="paginate_button page-item "><a href="#"
-													aria-controls="dataTable" data-dt-idx="3" tabindex="0"
-													class="page-link">3</a></li>
-												<li class="paginate_button page-item "><a href="#"
-													aria-controls="dataTable" data-dt-idx="4" tabindex="0"
-													class="page-link">4</a></li>
-												<li class="paginate_button page-item "><a href="#"
-													aria-controls="dataTable" data-dt-idx="5" tabindex="0"
-													class="page-link">5</a></li>
-												<li class="paginate_button page-item "><a href="#"
-													aria-controls="dataTable" data-dt-idx="6" tabindex="0"
-													class="page-link">6</a></li>
-												<li class="paginate_button page-item next"
-													id="dataTable_next"><a href="#"
-													aria-controls="dataTable" data-dt-idx="7" tabindex="0"
-													class="page-link">Next</a></li>
-											</ul>
-										</div>
-									</div>
+								<span th:each="counter : ${#numbers.sequence(navi.startPageGroup, navi.endPageGroup)}"> 
+								<th:block th:if="${counter == navi.currentPage}"><b></th:block>
+								<a th:text="${counter}" th:href="|javascript:pagingFormSubmit(${counter})|"></a>&nbsp;
+								<th:block th:if="${counter == navi.currentPage}"></b></th:block>
+								</span>
+	
+								<a th:href="|javascript:pagingFormSubmit(${navi.currentPage + 1})|">▶</a> 
+								<a th:href="|javascript:pagingFormSubmit(${navi.currentPage + navi.pagePerGroup})|">▷▷</a>
+								<br><br>
+								
 								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-
-			</div>
-
+                             </div>
+                </div>
 			<!-- footer 시작 -->
 			<th:block th:replace="fragmentsManager/footer :: footerFragment"></th:block>
 			<!-- footer 끝 -->

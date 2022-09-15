@@ -16,9 +16,11 @@ select
 	,memb_phone
 	,rolename
 from members
+<where>
 <if test="searchWord != null">
 	memb_name like '%' || #{searchWord} || '%'	
 </if>
+</where>
 order by 
 	1 desc
 </select>
@@ -28,10 +30,26 @@ order by
 select 
 	count(*)
 from members
+<where>
 <if test="searchWord != null">
 	memb_name like '%' || #{searchWord} || '%'	
 </if>
+</where>
 </select>
+
+<select id="getMemberInfo" resultType="Members" parameterType="String">
+select * 
+from members
+where
+	memb_mail=#{memb_mail}
+</select>
+
+<insert id="insertAttendant" parameterType="InvitationMember">
+INSERT INTO invitation
+(membInv_seq,prj_domain,membInv_recipient)
+VALUES
+(membInv_seq.nextval,#{prj_domain},#{membInv_recipient})
+</insert>
 
 
 </mapper>
