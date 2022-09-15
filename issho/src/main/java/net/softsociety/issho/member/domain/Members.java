@@ -1,6 +1,7 @@
 package net.softsociety.issho.member.domain;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,6 +24,13 @@ public class Members implements UserDetails{
 	private String memb_phone;
 	private boolean enabled;	//1 : 사용가능, 0 : 불가능ㄴ
 	private String rolename;
+	
+	//list
+	private List<Members> memList;
+	
+	//projectmember
+	private String prj_domain;
+	private String pjmb_right;
 	
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
