@@ -30,7 +30,6 @@
 		DELETE FROM members
 		where
 		memb_mail=#{memb_mail}
-		
 	</delete>
 
 </mapper>

@@ -1,4 +1,4 @@
-package net.softsociety.issho.controller.manager;
+package net.softsociety.issho.manager.controller;
 
 import java.util.ArrayList;
 
@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.extern.slf4j.Slf4j;
+import net.softsociety.issho.manager.domain.InvitationMember;
 import net.softsociety.issho.manager.service.MailSenderService;
 import net.softsociety.issho.manager.service.ManagerService;
 import net.softsociety.issho.manager.util.PageNavigator;
@@ -215,12 +216,68 @@ public class ManagerController {
 	 */
 	@PostMapping("mailSender")
 	@ResponseBody
-	public String mailSender(String email,String domain) throws Exception{
+	public String mailSender(InvitationMember invitation,String email,String domain) throws Exception{
 		
 		mailSenderService.mailSend(email, domain);
 		
-		log.debug(email,domain);
+		log.debug("이메일"+ email);
+		log.debug("도메인"+domain);
 		
-		return "전송 되었습니다.";
+		invitation.setPrj_domain(domain);
+		invitation.setMembInv_recipient(email);
+		
+		service.insertAttendant(invitation);
+		
+		log.debug("메일초대 도메인"+ invitation.getPrj_domain());
+		log.debug("메일초대인 메일"+ invitation.getMembInv_recipient());
+		
+		return "redirect:/";
+	}
+	
+	/**
+	 * 초대 이메일 중복체크
+	 * 
+	 * @param memb_mail
+	 * @return 결과값
+	 */
+	@ResponseBody
+	@PostMapping("/mailIdCheck")
+	public int idCheck(String memb_mail) {
+
+		log.debug("이메일 : {}", memb_mail);
+
+		int result = memberService.idSearchOne(memb_mail);
+		
+		log.debug("결과 : {}", result);
+
+		return result;
+	}
+
+	/**
+	 * 구성원관리 해당멤버 클릭시 멤버 정보 폼으로 이동
+	 * 
+	 * @param email
+	 * @param model
+	 * @return
+	 */
+	@GetMapping("ShowMemberInfo")
+	public String memberInfo(String email,Model model) {
+		
+		log.debug("멤버정보 이메일 : " + email);
+		
+		Members members = new Members();
+		
+		members.setMemb_mail(email);
+		
+		members = service.getMemberInfo(email);
+		
+		model.addAttribute("members",members);
+		
+		log.debug("멤버 정보: " + members);
+		
+		
+		return "/managerView/memberInfo";
+		
+		
 	}
 }
