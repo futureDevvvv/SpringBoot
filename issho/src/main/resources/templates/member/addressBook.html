@@ -3,42 +3,45 @@
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head th:replace="fragmentsManager/config :: configFragment">
 <meta charset="UTF-8">
-<title>구성원 페이지</title>
+<title>멤버 주소록</title>
 
+<script>
 
+</script>
 
 </head>
 <body>
 
 	<div id="wrapper">
 		<!-- content 시작 -->
-		<th:block th:replace="fragmentsManager/sidebar :: sidebar"></th:block>
+		<th:block th:replace="fragments/sidebar :: sidebar"></th:block>
 		<!-- content 끝 -->
 
 		<div id="content-wrapper" class="d-flex flex-column">
 			<!-- header 시작 -->
-			<th:block th:replace="fragmentsManager/header :: navFragment"></th:block>
+			<th:block th:replace="fragments/header :: navFragment"></th:block>
 			
 			<!-- header 끝 -->
 			<div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">프로젝트 관리</h1>
+                    <h1 class="h3 mb-2 text-gray-800">멤버 주소록</h1>
 
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">프로젝트 리스트</h6>
-                            
+                            <h6 class="m-0 font-weight-bold text-primary">주소록 리스트</h6>
                         </div>
                         
-                                <div class="col-sm-12 col-md-6">
+                                <div>
+                              
                                 <div id="dataTable_filter" class="dataTables_filter">
-                                <form id="pagingForm" method="get" th:action="@{/manager/project}">
+                                <form id="pagingForm" method="get" th:action="@{/manager/member}">
                                 <input type="hidden" name="page" id="page" >
-     							<div class="listTop">
+                                
+                               	<div class="listTop">
                                	
-                                <p>전체 프로젝트 수 : <span th:text="${navi.totalRecordsCount}"></span></p>
+                                <p>전체 멤버 수 : <span th:text="${navi.totalRecordsCount}"></span></p>
 								
 								
                                 <label class="listTop1">Search:
@@ -49,10 +52,11 @@
                                 </label>
                                 
                              	</div>
+                             	
                                 </form>
+                                
                                 </div>
                                 </div>
-                        
                         <div class="card-body">
                             <div class="table-responsive">
                                 <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
@@ -61,29 +65,43 @@
                               
                                 </div>
                                 </div>
-
+                                </div>
                                 </div>
                                 <div class="row">
                                 <div class="col-sm-12">
+                                	<!-- 삭제시 전송할 폼 -->
+								<form th:action="@{/manager/deleteMember}" method="get" id="deleteForm">
+									<input type="hidden" name="email" id="email"> 
+								</form>
+								
+								<!-- 
+								<form th:action="@{/manager/ShowMemberInfo}" method="get" id="memberInfoForm" name="memberInfoForm">
+									<input type="hidden" name="email" id="email"> 
+								</form>
+								 -->
+								
+								
                                 <form action="">
                                 <table class="table table-bordered dataTable" id="dataTable" width="100%" cellspacing="0" role="grid" aria-describedby="dataTable_info" style="width: 100%;">
                                     <thead>
                                         <tr role="row">
-                                        <th class="sorting sorting_asc" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-sort="ascending" style="width: 133px;">프로젝트명</th>
-                                        <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 50px;">멤버수</th>
-                                        <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 50px;">프로젝트 만료일</th>
-                                        <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 50px;">완성도</th>
-
+                                        <th class="sorting sorting_asc" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-sort="ascending" style="width: 133px;">이름</th>
+                                        <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 50px;">권한</th>
+                                        <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 50px;">이메일</th>
+                                        <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 50px;">담당업무</th>
+                                        <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 50px;">휴대전화</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    <tr class="odd" th:each="l:${list}">
-                                    <td class="sorting_1">프로젝트명
-                                    			</td>
-                                            <td>멤버수 표시</td>
-                                            <td>만료일표시</td>
-                                            <td>완성도 바 표시</td>
-
+                                    <tr class="odd" th:each="l:${list}" >
+                                    <td class="sorting_1">
+                                    		<a th:text=${l.memb_name} th:infoEmail="${l.memb_mail}" th:onclick="memberInfoOpen(this.getAttribute('infoEmail'))"></a></td>
+                                            <td th:text=${l.rolename}></td>
+                                            <td th:text=${l.memb_mail} id="email"></td>
+                                            <td th:text=${l.memb_work}></td>
+                                            <td th:text=${l.memb_phone}></td>
+                                            
+                                       
                                         </tr>
                                         </tbody>
                                       
@@ -91,7 +109,6 @@
                                 </form>
                                 </div>
                                 </div>
-                                
                                 <div class="navigator">
                                 <a th:href="|javascript:pagingFormSubmit(${navi.currentPage - navi.pagePerGroup})|">◁◁</a>
 								<a th:href="|javascript:pagingFormSubmit(${navi.currentPage - 1})|">◀</a> 
@@ -107,23 +124,46 @@
 								<br><br>
 								
 								</div>
+                             </div>
+                             </div>
+                             </div>
                              
                 </div>
+			
 			<!-- footer 시작 -->
 			<th:block th:replace="fragmentsManager/footer :: footerFragment"></th:block>
 			<!-- footer 끝 -->
 		</div>
 	</div>
-</div>
-</div>
-</div>
-</div>
+
 <script>
+
+
+
+
+function deleteMember(Memail){
+	let email = document.getElementById('email');
+	let form = document.getElementById('deleteForm');
+	
+	if(confirm('탈퇴 시키겠습니까?')) {
+		email.value = Memail;
+		form.submit();
+	}
+}
+
 function pagingFormSubmit(currentPage) {
 	var form = document.getElementById('pagingForm');
 	var page = document.getElementById('page');
 	page.value = currentPage;
 	form.submit();
+}
+
+//멤버 정보 팝업
+function memberInfoOpen(Memail){
+	
+	window.open('ShowMemberInfo?email=' + Memail, 'newWin',
+		'left=400,top=200,width=500,height=900,menubar=no');
+		
 }
 </script>
 

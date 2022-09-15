@@ -74,6 +74,13 @@
 									<input type="hidden" name="email" id="email"> 
 								</form>
 								
+								<!-- 
+								<form th:action="@{/manager/ShowMemberInfo}" method="get" id="memberInfoForm" name="memberInfoForm">
+									<input type="hidden" name="email" id="email"> 
+								</form>
+								 -->
+								
+								
                                 <form action="">
                                 <table class="table table-bordered dataTable" id="dataTable" width="100%" cellspacing="0" role="grid" aria-describedby="dataTable_info" style="width: 100%;">
                                     <thead>
@@ -87,9 +94,9 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    <tr class="odd" th:each="l:${list}">
-                                    <td class="sorting_1" th:text=${l.memb_name} id="email">
-                                    			</td>
+                                    <tr class="odd" th:each="l:${list}" >
+                                    <td class="sorting_1">
+                                    		<a th:text=${l.memb_name} th:infoEmail="${l.memb_mail}" th:onclick="memberInfoOpen(this.getAttribute('infoEmail'))"></a></td>
                                             <td th:text=${l.rolename}></td>
                                             <td th:text=${l.memb_mail} id="email"></td>
                                             <td th:text=${l.memb_work}></td>
@@ -133,6 +140,10 @@
 	</div>
 
 <script>
+
+
+
+
 function deleteMember(Memail){
 	let email = document.getElementById('email');
 	let form = document.getElementById('deleteForm');
@@ -150,6 +161,13 @@ function pagingFormSubmit(currentPage) {
 	form.submit();
 }
 
+//멤버 정보 팝업
+function memberInfoOpen(Memail){
+	
+	window.open('ShowMemberInfo?email=' + Memail, 'newWin',
+		'left=400,top=200,width=500,height=900,menubar=no');
+		
+}
 </script>
 
 </body>
