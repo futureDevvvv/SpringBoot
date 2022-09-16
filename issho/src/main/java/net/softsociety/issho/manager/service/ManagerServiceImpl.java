@@ -57,6 +57,12 @@ public class ManagerServiceImpl implements ManagerService {
 		membersDAO.insertAttendant(invitation);
 	}
 
+	@Override
+	public int invitationIdSearchOne(InvitationMember invitationMember) {
+		int result = membersDAO.invitationIdSearchOne(invitationMember);
+		return result;
+	}
+
 	
 	
 	

@@ -24,6 +24,9 @@ public interface ManagerService {
 	//초대테이블에 초대인 메일 추가생성
 	public void insertAttendant(InvitationMember invitation);
 
+	//초대 메일 중복 확인
+	public int invitationIdSearchOne(InvitationMember invitationMember);
+
 	
 	
 	

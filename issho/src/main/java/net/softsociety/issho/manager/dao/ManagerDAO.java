@@ -20,4 +20,6 @@ public interface ManagerDAO {
 	public Members getMemberInfo(String email);
 
 	public void insertAttendant(InvitationMember invitation);
+
+	public int invitationIdSearchOne(InvitationMember invitationMember);
 }

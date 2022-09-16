@@ -37,21 +37,26 @@
 											<form id="pagingForm" method="get"
 												th:action="@{/manager/invitation}">
 												
-												<p>전체 초대인원 수 : <span th:text="${navi.totalRecordsCount}"></span></p>
-												<input type="hidden" name="page" id="page"> <label class="listTop1" style="margin-left:10px">Search:
-													<input type="text" class="listTop1" name="searchWord" th:value="${searchWord}"> 
-													
-												<button class="btn btn-primary" type="button" onclick="pagingFormSubmit(1)">
+												<div id="listTop" >
+												<p>전체 초대인원 수 : <span th:text="${navi.totalRecordsCount}" ></span></p>
+				
+												<input type="hidden" name="page" id="page"> 
+												<label id="listTop1" >Search:
+												<input type="text"  id="listTop1" name="searchWord" th:value="${searchWord}"> 
+			
+												<button class="btn btn-primary"  type="button" onclick="pagingFormSubmit(1)">
 				                                    <i class="fas fa-search fa-sm"></i>
 				                                </button>
 												</label>
+												
 												<!-- 초대하기 버튼 -->
-												<a class="btn btn-primary btn-icon-split" onclick="invitationOpen()">
+												<a class="btn btn-primary btn-icon-split" onclick="invitationOpen()" id="listTop1" >
 			                                        <span class="icon text-white-50">
 			                                            <i class="fas fa-flag"></i>
 			                                        </span>
 			                                        <span class="text">초대하기</span>
 			                                    </a>
+			                                   </div>
 											</form>
 										</div>
 										</div>
@@ -88,8 +93,6 @@
 														<th class="sorting" tabindex="0" aria-controls="dataTable"
 															rowspan="1" colspan="1" style="width: 50px;">초대자</th>
 														<th class="sorting" tabindex="0" aria-controls="dataTable"
-															rowspan="1" colspan="1" style="width: 50px;">초대일</th>
-														<th class="sorting" tabindex="0" aria-controls="dataTable"
 															rowspan="1" colspan="1" style="width: 50px;">초대상태</th>
 													
 													</tr>
@@ -100,7 +103,6 @@
 														<td th:text=${l.memb_name}></td>
 														<td th:text=${l.rolename}></td>
 														<td th:text=${l.memb_mail}></td>
-														<td>초대날짜</td>
 														<td>초대중</td>
 														
 													</tr>

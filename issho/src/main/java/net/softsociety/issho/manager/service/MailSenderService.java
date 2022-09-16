@@ -23,13 +23,13 @@ public class MailSenderService  {
 	@Value(value = "${spring.mail.username}")
 	public String from;
 
-	public void mailSend(String mailTo,String domain) throws Exception {
+	public void mailSend(String memb_mail,String prj_domain) throws Exception {
 		MimeMessage m = mailSender.createMimeMessage();
 		MimeMessageHelper h = new MimeMessageHelper(m, "UTF-8");
 		h.setFrom(from);
-		h.setTo(mailTo);
-		h.setSubject(domain +" 프로젝트에 초대합니다.");
-		h.setText("http://localhost:/9990/issho/project/main/"+ domain);
+		h.setTo(memb_mail);
+		h.setSubject(prj_domain +" 프로젝트에 초대합니다.");
+		h.setText("http://localhost:/9990/issho/project/main/"+ prj_domain);
 		mailSender.send(m);
 	}
 

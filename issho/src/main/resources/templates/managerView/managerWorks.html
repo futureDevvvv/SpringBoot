@@ -36,13 +36,13 @@
                                 <form id="pagingForm" method="get" th:action="@{/manager/works}">
                                 <input type="hidden" name="page" id="page" >
                                 
-                                <div class="listTop">
+                                <div id="listTop">
                                	
-                                
+                             
 								<p>전체 업무 수 : <span th:text="${navi.totalRecordsCount}"></span></p>
 								
-                                <label class="listTop1">Search:
-                                <input type="text" class="listTop1" name="searchWord" th:value="${searchWord}">
+                                <label class="listTop">Search:
+                                <input type="text" class="listTop" name="searchWord" th:value="${searchWord}">
                                 <button class="btn btn-primary" type="button" onclick="pagingFormSubmit(1)">
 				                     <i class="fas fa-search fa-sm"></i>
 				                   </button>

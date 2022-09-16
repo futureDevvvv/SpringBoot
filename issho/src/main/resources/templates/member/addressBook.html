@@ -36,16 +36,16 @@
                                 <div>
                               
                                 <div id="dataTable_filter" class="dataTables_filter">
-                                <form id="pagingForm" method="get" th:action="@{/manager/member}">
+                                <form id="pagingForm" method="get" th:action="@{/member/addressBook}">
                                 <input type="hidden" name="page" id="page" >
                                 
-                               	<div class="listTop">
+                               	<div id="listTop">
                                	
                                 <p>전체 멤버 수 : <span th:text="${navi.totalRecordsCount}"></span></p>
 								
 								
-                                <label class="listTop1">Search:
-                                <input type="text" class="listTop1" name="searchWord" th:value="${searchWord}">
+                                <label id="listTop1">Search:
+                                <input type="text" id="listTop1" name="searchWord" th:value="${searchWord}">
                                 <button class="btn btn-primary" type="button" onclick="pagingFormSubmit(1)">
 				                     <i class="fas fa-search fa-sm"></i>
 				                   </button>
@@ -69,17 +69,8 @@
                                 </div>
                                 <div class="row">
                                 <div class="col-sm-12">
-                                	<!-- 삭제시 전송할 폼 -->
-								<form th:action="@{/manager/deleteMember}" method="get" id="deleteForm">
-									<input type="hidden" name="email" id="email"> 
-								</form>
-								
-								<!-- 
-								<form th:action="@{/manager/ShowMemberInfo}" method="get" id="memberInfoForm" name="memberInfoForm">
-									<input type="hidden" name="email" id="email"> 
-								</form>
-								 -->
-								
+                             
+						
 								
                                 <form action="">
                                 <table class="table table-bordered dataTable" id="dataTable" width="100%" cellspacing="0" role="grid" aria-describedby="dataTable_info" style="width: 100%;">
@@ -95,7 +86,7 @@
                                     <tbody>
                                     <tr class="odd" th:each="l:${list}" >
                                     <td class="sorting_1">
-                                    		<a th:text=${l.memb_name} th:infoEmail="${l.memb_mail}" th:onclick="memberInfoOpen(this.getAttribute('infoEmail'))"></a></td>
+                                    		<a th:text=${l.memb_name}></a></td>
                                             <td th:text=${l.rolename}></td>
                                             <td th:text=${l.memb_mail} id="email"></td>
                                             <td th:text=${l.memb_work}></td>
@@ -141,16 +132,6 @@
 
 
 
-function deleteMember(Memail){
-	let email = document.getElementById('email');
-	let form = document.getElementById('deleteForm');
-	
-	if(confirm('탈퇴 시키겠습니까?')) {
-		email.value = Memail;
-		form.submit();
-	}
-}
-
 function pagingFormSubmit(currentPage) {
 	var form = document.getElementById('pagingForm');
 	var page = document.getElementById('page');
@@ -158,13 +139,7 @@ function pagingFormSubmit(currentPage) {
 	form.submit();
 }
 
-//멤버 정보 팝업
-function memberInfoOpen(Memail){
-	
-	window.open('ShowMemberInfo?email=' + Memail, 'newWin',
-		'left=400,top=200,width=500,height=900,menubar=no');
-		
-}
+
 </script>
 
 </body>

@@ -52,4 +52,12 @@ VALUES
 </insert>
 
 
+<!-- 초대 멤버 검색 -->
+	<select id="invitationIdSearchOne" parameterType="InvitationMember" resultType="int">
+		SELECT COUNT(*)
+		FROM invitation
+		WHERE membInv_recipient = #{membInv_recipient}
+		and prj_domain = #{prj_domain}
+	</select>
+
 </mapper>

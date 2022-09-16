@@ -1,12 +1,14 @@
 package net.softsociety.issho.member.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.servlet.ServletContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -76,10 +78,8 @@ public class MemberController {
 	public String join(Members members, @RequestParam MultipartFile upload) {
 
 		log.debug("전달받은 객체 : {}", members);
-		
 
-		
-		  //resources의 상위 디렉토리까지의 경로가 저장됨. 
+		 /* //resources의 상위 디렉토리까지의 경로가 저장됨. 
 		  String webRoot = webApplicationContext.getServletContext().getRealPath("/"); 
 		  String imgRoot = webRoot + "resources/savedImg";
 		  
@@ -89,9 +89,21 @@ public class MemberController {
 		  if (upload != null && !upload.isEmpty()) { String savedfile =
 		  FileService.saveFile(upload, webRoot + imgRoot);
 		  members.setMemb_ogfile(upload.getOriginalFilename());
-		  members.setMemb_savedfile(savedfile); }
-		 
-	
+		  members.setMemb_savedfile(savedfile); }*/
+		
+		if(upload != null && !upload.isEmpty()) {
+			try {
+				String absolutePath = new ClassPathResource(uploadPath).getFile().getAbsolutePath();
+				log.debug("absolutePath : {}", absolutePath);
+				String savedfile = FileService.saveFile(upload, absolutePath);
+				members.setMemb_ogfile(upload.getOriginalFilename());
+				members.setMemb_savedfile(savedfile);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
 	
 		log.debug("업로드 처리후 : {}", members);
 
