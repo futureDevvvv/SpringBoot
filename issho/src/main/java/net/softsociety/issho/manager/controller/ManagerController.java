@@ -214,17 +214,18 @@ public class ManagerController {
 	 * @return
 	 * @throws Exception
 	 */
-	@PostMapping("mailSender")
-	@ResponseBody
-	public String mailSender(InvitationMember invitation,String email,String domain) throws Exception{
+	@PostMapping("mailSender2")
+	public String mailSender(InvitationMember invitation) throws Exception{
 		
-		mailSenderService.mailSend(email, domain);
+		mailSenderService.mailSend(invitation.getMembInv_recipient(), invitation.getPrj_domain());
+		log.debug("메일샌더 실행");
+		/*
+		log.debug("이메일"+ memb_mail); 
+		log.debug("도메인"+prj_domain);
 		
-		log.debug("이메일"+ email);
-		log.debug("도메인"+domain);
-		
-		invitation.setPrj_domain(domain);
-		invitation.setMembInv_recipient(email);
+		invitation.setPrj_domain(prj_domain);
+		invitation.setMembInv_recipient(memb_mail);
+		*/
 		
 		service.insertAttendant(invitation);
 		
@@ -242,11 +243,14 @@ public class ManagerController {
 	 */
 	@ResponseBody
 	@PostMapping("/mailIdCheck")
-	public int idCheck(String memb_mail) {
+	public int idCheck(InvitationMember invitationMember,String membInv_recipient, String prj_domain) {
 
-		log.debug("이메일 : {}", memb_mail);
-
-		int result = memberService.idSearchOne(memb_mail);
+		log.debug("이메일 : {}", membInv_recipient);
+		log.debug("도메인 : {}", prj_domain);
+		
+		invitationMember.setMembInv_recipient(membInv_recipient);
+		invitationMember.setPrj_domain(prj_domain);
+		int result = service.invitationIdSearchOne(invitationMember);
 		
 		log.debug("결과 : {}", result);
 

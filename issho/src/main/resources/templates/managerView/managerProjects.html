@@ -36,13 +36,14 @@
                                 <div id="dataTable_filter" class="dataTables_filter">
                                 <form id="pagingForm" method="get" th:action="@{/manager/project}">
                                 <input type="hidden" name="page" id="page" >
-     							<div class="listTop">
+     							
+     							<div id="listTop">
                                	
                                 <p>전체 프로젝트 수 : <span th:text="${navi.totalRecordsCount}"></span></p>
 								
 								
-                                <label class="listTop1">Search:
-                                <input type="text" class="listTop1" name="searchWord" th:value="${searchWord}">
+                                <label id="listTop1">Search:
+                                <input type="text" id="listTop1" name="searchWord" th:value="${searchWord}">
                                 <button class="btn btn-primary" type="button" onclick="pagingFormSubmit(1)">
 				                     <i class="fas fa-search fa-sm"></i>
 				                   </button>
