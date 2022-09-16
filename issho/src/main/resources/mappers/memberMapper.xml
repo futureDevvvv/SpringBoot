@@ -5,10 +5,22 @@
 <mapper namespace="net.softsociety.issho.member.dao.MemberDAO">
 
 	<!-- 멤버 검색 -->
-	<select id="idSearchOne" parameterType="String" resultType="int">
-		SELECT COUNT(*)
+	<select id="getUserById" parameterType="String" resultType="Members">
+		SELECT *
 		FROM members
 		WHERE memb_mail = #{memb_mail}
+	</select>
+	
+	<select id="idSearchOne" parameterType="String" resultType="int">
+		SELECT *
+		FROM members
+		WHERE memb_mail = #{memb_mail}
+	</select>
+	
+	<select id="getProjectMemById" parameterType="String" resultType="ProjectMember">
+		SELECT *
+		FROM projectmember
+		WHERE memb_mail = #{memb_mail} AND prj_domain = #{prj_domain}
 	</select>
 
 	<!-- 회원가입 -->
