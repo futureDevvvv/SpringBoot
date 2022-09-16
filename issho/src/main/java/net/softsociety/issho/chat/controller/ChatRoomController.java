@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import net.softsociety.issho.chat.ChatRoomRepository;
 import net.softsociety.issho.chat.domain.ChatMsg;
@@ -93,6 +94,7 @@ public class ChatRoomController {
 		return "chat/chat_room";
 	}
 	
+	@ResponseBody
 	@RequestMapping(value="/insertMsg", method = {RequestMethod.POST})
 	public void insertMsg(@AuthenticationPrincipal UserDetails user, ChatMsg msg) {
 		
