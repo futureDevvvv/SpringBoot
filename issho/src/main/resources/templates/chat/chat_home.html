@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<th:block th:replace="fragments/config :: head"></th:block>
+
+<style>
+header {
+	height: 75px;
+	padding: 1rem;
+	color: white;
+	background: #4e73df;
+	font-weight: bold;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+#search {
+	padding: 20px;
+}
+</style>
+
+</head>
+
+<body>
+	<header>
+		<div id="title">
+			<h3>메신저</h3>
+
+		</div>
+
+		<button type="button" class="btn btn-light btn-lg"
+			onclick="openNewChat();">+</button>
+
+	</header>
+	<div class="form-group" id="search">
+		<input type="text" class="form-control form-control-user"
+			id="searchChat" name="searchChat" aria-describedby="emailHelp"
+			placeholder="채팅방명 또는 참여 멤버로 검색하세요.">
+	</div>
+
+	<table class="table table-hover">
+		<tr th:each="list : ${list}" th:id="${list.chatroom_seq}"
+			ondblclick="openChat(id)">
+
+			<td th:text="${list.chatroom_name}">
+		</tr>
+	</table>
+
+
+</body>
+
+
+<script>
+	function openNewChat() {
+		window.open("multiRoom/newChat?domain=[[${project.prj_domain}]]",
+				"채팅방 오픈", "width=500, height=550, top=30, left=30");
+	}
+
+	function openChat(id) {
+
+		location.href = "room?roomid=" + id;
+
+	}
+</script>
+</html>
