@@ -4,6 +4,7 @@
 
 <head th:fragment="configFragment">
 
+
 <th:block th:fragment="config">
 	<meta charset="UTF-8" />
 	<!-- 공통으로 쓰이는 css파일을 넣는다.-->
@@ -11,21 +12,25 @@
 	<link rel="stylesheet"
 		href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" />
 	<style>
+
 .headerDiv {
 	border: 3px solid blueviolet;
 }
 </style>
 	<!-- 컨텐츠페이지의 CSS 영역이 들어감 -->
-	<!-- 공통으로 쓰이는 js 파일을 넣는다.-->
-	<script th:src="@{/js/jquery-3.6.0.min.js}"></script>
-	<script th:src="@{/js/sb-admin-2.js}"></script>
 
-	<!-- Bootstrap core JavaScript-->
-	<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
-	<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
 
-	<!-- Core plugin JavaScript-->
-	<script th:src="@{/vendor/jquery-easing/jquery.easing.min.js}"></script>
+<!-- 공통으로 쓰이는 js 파일을 넣는다.-->
+<script th:src="@{/js/jquery-3.6.0.min.js}"></script>
+<script th:src="@{/js/sb-admin-2.js}"></script>
+
+<!-- Bootstrap core JavaScript-->
+<script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+
+<!-- Core plugin JavaScript-->
+<script th:src="@{/vendor/jquery-easing/jquery.easing.min.js}"></script>
+
 
 	<!-- 컨텐츠페이지의 스크립트 영역이 들어감 -->
 
