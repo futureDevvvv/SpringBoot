@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Controller
 public class HomeController {
-	//123
+
 	/**
 	 * @brief 메인화면 이동
 	 * @author 윤영혜
