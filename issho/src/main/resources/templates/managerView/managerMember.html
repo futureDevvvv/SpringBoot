@@ -36,20 +36,21 @@
                                 <div>
                               
                                 <div id="dataTable_filter" class="dataTables_filter">
-                                <form id="pagingForm" method="get" th:action="@{/manager/member}">
+                                <form class="form-inline" id="pagingForm" method="get" th:action="@{/manager/member}">
                                 <input type="hidden" name="page" id="page" >
                                 
                                	<div id="listTop">
                                	
-                                <p>전체 멤버 수 : <span th:text="${navi.totalRecordsCount}"></span></p>
+                                <!-- <p>검색된 수 : <span th:text="${navi.totalRecordsCount}"></span>명</p> -->
 								
 								
-                                <label class="listTop1">Search:
-                                <input type="text" class="listTop1" name="searchWord" th:value="${searchWord}">
-                                <button class="btn btn-primary" type="button" onclick="pagingFormSubmit(1)">
+                                <label class="mr-sm-2" id="listTop1">
+                                <input type="text" id="listTop1" class="form-control mb-2 mr-sm-2" name="searchWord" th:value="${searchWord}">
+                                <button class="btn btn-primary mb-2" type="button" onclick="pagingFormSubmit(1)">
 				                     <i class="fas fa-search fa-sm"></i>
 				                   </button>
                                 </label>
+                                
                                 
                              	</div>
                              	
@@ -63,6 +64,7 @@
                                 <div class="row"><div class="col-sm-12 col-md-6">
                                 <div class="dataTables_length" id="dataTable_length">
                               
+                                </div>
                                 </div>
                                 </div>
                                 </div>
@@ -101,7 +103,7 @@
                                             <td th:text=${l.memb_mail} id="email"></td>
                                             <td th:text=${l.memb_work}></td>
                                             <td th:text=${l.memb_phone}></td>
-                                            <td><input class="btn btn-danger btn-icon-split" type="button" value="탈퇴" th:email="${l.memb_mail}"
+                                            <td><input class="btn btn-danger" type="button" value="탈퇴" th:email="${l.memb_mail}"
                                             			th:onclick="deleteMember(this.getAttribute('email'))">
                                             			</td>
                                        
@@ -113,21 +115,19 @@
                                 </div>
                                 </div>
                                 <div class="navigator">
-                                <a th:href="|javascript:pagingFormSubmit(${navi.currentPage - navi.pagePerGroup})|">◁◁</a>
-								<a th:href="|javascript:pagingFormSubmit(${navi.currentPage - 1})|">◀</a> 
+								<a class="btn btn-primary" th:href="|javascript:pagingFormSubmit(${navi.currentPage - 1})|">Previous</a> 
 
 								<span th:each="counter : ${#numbers.sequence(navi.startPageGroup, navi.endPageGroup)}"> 
 								<th:block th:if="${counter == navi.currentPage}"><b></th:block>
-								<a th:text="${counter}" th:href="|javascript:pagingFormSubmit(${counter})|"></a>&nbsp;
+								<a class="btn btn-light" th:text="${counter}" th:href="|javascript:pagingFormSubmit(${counter})|"></a>&nbsp;
 								<th:block th:if="${counter == navi.currentPage}"></b></th:block>
 								</span>
 	
-								<a th:href="|javascript:pagingFormSubmit(${navi.currentPage + 1})|">▶</a> 
-								<a th:href="|javascript:pagingFormSubmit(${navi.currentPage + navi.pagePerGroup})|">▷▷</a>
+								<a class="btn btn-primary" th:href="|javascript:pagingFormSubmit(${navi.currentPage + 1})|">Next</a> 
 								<br><br>
 								
 								</div>
-                             </div>
+                             
                              </div>
                              </div>
                              

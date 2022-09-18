@@ -11300,6 +11300,12 @@ body.sidebar-toggled footer.sticky-footer {
 .navigator{
 	text-align: center;
 }
-
+.listTop{
+	margin-left: 10px;
+	margin-top: 10px;
+}
+.listTop{
+	display :inline-block;
+}
 
 

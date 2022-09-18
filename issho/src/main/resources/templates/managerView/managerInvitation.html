@@ -32,32 +32,35 @@
 					<div class="card-header py-3">
 						<h6 class="m-0 font-weight-bold text-primary">초대 리스트</h6>
 					</div>
-						<div class="listTop">
-										<div id="dataTable_filter" class="dataTables_filter">
-											<form id="pagingForm" method="get"
+						<div class="w3-clear nextprev">
+										<div class="w3-left w3-btn">
+											<form class="form-inline" id="pagingForm" method="get"
 												th:action="@{/manager/invitation}">
 												
-												<div id="listTop" >
-												<p>전체 초대인원 수 : <span th:text="${navi.totalRecordsCount}" ></span></p>
-				
 												<input type="hidden" name="page" id="page"> 
-												<label id="listTop1" >Search:
-												<input type="text"  id="listTop1" name="searchWord" th:value="${searchWord}"> 
+												<div id="listTop" class="w3-left w3-btn">
+				
+												<label class="mr-sm-2" id="listTop1" >
+												<input class="form-control mb-2 mr-sm-2" type="text"  id="listTop1" name="searchWord" th:value="${searchWord}"> 
 			
-												<button class="btn btn-primary"  type="button" onclick="pagingFormSubmit(1)">
+												<button class="btn btn-primary mb-2" type="button" onclick="pagingFormSubmit(1)">
 				                                    <i class="fas fa-search fa-sm"></i>
 				                                </button>
 												</label>
-												
-												<!-- 초대하기 버튼 -->
-												<a class="btn btn-primary btn-icon-split" onclick="invitationOpen()" id="listTop1" >
-			                                        <span class="icon text-white-50">
+				                                </div>
+	
+												  	<!-- 초대하기 버튼 -->
+												<div class="w3-right w3-btn" style="margin-left: 830px;">
+												<a  class="btn btn-primary btn-icon-split" onclick="invitationOpen()">
+			                                        <span   class="icon text-white-50">
 			                                            <i class="fas fa-flag"></i>
 			                                        </span>
 			                                        <span class="text">초대하기</span>
 			                                    </a>
 			                                   </div>
+			                                
 											</form>
+											
 										</div>
 										</div>
 					<div class="card-body">
@@ -114,17 +117,15 @@
 								</div>
 
                                 <div class="navigator">
-                                <a th:href="|javascript:pagingFormSubmit(${navi.currentPage - navi.pagePerGroup})|">◁◁</a>
-								<a th:href="|javascript:pagingFormSubmit(${navi.currentPage - 1})|">◀</a> 
+								<a class="btn btn-primary" th:href="|javascript:pagingFormSubmit(${navi.currentPage - 1})|">Previous</a> 
 
 								<span th:each="counter : ${#numbers.sequence(navi.startPageGroup, navi.endPageGroup)}"> 
 								<th:block th:if="${counter == navi.currentPage}"><b></th:block>
-								<a th:text="${counter}" th:href="|javascript:pagingFormSubmit(${counter})|"></a>&nbsp;
+								<a class="btn btn-light" th:text="${counter}" th:href="|javascript:pagingFormSubmit(${counter})|"></a>&nbsp;
 								<th:block th:if="${counter == navi.currentPage}"></b></th:block>
 								</span>
 	
-								<a th:href="|javascript:pagingFormSubmit(${navi.currentPage + 1})|">▶</a> 
-								<a th:href="|javascript:pagingFormSubmit(${navi.currentPage + navi.pagePerGroup})|">▷▷</a>
+								<a class="btn btn-primary" th:href="|javascript:pagingFormSubmit(${navi.currentPage + 1})|">Next</a> 
 								<br><br>
 								
 								</div>

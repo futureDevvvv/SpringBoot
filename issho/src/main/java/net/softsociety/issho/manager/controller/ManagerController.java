@@ -275,9 +275,13 @@ public class ManagerController {
 		
 		members = service.getMemberInfo(email);
 		
+		String profileImg = "http://localhost:9990/issho/savedImg/" + members.getMemb_savedfile();
+		
 		model.addAttribute("members",members);
+		model.addAttribute("profileImg",profileImg);
 		
 		log.debug("멤버 정보: " + members);
+		
 		
 		
 		return "/managerView/memberInfo";
