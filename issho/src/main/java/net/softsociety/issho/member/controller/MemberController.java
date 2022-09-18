@@ -92,18 +92,19 @@ public class MemberController {
 		  members.setMemb_savedfile(savedfile); }*/
 		
 		if(upload != null && !upload.isEmpty()) {
-			try {
-				String absolutePath = new ClassPathResource(uploadPath).getFile().getAbsolutePath();
-				log.debug("absolutePath : {}", absolutePath);
-				String savedfile = FileService.saveFile(upload, absolutePath);
+		
+			/*
+			 * String absolutePath = new
+			 * ClassPathResource(uploadPath).getFile().getAbsolutePath();
+			 * log.debug("absolutePath : {}", absolutePath);
+			 */
+				log.debug("uploadPath : {}", uploadPath);
+				String savedfile = FileService.saveFile(upload, uploadPath);
 				members.setMemb_ogfile(upload.getOriginalFilename());
 				members.setMemb_savedfile(savedfile);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
 		
+		}		
+	
 	
 		log.debug("업로드 처리후 : {}", members);
 
