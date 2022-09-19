@@ -98,7 +98,7 @@
                                     <tbody>
                                     <tr class="odd" th:each="l:${list}" >
                                     <td class="sorting_1">
-                                    		<a th:text=${l.memb_name} th:infoEmail="${l.memb_mail}" th:onclick="memberInfoOpen(this.getAttribute('infoEmail'))"></a></td>
+                                    		<a th:text=${l.memb_name} th:id="newTask" data-toggle="modal" th:infoEmail="${l.memb_mail}" th:onclick="memberInfoOpen(this.getAttribute('infoEmail'))" data-target="exampleModal"></a></td>
                                             <td th:text=${l.rolename}></td>
                                             <td th:text=${l.memb_mail} id="email"></td>
                                             <td th:text=${l.memb_work}></td>
@@ -106,11 +106,11 @@
                                             <td><input class="btn btn-danger" type="button" value="탈퇴" th:email="${l.memb_mail}"
                                             			th:onclick="deleteMember(this.getAttribute('email'))">
                                             			</td>
-                                       
+                                       <!--  th:infoEmail="${l.memb_mail}" th:onclick="memberInfoOpen(this.getAttribute('infoEmail'))"  -->
                                         </tr>
                                         </tbody>
-                                      
                                 </table>
+                                
                                 </form>
                                 </div>
                                 </div>
@@ -138,6 +138,30 @@
 			<!-- footer 끝 -->
 		</div>
 	</div>
+
+<!-- 태스크 추가 modal -->
+         <div class="modal fade" id="exampleModal" tabindex="-1"
+            aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-ml">
+               <div class="modal-content">
+                  <div class="modal-header">
+                     <h5 class="modal-title fw-bold mb-0" id="exampleModalLabel">멤버 정보</h5>
+                     
+                  </div>
+				 <div class="modal-body p-5 pt-0">
+                      
+                  
+                  </div>
+                  <div class="modal-footer">
+                     <button type="button" id="closeNewTask" class="btn btn-secondary"
+                        data-bs-dismiss="modal">확인</button>
+
+                  </div>
+               </div>
+            </div>
+         </div>
+
+
 
 <script>
 
@@ -168,6 +192,21 @@ function memberInfoOpen(Memail){
 		'left=400,top=200,width=500,height=900,menubar=no');
 		
 }
+
+
+//새로운 태스크 모달창 제어
+$("#newTask").click(function(e) {
+   e.preventDefault();
+   $("#exampleModal").modal("show");
+});
+
+$("#closeNewTask").click(function(e) {
+   e.preventDefault();
+   $("#exampleModal").modal("hide");
+})
+
+
+
 </script>
 
 </body>
