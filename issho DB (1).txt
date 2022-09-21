@@ -1,0 +1,546 @@
+DROP TABLE members;
+DROP TABLE projects;
+DROP TABLE projectmember;
+DROP TABLE task;
+DROP TABLE mention;
+DROP TABLE taskreply;
+DROP TABLE taskfile;
+DROP TABLE clist;
+DROP TABLE chkcontent;
+DROP TABLE taskstaff;
+DROP TABLE taglist;
+DROP TABLE hashconnect;
+DROP TABLE plan;
+DROP TABLE attendant;
+DROP TABLE chatroom;
+DROP TABLE chatmsg;
+DROP TABLE helper;
+DROP TABLE invitation;
+DROP TABLE driveFile;
+DROP TABLE notice;
+DROP TABLE driveFolder;
+DROP TABLE noticeComment;
+DROP TABLE bookmark;
+DROP TABLE noticeFile;
+DROP SEQUENCE task_seq;
+DROP SEQUENCE ment_seq;
+DROP SEQUENCE tfile_seq;
+DROP SEQUENCE treply_seq;
+DROP SEQUENCE chklist_seq;
+DROP SEQUENCE chkcont_seq;
+DROP SEQUENCE plan_seq;
+DROP SEQUENCE chatroom_seq;
+DROP SEQUENCE chatmsg_seq;
+DROP SEQUENCE membInv_seq;
+DROP SEQUENCE notice_seq;
+DROP SEQUENCE driveFile_seq;
+DROP SEQUENCE noticeCmt_seq;
+DROP SEQUENCE driveFolder_seq;
+DROP SEQUENCE noticeFile_seq;
+DROP SEQUENCE Bookmark_seq;
+
+
+CREATE SEQUENCE task_seq;
+CREATE SEQUENCE ment_seq;
+CREATE SEQUENCE tfile_seq;
+CREATE SEQUENCE treply_seq;
+CREATE SEQUENCE chklist_seq;
+CREATE SEQUENCE chkcont_seq;
+CREATE SEQUENCE plan_seq;
+CREATE SEQUENCE chatroom_seq;
+CREATE SEQUENCE chatmsg_seq;
+CREATE SEQUENCE membInv_seq;
+CREATE SEQUENCE notice_seq;
+CREATE SEQUENCE driveFile_seq;
+CREATE SEQUENCE noticeCmt_seq;
+CREATE SEQUENCE driveFolder_seq;
+CREATE SEQUENCE noticeFile_seq;
+CREATE SEQUENCE Bookmark_seq;
+
+CREATE TABLE members (
+	memb_mail	VARCHAR2(70)		NOT NULL,
+	memb_name	VARCHAR2(50)		NOT NULL,
+	memb_pwd	VARCHAR2(200)		NOT NULL,
+	memb_ogFile	VARCHAR2(1000)		NULL,
+	memb_savedFile	VARCHAR2(1000)		NULL,
+	memb_work	VARCHAR2(1000)		NULL,
+	memb_phone	VARCHAR2(100)		NOT NULL,
+	enabled	NUMBER	DEFAULT 0	NULL
+);
+
+CREATE TABLE projects (
+	prj_domain	VARCHAR2(10)		NOT NULL,
+	prj_name	VARCHAR2(20)		NOT NULL,
+	prj_date	DATE	DEFAULT SYSDATE	NULL,
+	prj_enabled	NUMBER	DEFAULT 1	NULL
+);
+
+
+CREATE TABLE projectmember (
+	prj_domain	VARCHAR2(10)		NOT NULL,
+	memb_mail	VARCHAR2(70)		NOT NULL,
+	pjmb_right	    VARCHAR2(10)	    DEFAULT 'member' NOT NULL 
+);
+
+
+CREATE TABLE task (
+	task_seq	NUMBER		NOT NULL,
+	prj_domain	VARCHAR2(10)		NOT NULL,
+	task_name	VARCHAR2(100)		NOT NULL,
+	task_content	VARCHAR2(3000)		NULL,
+	task_sender	VARCHAR2(70)		NOT NULL,
+	task_rank	NUMBER	DEFAULT 0	NULL,
+	task_state	NUMBER	DEFAULT 0	NULL,
+	task_inputDate	DATE	DEFAULT SYSDATE	NULL,
+	task_startDate	DATE		NULL,
+	task_endDate	DATE		NULL,
+	exp_startDate	DATE		NULL,
+	exp_endDate	DATE		NULL,
+	ptask_num	NUMBER		NULL
+);
+
+CREATE TABLE mention (
+	ment_seq	NUMBER		NOT NULL,
+	treply_seq	NUMBER		NOT NULL,
+	ment_sender	VARCHAR2(70)		NOT NULL
+);
+
+CREATE TABLE taskreply (
+	treply_seq	NUMBER		NOT NULL,
+	task_seq	NUMBER		NOT NULL,
+	treply_writer	VARCHAR2(70)		NOT NULL,
+	treply_content	VARCHAR2(3000)		NULL,
+	treply_ogFile	VARCHAR2(1000)		NULL,
+	treply_saveFile	VARCHAR2(1000)		NULL
+);
+
+CREATE TABLE taskfile (
+	tfile_seq	NUMBER		NOT NULL,
+	task_seq	NUMBER		NOT NULL,
+	tfile_ogFile	VARCHAR2(1000)		NULL,
+	tfile_saveFile	VARCHAR2(1000)		NULL
+);
+
+CREATE TABLE clist (
+	chklist_seq	NUMBER		NOT NULL,
+	task_seq	NUMBER		NOT NULL,
+	chklist_name	VARCHAR2(100)		NULL
+);
+
+CREATE TABLE chkcontent (
+	chkcont_seq	NUMBER		NOT NULL,
+	chklist_seq	NUMBER		NOT NULL,
+	chkcont_cont	VARCHAR2(300)		NOT NULL,
+	chkcont_state	NUMBER	DEFAULT 0	NULL,
+	chkcont_performer	VARCHAR2(70)		NULL
+);
+
+CREATE TABLE taskstaff (
+	task_seq	NUMBER		NOT NULL,
+	memb_mail	VARCHAR2(70)		NOT NULL,
+	tsuper_perform	NUMBER		NULL
+);
+
+CREATE TABLE taglist (
+	hlist_name	VARCHAR2(10)		NOT NULL
+);
+
+CREATE TABLE hashconnect (
+	task_seq	NUMBER		NOT NULL,
+	hlist_name	VARCHAR2(10)		NOT NULL
+);
+
+CREATE TABLE plan (
+	plan_seq	NUMBER		NOT NULL,
+	plan_name	VARCHAR2(100)		NOT NULL,
+	plan_startDate	DATE		NULL,
+	plan_endDate	DATE		NULL,
+	plan_place	VARCHAR2(100)		NULL,
+	plan_priority	NUMBER	DEFAULT 0	NULL,
+	plan_content	VARCHAR2(3000)		NOT NULL
+);
+
+CREATE TABLE attendant (
+	plan_seq	NUMBER		NOT NULL,
+	memb_mail	VARCHAR2(70)		NOT NULL,
+	att_whether	NUMBER	DEFAULT 0	NULL
+);
+
+CREATE TABLE chatroom (
+	chatroom_seq	NUMBER		NOT NULL,
+	chatroom_name	VARCHAR2(100)		NOT NULL
+);
+
+CREATE TABLE chatmsg (
+	chatroom_seq	NUMBER		NOT NULL,
+	chatmsg_seq	NUMBER		NULL,
+	chatmsg_recipient	VARCHAR2(70)		NULL,
+	chatmsg_sendDate	TIMESTAMP		NULL,
+	chatmsg_content	VARCHAR2(1000)		NULL
+);
+
+CREATE TABLE helper (
+	task_seq	NUMBER		NOT NULL,
+	memb_mail	VARCHAR2(70)		NOT NULL
+);
+
+CREATE TABLE invitation (
+	membInv_seq	NUMBER		NOT NULL,
+	prj_domain	VARCHAR2(10)		NOT NULL,
+	membInv_recipient VARCHAR2(70)		NOT NULL,
+	membInv_accept	NUMBER	DEFAULT 0 NULL
+);
+
+CREATE TABLE driveFile (
+	driveFile_seq	NUMBER		NOT NULL,
+	driveFolder_seq2	NUMBER		NOT NULL,
+	driveFile_ogFile	VARCHAR2(1000)		NULL,
+	driveFile_saveFile	VARCHAR2(1000)		NULL,
+	driveFolder_seq	NUMBER		NOT NULL,
+	driveFile_writer	VARCHAR2(70)		NOT NULL,
+	driveFile_type	VARCHAR2(10)		NOT NULL,
+	driveFile_date	DATE		NULL
+);
+
+CREATE TABLE notice (
+	notice_seq	NUMBER		NOT NULL,
+	prj_domain	VARCHAR2(10)		NOT NULL,
+	notice_name	VARCHAR2(100)		NOT NULL,
+	notice_writer	VARCHAR2(70)		NOT NULL,
+	notice_contents	VARCHAR2(3000)		NOT NULL,
+	notice_ogFilr	VARCHAR2(1000)		NULL,
+	notice_saveFile	VARCHAR2(1000)		NULL,
+	notice_date	DATE		NULL,
+	notice_hits 	NUMBER	DEFAULT 0 NULL
+);
+
+CREATE TABLE driveFolder (
+	driveFolder_seq	NUMBER		NOT NULL,
+	prj_domain	VARCHAR2(10)		NOT NULL,
+	driveFolder_name	VARCHAR2(30) NOT NULL,
+	driveFolder_writer	VARCHAR2(70)		NOT NULL,
+	driveFolder_date	DATE DEFAULT sysdate	NULL
+);
+
+CREATE TABLE noticeComment (
+	noticeCmt_seq	NUMBER		NOT NULL,
+	notice_seq	NUMBER		NOT NULL,
+	noticeCmt_writer	VARCHAR2(70)		NOT NULL,
+	noticeCmt_contents	VARCHAR2(3000)		NOT NULL,
+	noticeCmt_date	DATE DEFAULT sysdate	NULL
+);
+
+CREATE TABLE bookmark (
+	Bookmark_seq	NUMBER		NOT NULL,
+	task_seq	NUMBER		NOT NULL,
+	memb_mail	VARCHAR2(70)		NOT NULL
+);
+
+CREATE TABLE noticeFile (
+	noticeFile_seq	NUMBER		NOT NULL,
+	notice_seq	NUMBER		NOT NULL,
+	noticeFile_ogFile	VARCHAR2(1000)		NULL,
+	noticeFile_saveFile	VARCHAR2(1000)		NULL
+);
+
+ALTER TABLE members ADD CONSTRAINT PK_MEMBERS PRIMARY KEY (
+	memb_mail
+);
+
+ALTER TABLE projects ADD CONSTRAINT PK_PROJECTS PRIMARY KEY (
+	prj_domain
+);
+
+ALTER TABLE task ADD CONSTRAINT PK_TASK PRIMARY KEY (
+	task_seq
+);
+
+ALTER TABLE mention ADD CONSTRAINT PK_MENTION PRIMARY KEY (
+	ment_seq
+);
+
+ALTER TABLE taskreply ADD CONSTRAINT PK_TASKREPLY PRIMARY KEY (
+	treply_seq
+);
+
+ALTER TABLE taskfile ADD CONSTRAINT PK_TASKFILE PRIMARY KEY (
+	tfile_seq
+);
+
+ALTER TABLE clist ADD CONSTRAINT PK_CLIST PRIMARY KEY (
+	chklist_seq
+);
+
+ALTER TABLE chkcontent ADD CONSTRAINT PK_CHKCONTENT PRIMARY KEY (
+	chkcont_seq
+);
+
+ALTER TABLE taglist ADD CONSTRAINT PK_TAGLIST PRIMARY KEY (
+	hlist_name
+);
+
+ALTER TABLE plan ADD CONSTRAINT PK_PLAN PRIMARY KEY (
+	plan_seq
+);
+
+ALTER TABLE chatroom ADD CONSTRAINT PK_CHATROOM PRIMARY KEY (
+	chatroom_seq
+);
+
+ALTER TABLE invitation ADD CONSTRAINT PK_INVITATION PRIMARY KEY (
+	membInv_seq
+);
+
+ALTER TABLE driveFile ADD CONSTRAINT PK_DRIVEFILE PRIMARY KEY (
+	driveFile_seq
+);
+
+ALTER TABLE notice ADD CONSTRAINT PK_NOTICE PRIMARY KEY (
+	notice_seq
+);
+
+ALTER TABLE driveFolder ADD CONSTRAINT PK_DRIVEFOLDER PRIMARY KEY (
+	driveFolder_seq
+);
+
+ALTER TABLE noticeComment ADD CONSTRAINT PK_NOTICECOMMENT PRIMARY KEY (
+	noticeCmt_seq
+);
+
+ALTER TABLE bookmark ADD CONSTRAINT PK_BOOKMARK PRIMARY KEY (
+	Bookmark_seq
+);
+
+ALTER TABLE noticeFile ADD CONSTRAINT PK_NOTICEFILE PRIMARY KEY (
+	noticeFile_seq
+);
+
+ALTER TABLE projectmember ADD CONSTRAINT FK_projects_TO_projectmember_1 FOREIGN KEY (
+	prj_domain
+)
+REFERENCES projects (
+	prj_domain
+);
+
+ALTER TABLE projectmember ADD CONSTRAINT FK_members_TO_projectmember_1 FOREIGN KEY (
+	memb_mail
+)
+REFERENCES members (
+	memb_mail
+);
+
+ALTER TABLE task ADD CONSTRAINT FK_projects_TO_task_1 FOREIGN KEY (
+	prj_domain
+)
+REFERENCES projects (
+	prj_domain
+);
+
+ALTER TABLE mention ADD CONSTRAINT FK_taskreply_TO_mention_1 FOREIGN KEY (
+	treply_seq
+)
+REFERENCES taskreply (
+	treply_seq
+);
+
+ALTER TABLE taskreply ADD CONSTRAINT FK_task_TO_taskreply_1 FOREIGN KEY (
+	task_seq
+)
+REFERENCES task (
+	task_seq
+);
+
+ALTER TABLE taskfile ADD CONSTRAINT FK_task_TO_taskfile_1 FOREIGN KEY (
+	task_seq
+)
+REFERENCES task (
+	task_seq
+);
+
+ALTER TABLE clist ADD CONSTRAINT FK_task_TO_clist_1 FOREIGN KEY (
+	task_seq
+)
+REFERENCES task (
+	task_seq
+);
+
+ALTER TABLE chkcontent ADD CONSTRAINT FK_clist_TO_chkcontent_1 FOREIGN KEY (
+	chklist_seq
+)
+REFERENCES clist (
+	chklist_seq
+);
+
+ALTER TABLE taskstaff ADD CONSTRAINT FK_task_TO_taskstaff_1 FOREIGN KEY (
+	task_seq
+)
+REFERENCES task (
+	task_seq
+);
+
+ALTER TABLE taskstaff ADD CONSTRAINT FK_members_TO_taskstaff_1 FOREIGN KEY (
+	memb_mail
+)
+REFERENCES members (
+	memb_mail
+);
+
+ALTER TABLE hashconnect ADD CONSTRAINT FK_task_TO_hashconnect_1 FOREIGN KEY (
+	task_seq
+)
+REFERENCES task (
+	task_seq
+);
+
+ALTER TABLE hashconnect ADD CONSTRAINT FK_taglist_TO_hashconnect_1 FOREIGN KEY (
+	hlist_name
+)
+REFERENCES taglist (
+	hlist_name
+);
+
+ALTER TABLE attendant ADD CONSTRAINT FK_plan_TO_attendant_1 FOREIGN KEY (
+	plan_seq
+)
+REFERENCES plan (
+	plan_seq
+);
+
+ALTER TABLE attendant ADD CONSTRAINT FK_members_TO_attendant_1 FOREIGN KEY (
+	memb_mail
+)
+REFERENCES members (
+	memb_mail
+);
+
+ALTER TABLE chatmsg ADD CONSTRAINT FK_chatroom_TO_chatmsg_1 FOREIGN KEY (
+	chatroom_seq
+)
+REFERENCES chatroom (
+	chatroom_seq
+);
+
+ALTER TABLE helper ADD CONSTRAINT FK_task_TO_helper_1 FOREIGN KEY (
+	task_seq
+)
+REFERENCES task (
+	task_seq
+);
+
+ALTER TABLE helper ADD CONSTRAINT FK_members_TO_helper_1 FOREIGN KEY (
+	memb_mail
+)
+REFERENCES members (
+	memb_mail
+);
+
+ALTER TABLE invitation ADD CONSTRAINT FK_projects_TO_invitation_1 FOREIGN KEY (
+	prj_domain
+)
+REFERENCES projects (
+	prj_domain
+);
+
+ALTER TABLE driveFile ADD CONSTRAINT FK_driveFolder_TO_driveFile_1 FOREIGN KEY (
+	driveFolder_seq2
+)
+REFERENCES driveFolder (
+	driveFolder_seq
+);
+
+ALTER TABLE notice ADD CONSTRAINT FK_projects_TO_notice_1 FOREIGN KEY (
+	prj_domain
+)
+REFERENCES projects (
+	prj_domain
+);
+
+ALTER TABLE driveFolder ADD CONSTRAINT FK_projects_TO_driveFolder_1 FOREIGN KEY (
+	prj_domain
+)
+REFERENCES projects (
+	prj_domain
+);
+
+ALTER TABLE noticeComment ADD CONSTRAINT FK_notice_TO_noticeComment_1 FOREIGN KEY (
+	notice_seq
+)
+REFERENCES notice (
+	notice_seq
+);
+
+ALTER TABLE bookmark ADD CONSTRAINT FK_task_TO_bookmark_1 FOREIGN KEY (
+	task_seq
+)
+REFERENCES task (
+	task_seq
+);
+
+ALTER TABLE noticeFile ADD CONSTRAINT FK_notice_TO_noticeFile_1 FOREIGN KEY (
+	notice_seq
+)
+REFERENCES notice (
+	notice_seq
+);
+
+------------------------------------------------------------------------------------------------------------------------------------
+
+INSERT INTO members (memb_mail, memb_name, memb_pwd, memb_ogFile,  memb_savedFile, memb_work, memb_phone, enabled)
+VALUES ('aaa@aaa.com', '김1', '1111', '강아지1.jpg', 'scit42.jpg', 'DB관리', '010-111-1111', 0);
+
+INSERT INTO members (memb_mail, memb_name, memb_pwd, memb_ogFile,  memb_savedFile, memb_work, memb_phone, enabled)
+VALUES ('bbb@bbb.com', '김2', '2222', '강아지2.jpg', 'scit42.jpg', 'DB관리', '010-222-2222', 0 );
+
+INSERT INTO members (memb_mail, memb_name, memb_pwd, memb_ogFile,  memb_savedFile, memb_work, memb_phone, enabled)
+VALUES ('ccc@ccc.com', '김3', '3333', '강아지3.jpg', 'scit42.jpg', 'DB관리', '010-333-3333', 0 );
+
+INSERT INTO members (memb_mail, memb_name, memb_pwd, memb_ogFile,  memb_savedFile, memb_work, memb_phone, enabled)
+VALUES ('ddd@ddd.com', '김4', '4444', '강아지4.jpg', 'scit42.jpg', 'DB관리', '010-444-4444', 0);
+
+INSERT INTO members (memb_mail, memb_name, memb_pwd, memb_ogFile,  memb_savedFile, memb_work, memb_phone, enabled)
+VALUES ('eee@eee.com', '김5', '5555', '강아지5.jpg', 'scit42.jpg', 'DB관리', '010-555-5555', 0 );
+
+INSERT INTO members (memb_mail, memb_name, memb_pwd, memb_ogFile,  memb_savedFile, memb_work, memb_phone, enabled)
+VALUES ('fff@fff.com', '김6', '6666', '강아지6.jpg', 'scit42.jpg', 'DB관리', '010-666-6666', 0 );
+
+INSERT INTO members (memb_mail, memb_name, memb_pwd, memb_ogFile,  memb_savedFile, memb_work, memb_phone, enabled)
+VALUES ('ggg@ggg.com', '김7', '7777', '강아지7.jpg', 'scit42.jpg', 'DB관리', '010-777-7777', 0 );
+
+INSERT INTO members (memb_mail, memb_name, memb_pwd, memb_ogFile,  memb_savedFile, memb_work, memb_phone, enabled)
+VALUES ('hhh@hhh.com', '김8', '8888', '강아지8.jpg', 'scit42.jpg', 'DB관리', '010-888-8888', 0 );
+
+INSERT INTO members (memb_mail, memb_name, memb_pwd, memb_ogFile,  memb_savedFile, memb_work, memb_phone, enabled)
+VALUES ('iii@iii.com', '김9', '9999', '강아지9.jpg', 'scit42.jpg', 'DB관리', '010-999-9999', 0 );
+
+INSERT INTO members (memb_mail, memb_name, memb_pwd, memb_ogFile,  memb_savedFile, memb_work, memb_phone, enabled)
+VALUES ('jjj@jjj.com', '김0', '0000', '강아지0.jpg', 'scit42.jpg', 'DB관리', '010-000-0000', 0 );
+
+INSERT INTO projects (prj_domain, prj_name, prj_enabled) 
+VALUES ('scit41','홍1',0);
+
+INSERT INTO projects (prj_domain, prj_name,  prj_enabled) 
+VALUES ('scit42','홍2',0);
+
+INSERT INTO projects (prj_domain, prj_name,  prj_enabled) 
+VALUES ('scit43','홍3',0);
+
+INSERT INTO projects (prj_domain, prj_name,  prj_enabled) 
+VALUES ('scit44','홍4',0);
+
+INSERT INTO projects (prj_domain, prj_name,  prj_enabled) 
+VALUES ('scit45','홍5',0);
+
+INSERT INTO projects (prj_domain, prj_name,  prj_enabled) 
+VALUES ('scit46','홍6',1);
+
+INSERT INTO projects (prj_domain, prj_name,  prj_enabled) 
+VALUES ('scit47','홍7',1);
+
+INSERT INTO projects (prj_domain, prj_name,  prj_enabled) 
+VALUES ('scit48','홍8',1);
+
+INSERT INTO projects (prj_domain, prj_name,  prj_enabled) 
+VALUES ('scit49','홍9',1);
+
+INSERT INTO projects (prj_domain, prj_name,  prj_enabled) 
+VALUES ('scit50','홍0',1);

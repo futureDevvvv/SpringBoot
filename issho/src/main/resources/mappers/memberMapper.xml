@@ -4,6 +4,26 @@
 
 <mapper namespace="net.softsociety.issho.member.dao.MemberDAO">
 
+	<!-- 멤버 목록 -->
+	<select id="listMembers" parameterType="Map" resultType="Members">
+	select
+		memb_mail
+		,memb_name
+		,memb_ogFile
+		,memb_savedFile
+		,memb_work
+		,memb_phone
+		,rolename
+	from members
+	<where>
+	<if test="searchWord != null">
+		memb_name like '%' || #{searchWord} || '%'	
+	</if>
+	</where>
+	order by 
+		1 desc
+	</select>
+
 	<!-- 멤버 검색 -->
 	<select id="idSearchOne" parameterType="String" resultType="int">
 		SELECT COUNT(*)
