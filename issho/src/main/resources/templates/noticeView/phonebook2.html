@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>issho -  맴버 주소록</title>
+
+  <!-- Custom fonts for this template-->
+  <link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link
+    href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+    rel="stylesheet">
+
+  <!-- Custom styles for this template-->
+  <link href="/css/sb-admin-2.min.css" rel="stylesheet">
+
+</head>
+<body>
+
+<script>
+// 페이지 이동 스크립트  
+function pagingFormSubmit(currentPage) {
+	var form = document.getElementById('pagingForm');
+	var page = document.getElementById('page');
+	page.value = currentPage;
+	form.submit();
+}
+</script>
+
+	<div id="wrapper">
+		<!-- content 시작 -->
+		<th:block th:replace="fragments/sidebar :: sidebar"></th:block>
+		<!-- content 끝 -->
+
+		<div id="content-wrapper" class="d-flex flex-column">
+			<!-- header 시작 -->
+			<th:block th:replace="fragments/header :: navFragment"></th:block>
+<!--			
+			<div class="text-center">
+				<h2>프로젝트 멤버 주소록</h2>
+			</div>
+-->
+			<!-- header 끝 -->
+			
+			<!-- [SHHONG] 표 시작 -->
+			<div class="container-fluid bg-white">
+						
+				<h2>멤버 주소록</h2>
+				<p>The .table-bordered class adds border on all sides of the table and cells:</p>            
+	
+				<!-- 검색폼 -->
+				<form id="pagingForm" method="get" th:action="@{/member/memberList}">
+<!--					<table class="table table-bordered table-hover table-condensed" > -->
+					<table class="table table-condensed" >
+						<tr>
+							<input type="hidden" name="page" id="page" />
+							<td style="text-align:left;" class="col-sm-1">
+								<select id="type" name="type">
+									<option value="prj_name" th:selected="${type} == 'prj_name'">이름</option>
+									<option value="prj_manager" th:selected="${type} == 'prj_manager'">이메일</option>
+									<option value="prj_name" th:selected="${type} == 'prj_name'">담당업무</option>
+								</select>
+							</td>
+							<td style="text-align:left;" class="col-sm-6">
+								<input type="text" name="searchWord" th:value="${searchWord}">
+								<input type="button" onclick="pagingFormSubmit(1)" value="검색">
+							</td>
+						</tr>
+					</table>
+				</form>			
+
+				<table class="table-bordered table-hover table-condensed bg-white" width="100%">
+					<thead class="text-center " style="background-color: rgb(217, 217, 217)">
+						<tr height="50px">
+						    <th class="col-lg-1">No</th>
+						    <th class="col-lg-1">이름</th>
+						    <th class="col-lg-2">이메일</th>
+						    <th class="col-lg-3">담당업무</th>
+						    <th class="col-lg-1">연락처</th>
+						    <th class="col-lg-1">구분</th>
+						    <th class="col-lg-1">활성화</th>
+						</tr>
+					</thead>
+		<th:block th:if="${memberList}">
+		  	<tbody class="text-center">
+				<tr>
+					<td class="text-info" colspan=7 height="100px"><h3>멤버가 없습니다.</h3></td>
+			</tbody>
+		</th:block>
+		
+		<th:block th:unless="${memberList}">
+				  	<tbody class="text-center">
+						<tr height="40px">
+						    <td class="col-lg-1">1</td>
+						    <td class="col-lg-1">홍길동</td>
+						    <td class="col-lg-2">srhong@naver.com</td>
+						    <td class="col-lg-3">프로젝트 개발 PM</td>
+						    <td class="col-lg-2">011-1111-1111</td>
+						    <td class="col-lg-1">PM</td>
+						    <td class="col-lg-1">Y</td>
+						</tr>
+						<tr height="40px">
+						    <td class="col-lg-1">1</td>
+						    <td class="col-lg-1">홍길동</td>
+						    <td class="col-lg-2">srhong@naver.com</td>
+						    <td class="col-lg-3">프로젝트 개발 PM</td>
+						    <td class="col-lg-2">011-1111-1111</td>
+						    <td class="col-lg-1">PM</td>
+						    <td class="col-lg-1">Y</td>
+						</tr>
+						<tr height="40px">
+						    <td class="col-lg-1">1</td>
+						    <td class="col-lg-1">홍길동</td>
+						    <td class="col-lg-2">srhong@naver.com</td>
+						    <td class="col-lg-3">프로젝트 개발 PM</td>
+						    <td class="col-lg-2">011-1111-1111</td>
+						    <td class="col-lg-1">PM</td>
+						    <td class="col-lg-1">Y</td>
+						</tr>
+						<tr height="40px">
+						    <td class="col-lg-1">1</td>
+						    <td class="col-lg-1">홍길동</td>
+						    <td class="col-lg-2">srhong@naver.com</td>
+						    <td class="col-lg-3">프로젝트 개발 PM</td>
+						    <td class="col-lg-2">011-1111-1111</td>
+						    <td class="col-lg-1">PM</td>
+						    <td class="col-lg-1">Y</td>
+						</tr>
+						<tr height="40px">
+						    <td class="col-lg-1">1</td>
+						    <td class="col-lg-1">홍길동</td>
+						    <td class="col-lg-2">srhong@naver.com</td>
+						    <td class="col-lg-3">프로젝트 개발 PM</td>
+						    <td class="col-lg-2">011-1111-1111</td>
+						    <td class="col-lg-1">PM</td>
+						    <td class="col-lg-1">Y</td>
+						</tr>
+						<tr height="40px">
+						    <td class="col-lg-1">1</td>
+						    <td class="col-lg-1">홍길동</td>
+						    <td class="col-lg-2">srhong@naver.com</td>
+						    <td class="col-lg-3">프로젝트 개발 PM</td>
+						    <td class="col-lg-2">011-1111-1111</td>
+						    <td class="col-lg-1">PM</td>
+						    <td class="col-lg-1">Y</td>
+						</tr>
+						<tr height="40px">
+						    <td class="col-lg-1">1</td>
+						    <td class="col-lg-1">홍길동</td>
+						    <td class="col-lg-2">srhong@naver.com</td>
+						    <td class="col-lg-3">프로젝트 개발 PM</td>
+						    <td class="col-lg-2">011-1111-1111</td>
+						    <td class="col-lg-1">PM</td>
+						    <td class="col-lg-1">Y</td>
+						</tr>
+				 	</tbody>
+		</th:block>
+				 </table>
+			</div>
+			<!-- [SHHONG] 표 끝 -->
+
+			<table class="table table-bordered table-hover table-condensed" width="80%">
+				<tr>
+					<td style="text-align:center;">
+			
+						<!-- nav 시작 -->
+			        	<nav aria-label="...">
+							<ul class="pagination" style="justify-content: center; text-align: center;">		 
+								<li class="page-item disabled">
+									<span class="page-link">이전</span>
+								</li>
+								<li class="page-item">
+									<a class="page-link" href="#">1</a>
+								</li>
+								<li class="page-item active">
+									<span class="page-link">2
+									<span class="sr-only">(current)</span>
+									</span>
+								</li>
+								<li class="page-item">
+									<a class="page-link" href="#">3</a>
+								</li>							
+								<li class="page-item">
+									<a class="page-link" href="#">이후</a>
+								</li>
+						 </ul>
+						</nav>
+					</td>
+				</tr>
+			</table>
+			
+			
+			<!-- nav 끝 -->
+					
+			<!-- footer 시작 -->
+			<th:block th:replace="fragments/footer :: footerFragment"></th:block>
+			<!-- footer 끝 -->
+		</div>
+	</div>
+	
+  <!-- Bootstrap core JavaScript-->
+  <script src="/vendor/jquery/jquery.min.js"></script>
+  <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Core plugin JavaScript-->
+  <script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+  <!-- Custom scripts for all pages-->
+  <script src="/js/sb-admin-2.min.js"></script>
+
+  <!-- Page level plugins -->
+  <script src="/vendor/chart.js/Chart.min.js"></script>
+
+  <!-- Page level custom scripts -->
+  <script src="/js/demo/chart-area-demo.js"></script>
+  <script src="/js/demo/chart-pie-demo.js"></script>
+
+
+</body>
+</html>
