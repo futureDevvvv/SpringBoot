@@ -57,7 +57,9 @@ dependencies {
 
 	testImplementation 'org.springframework.security:spring-security-test'
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
-
+	
+	//신승훈
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.4'
 }
 
 tasks.named('test') {
