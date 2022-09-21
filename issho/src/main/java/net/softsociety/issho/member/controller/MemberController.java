@@ -1,14 +1,21 @@
 package net.softsociety.issho.member.controller;
 
+
+import java.util.ArrayList;
+
+
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+
 
 import javax.servlet.ServletContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,17 +30,19 @@ import net.softsociety.issho.manager.service.ManagerService;
 import net.softsociety.issho.manager.util.PageNavigator;
 import net.softsociety.issho.member.domain.Members;
 import net.softsociety.issho.member.service.MemberService;
+import net.softsociety.issho.notice.domain.NoticeDetail;
 import net.softsociety.issho.util.FileService;
+import net.softsociety.issho.util.PageNavigator;
 
 @lombok.extern.slf4j.Slf4j
-@Controller
-@RequestMapping("/member")
 /**
  * @brief 멤버 관련 컨트롤러 : 회원가입
  * @author 윤영혜
  *
  */
 
+@Controller
+@RequestMapping("/member")
 public class MemberController {
 
 	@Autowired
@@ -92,18 +101,19 @@ public class MemberController {
 		  members.setMemb_savedfile(savedfile); }*/
 		
 		if(upload != null && !upload.isEmpty()) {
-			try {
-				String absolutePath = new ClassPathResource(uploadPath).getFile().getAbsolutePath();
-				log.debug("absolutePath : {}", absolutePath);
-				String savedfile = FileService.saveFile(upload, absolutePath);
+		
+			/*
+			 * String absolutePath = new
+			 * ClassPathResource(uploadPath).getFile().getAbsolutePath();
+			 * log.debug("absolutePath : {}", absolutePath);
+			 */
+				log.debug("uploadPath : {}", uploadPath);
+				String savedfile = FileService.saveFile(upload, uploadPath);
 				members.setMemb_ogfile(upload.getOriginalFilename());
 				members.setMemb_savedfile(savedfile);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
 		
+		}		
+	
 	
 		log.debug("업로드 처리후 : {}", members);
 
@@ -141,6 +151,7 @@ public class MemberController {
 	public String loginForm() {
 		return "member/member_login";
 	}
+
 	
 	
 	/**

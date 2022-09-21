@@ -18,7 +18,7 @@ public class WebSecurityConfig {
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http.csrf().disable().authorizeRequests()
-				.antMatchers("/", "/member/join", "/member/idCheck", "/img/**", "/css/**", "/js/**", "/vendor/**", "/domainCheck")
+				.antMatchers("/", "/member/join", "/member/idCheck", "/img/**", "/css/**", "/js/**", "/vendor/**", "/domainCheck", "/savedImg/**")
 				.permitAll()
 				.antMatchers("/project/**").hasAnyAuthority("ROLE_USER", "PM")
 				/*
@@ -38,4 +38,6 @@ public class WebSecurityConfig {
 	public PasswordEncoder passwordEncoder() {
 		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
 	}
+	
+	
 }

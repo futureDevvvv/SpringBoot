@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lagn="ko" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head th:replace="fragments/config :: configFragment">
+<meta charset="UTF-8">
+<title>issho - 공지사항</title>
+
+</head>
+<body>
+<!-- 홍상혁 : 페이징을 위한 자바 스크립트-->
+<script>
+
+//공지사항 삭제
+function deleteNotice(notice_seq) {
+	location.href = 'deleteNotice?notice_seq=' + notice_seq;
+	return false;
+}
+
+function writeORupdate() {
+	let mode = $('#submitComment').val();
+	alert(mode);
+	if(mode =='수정')
+		return updateComment();
+	else 
+		return writeComment();		
+}
+
+function writeComment() {
+
+	let noticeCmt_contents = $('#noticeCmt_contents').val();
+	let notice_seq = $('#notice_seq').val();
+	
+	if (noticeCmt_contents < 5 || noticeCmt_contents > 1000) {
+		alert('댓글을 5자 이상 1,000자 이하로 내용을 입력하세요.');
+		return false;
+	}
+	
+	$.ajax({
+		url: 'writeComment',
+		type: 'post',
+		data: { notice_seq: notice_seq, noticeCmt_contents: noticeCmt_contents },
+		success: function(n) {
+			if(n == 0) {
+				alert('저장이 실패였습니다.');
+				return false;			
+			}else
+				return true;
+		},
+		error: function() {
+			alert('저장이 실패였습니다.');
+			return false;
+		}
+	});
+}
+
+function updateComment() {
+	let noticeCmt_contents = $('#noticeCmt_contents').val();
+	let notice_seq = $('#notice_seq').val();
+	
+	if (noticeCmt_contents < 5 || noticeCmt_contents > 1000) {
+		alert('댓글을 5자 이상 1,000자 이하로 내용을 입력하세요.');
+		return false;
+	}
+	
+	$.ajax({
+		url: 'updateComment',
+		type: 'post',
+		data: { noticeCmt_seq: changeCmt_seq, noticeCmt_contents: noticeCmt_contents },
+		success: function(n) {
+			if(n == 0) {
+				alert('UP1 저장이 실패였습니다.');
+				return false;			
+			}else
+				return true;
+		},
+		error: function() {
+			alert('UP2 저장이 실패였습니다.');
+			return false;
+		}
+	});
+}
+
+//전역변수로 수정 시 사용할 코멘트 번호임
+let changeCmt_seq;
+function changeMode(Cmt_seq){
+	//변경할 댓글 번호 전역변수에 저장
+	changeCmt_seq = Cmt_seq;
+//	alert(changeCmt_seq);
+
+	//변경할 장소로 인동
+	location.href = '#commentForm';
+	$('#submitComment').val('수정');
+	$('#noticeCmt_contents').val("수정할 내용을 입력하세요");
+	$('#noticeCmt_contents').select();
+	
+	return false;
+}
+
+function deleteComment(noticeCmt_seq) {
+	
+	if (confirm('삭제하시겠습니까?')==false) {
+		return false;
+	}
+	
+	$.ajax({
+		url: 'deleteComment',
+		type: 'get',
+		data: {noticeCmt_seq: noticeCmt_seq},
+		success: function(n) {
+			if(n == 0) {
+				alert('삭제가 실패였습니다.');
+				return false;			
+			}else
+				return true;
+		},
+		error: function(e) {
+			alert(e);
+			return false;
+		}
+	});
+}
+</script>
+
+	<div id="wrapper">
+		<!-- content 시작 -->
+		<th:block th:replace="fragments/sidebar :: sidebar"></th:block>
+		<!-- content 끝 -->
+
+		<div id="content-wrapper" class="d-flex flex-column">
+			<!-- header 시작 -->
+			<th:block th:replace="fragments/header :: navFragment"></th:block>
+			<!-- header 끝 -->
+			
+			<!-- [SHHONG] 시작 -->
+
+<!-- 			
+			<div th:insert="/noticeView/modalFragment :: noticeDeleteFrag"></div>
+			<div th:insert="/noticeView/modalFragment :: changeCommentFrag"></div>
+-->
+	 			<div class="container-fluid">
+						
+					<h2>공지사항</h2>
+					<h5 th:text="'['+ ${noticeDetail.prj_name} + '] 프로젝트의 공지사항입니다'"></h5>            
+					
+			
+				<div id="accordion" class="col-lg-8 offset-sm-1 mb-0">
+				  <div class="card mb-0" >
+				  
+					<!-- Collapse 시작 -->
+					  <div class="card-header  bg-orange" id="headingOne" style="background-color:rgb(255, 249, 227)">
+					      <h3 class="mb-0">
+					        <button class="btn" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" >
+					         	<h4 th:text="${noticeDetail.notice_name}"> 공지사항제목 입니다.</h4>
+					      	</button>
+					      </h3>
+					      <div class="d-flex justify-content-around p-0 d-flex">
+				        	<div><p class="text-sm-left" th:text="'* 작성자: ' + ${noticeDetail.notice_writer}">* 작성자: 홍길동 </p> </div>
+				        	<div><p th:text="'* 작성일시: ' + ${noticeDetail.notice_date}">* 작성일시: 2022.09.15 15:03:00</p> </div>
+				        	<div><p th:text="'* 조회수: ' + ${noticeDetail.notice_hits}">* 조회수: 123</p> </div>
+							
+<!--  나중에 데이터 정비되면 바꾸어야 됨	-->						
+							<div th:if="${#authentication.name} == ${noticeDetail.notice_writer}">
+								<div>
+									<a class="btn btn-sm bg-gradient-primary text-white" th:href="@{/notice/updateNotice(notice_seq=${noticeDetail.notice_seq})}">　수정　</a>
+	 								<a class="btn btn-sm bg-gradient-primary text-white" th:href="|javascript:deleteNotice(${noticeDetail.notice_seq})|">　삭제　</a>		
+ <!--									<a class="btn btn-sm bg-gradient-primary text-white" data-toggle="modal" data-target="#deleteNoticeModal">　삭제　</a> -->
+								</div>
+							  </div>
+						  </div>
+					  </div>
+					  <!-- Collapse 끝 -->
+					  
+					    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+					     	<div class="card-body" th:text="${noticeDetail.notice_contents}">
+									공지사항 내용입니다.
+					     	</div>
+      					  	<div class="card-body" th:if="${noticeDetail.notice_ogFilr}">
+								<strong><a th:href="@{/notice/fileDownload(notice_seq=${noticeDetail.notice_seq})}" th:text="'● 첨부파일: '+ ${noticeDetail.notice_ogFilr}">첨부 파일입니다</a></strong>	
+			      	  		</div>
+					    </div>
+					</div>			  
+	
+				    <!-- 댓글 시작 -->
+					<br><br>		
+
+				    <!-- 댓글 입력 폼 -->
+					<div class="mb-3">
+						<form id="CommentForm" th:action="@{/notice/readNotice}" method="get">
+							<div style="display:inline" height="50px">
+								<input type="hidden" name="notice_seq" id="notice_seq" th:value="${noticeDetail.notice_seq}"/>
+								<input type="text" class="col-lg-10" id="noticeCmt_contents" name="noticeCmt_contents" placeholder="댓글을 입력하세요">
+								<input type="submit" id="submitComment" class="btn btn-primary bg-gradient-primary " value="댓글저장" onclick="return writeORupdate();"/> 	
+							</div>
+						</form>
+					</div>
+	 
+				    <!-- 댓글 시작 -->
+					<!-- 1번째 댓글 -->
+					
+		<th:block th:if="${commentList}">
+					<div th:each="commentDetail:${commentList}" class="m-0 p-0 bg-white border-left-info" style="border-bottom: 1px solid rgb(192, 192, 192); border-top: 1px solid rgb(192, 192, 192); ">
+						<p th:text="${commentDetail.noticeCmt_contents}" class="m-0 mx-2 my-2 p-0">댓글 제목입니다.</p>
+				        <div class="d-flex m-0 mb-2 mx-3 p-0 justify-content-between">
+							<div th:text="'* 작성자: ' + ${commentDetail.memb_name}" class="m-0 p-0"><p>　* 작성자: 홍길동 </p> </div>
+							<div th:text="'* 작성일시: '+ ${commentDetail.noticeCmt_date}" class="m-0 p-0"><p>　* 작성일시: 2022.09.15 15:03:00</p> </div>
+							<div class="m-0 p-0 text-white">
+								<div th:if="${#authentication.name} == ${commentDetail.noticeCmt_writer}">
+									<a class="btn-sm bg-gradient-primary text-white" href="#" th:onclick="'changeMode(' + ${commentDetail.noticeCmt_seq} + ');'">수정</a>							
+		<!-- 							<a class="btn-sm bg-gradient-primary text-white" th:href="@{/notice/changeComment(notice_seq=${commentDetail.noticeCmt_seq})}">수정</a>  -->								
+		<!-- 							<a class="btn-sm bg-gradient-primary text-white" th:href="@{/notice/changeComment(notice_seq=${commentDetail.noticeCmt_seq})}">수정</a>  -->	
+									<!-- <a class="btn-sm bg-gradient-primary text-white" href="|javascript:/notice/deleteComment(${commentDetail.noticeCmt_seq})|" th:onclick="${'return deleteComment('+commentDetail.noticeCmt_seq +');'">삭제</a> -->
+									<a class="btn-sm bg-gradient-primary text-white" th:href="@{/notice/readNotice(notice_seq= ${commentDetail.notice_seq})}" th:onclick="'return deleteComment('+${commentDetail.noticeCmt_seq} +');'">삭제</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+		</th:block>
+				<br><br>
+			
+			
+			<!-- Content-Fluid 끝 -->
+			</div>
+
+			<!-- [SHHONG] 표 끝 -->
+			
+			<!-- footer 시작 -->
+			<th:block th:replace="fragments/footer :: footerFragment"></th:block>
+			<!-- footer 끝 -->
+		</div>
+	</div>
+
+</body>
+</html>
