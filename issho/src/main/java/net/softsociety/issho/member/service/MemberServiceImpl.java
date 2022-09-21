@@ -1,7 +1,6 @@
 package net.softsociety.issho.member.service;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -57,5 +56,7 @@ public class MemberServiceImpl implements MemberService {
 		
 		return result;
 	}
+
+	
 
 }
