@@ -32,7 +32,8 @@
 	</select>
 	
 	<select id="idSearchOne" parameterType="String" resultType="int">
-		SELECT count(*) 
+
+		SELECT COUNT(*)
 		FROM members
 		WHERE memb_mail = #{memb_mail}
 	</select>
