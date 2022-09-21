@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lagn="ko" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head th:replace="fragments/config :: configFragment">
+<meta charset="UTF-8">
+<title>issho - 공지사항</title>
+
+</head>
+<body>
+<!-- 홍상혁 : 페이징을 위한 자바 스크립트-->
+<script>
+function pagingFormSubmit(currentPage) {
+	var form = $('#pagingForm');
+	var page = $('#page');
+	var type = $('#type');
+	var searchWord = $('#searchWord');
+
+// form 디자인 관련 page 값을 Controller로 전달 못하는 상황이 발생하여 수정	
+//	page.value = currentPage;
+//	form.submit();
+
+	let uri = '/issho/notice/noticeList?';
+	
+	let namevalues = 'page=' + currentPage + '&type='+ type.val();
+	if (Boolean(searchWord.val())) 
+		namevalues = namevalues + '&searchWord='+ searchWord.val();	
+	
+	location.href = uri + namevalues;
+//	return false;
+}
+</script>
+
+	<div id="wrapper">
+		<!-- content 시작 -->
+		<th:block th:replace="fragments/sidebar :: sidebar"></th:block>
+		<!-- content 끝 -->
+
+		<div id="content-wrapper" class="d-flex flex-column">
+			<!-- header 시작 -->
+			<th:block th:replace="fragments/header :: navFragment"></th:block>
+			<!-- header 끝 -->
+			
+			<!-- [SHHONG] 표 시작 -->
+<!-- 			<div class="container-fluid" width="80%">  -->
+	 			<div class="container">
+						
+				<h2>프로젝트 공지사항</h2>
+				<p>The .table-bordered class adds border on all sides of the table and cells:</p>            
+	
+				<!-- 검색폼 -->
+				<form id="pagingForm" method="get" th:action="@{/notice/noticeList}">
+					<table class="table table-bordered table-hover table-condensed" >
+						<tr>
+							<td style="text-align:left;" class="col-lg-2">
+								<input type="hidden" name="page" id="page"/>
+								조회된 갯수 : <span th:text="${navi.totalRecordsCount}"></span>
+							</td>
+							<td style="text-align:left;" class="col-lg-1">
+								<select id="type" name="type">
+									<option value="notice_name" th:selected="${type} == 'notice_name'">제목</option>
+									<option value="memb_name" th:selected="${type} == 'memb_name'">작성자</option>
+									<option value="notice_date" th:selected="${type} == 'notice_date'">작성일</option>
+									<option value="notice_contents" th:selected="${type} == 'notice_contents'">내용</option>
+								</select>
+							</td>
+							<td style="text-align:left;" class="col-lg-6">
+								<input type="text" id="searchWord" name="searchWord" th:value="${searchWord}">								
+                                <input type="submit" class="btn btn-primary" onclick="pagingFormSubmit(1)" value="검색">
+								
+<!--  								<input type="button" onclick="pagingFormSubmit(1)" value="검색"> -->
+							</td>
+							<td style="text-align:right;" class="col-lg-4">
+								<button type="button" class="btn btn-primary" th:href="@{notice/write}">공지 작성</button>
+							</td>
+						</tr>
+					</table>
+				</form>			
+
+				<table class="table-bordered table-hover table-condensed bg-white" width="100%">
+					<thead class="text-center " style="background-color: rgb(217, 217, 217)">
+						<tr style="color:black;" height="50px">
+						    <th class="col-lg-1">번호</th>
+						    <th class="col-lg-5">제목</th>
+						    <th class="col-lg-1">작성자</th>
+						    <th class="col-lg-2">작성일</th>
+						    <th class="col-lg-1">조회수</th>
+						    <th class="col-lg-2"></th>
+
+						</tr>
+					</thead>
+				<th:block th:unless="${noticeList}">
+				  	<tbody class="text-center">
+						<tr>
+							<td class="text-info" colspan=7 height="100px"><h3>공지사항이 없습니다.</h3></td>
+					</tbody>
+				</th:block>
+				
+				<th:block th:if="${noticeList}">
+				  	<tbody class="text-center">
+						<tr th:each="notice : ${noticeList}" >
+						    <td class="col-lg-1" th:text="${notice.notice_seq}" >번호</td>
+						    <td>
+			    				<a th:text="${notice.notice_name}" th:href="@{/notice/read(notice_seq=${notice.notice_seq})}">제목</a>
+						    </td>
+						    <td class="col-lg-1" th:text="${notice.memb_name}">작성자</td>
+						    <td class="col-lg-2" th:text="${notice.notice_date}">작성일</td>
+						    <td class="col-lg-1" th:text="${notice.notice_hits}">조회수</td>
+						    <td class="col-lg-2">
+								<button type="button" class="btn btn-primary" th:href="@{/notice/update(notice_seq=${notice.notice_seq})}">수정</button>
+								<button type="button" class="btn btn-primary" th:href="@{/notice/delete(notice_seq=${notice.notice_seq})}">삭제</button>
+						    </td> 		
+ 						</tr>
+				 	</tbody>
+				</th:block>
+						 </table>
+					</div>
+						<table class="table table-bordered table-hover table-condensed" >
+						<tr>
+							<td style="text-align:center;">
+					
+								<!-- nav 시작 -->
+<!--  					        	<nav aria-label="...">
+									<ul class="pagination" style="justify-content: center; text-align: center;">		 
+										<li class="page-item disabled">
+											<span class="page-link">이전</span>
+										</li>
+										<li class="page-item">
+											<a class="page-link" href="#">1</a>
+										</li>
+										<li class="page-item active">
+											<span class="page-link">2
+											<span class="sr-only">(current)</span>
+											</span>
+										</li>
+										<li class="page-item">
+											<a class="page-link" href="#">3</a>
+										</li>							
+										<li class="page-item">
+											<a class="page-link" href="#">이후</a>
+										</li>
+								 	</ul>
+								</nav>
+-->
+								<!-- nav 끝 -->
+								
+		
+			<a th:href="|javascript:pagingFormSubmit(${navi.currentPage - navi.pagePerGroup})|">◁◁</a>
+			<a th:href="|javascript:pagingFormSubmit(${navi.currentPage - 1})|">◀</a> 
+		
+			<span th:each="counter : ${#numbers.sequence(navi.startPageGroup, navi.endPageGroup)}"> 
+				<th:block th:if="${counter == navi.currentPage}"><b></th:block>
+					<a th:text="${counter}" th:href="|javascript:pagingFormSubmit(${counter})|"></a>&nbsp;
+				<th:block th:if="${counter == navi.currentPage}"></b></th:block>
+			</span>
+			
+			<a th:href="|javascript:pagingFormSubmit(${navi.currentPage + 1})|">▶</a> 
+			<a th:href="|javascript:pagingFormSubmit(${navi.currentPage + navi.pagePerGroup})|">▷▷</a>
+			<br><br>
+		
+							</td>
+						</tr>
+					</table>
+			<!-- [SHHONG] 표 끝 -->
+			
+			<!-- footer 시작 -->
+			<th:block th:replace="fragments/footer :: footerFragment"></th:block>
+			<!-- footer 끝 -->
+		</div>
+	</div>
+
+</body>
+</html>
