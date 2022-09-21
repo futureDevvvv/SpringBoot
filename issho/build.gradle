@@ -33,8 +33,8 @@ dependencies {
 	
 	//dependencies for websocket
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
-	//implementation 'org.webjars:sockjs-client:1.1.2'
-	//implementation 'org.webjars:webjars-locator:0.30'
+	implementation 'org.webjars:sockjs-client:1.1.2'
+	implementation 'org.webjars:webjars-locator:0.30'
 	
 	//dependencies for using DB
 	runtimeOnly 'com.oracle.database.jdbc:ojdbc8'
@@ -57,7 +57,19 @@ dependencies {
 
 	testImplementation 'org.springframework.security:spring-security-test'
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
+	
+	//Excel Download apache
+	implementation group: 'org.apache.poi', name: 'poi', version: '4.1.2'
+	implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '4.1.2'
+	
+	// https://mvnrepository.com/artifact/com.lowagie/itext
+	implementation group: 'com.lowagie', name: 'itext', version: '2.1.7'
+	
+	implementation("org.xhtmlrenderer:flying-saucer-pdf:9.1.20")
 
+
+
+	
 }
 
 tasks.named('test') {

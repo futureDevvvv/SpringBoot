@@ -2,9 +2,12 @@ package net.softsociety.issho.member.dao;
 
 import java.util.ArrayList;
 
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Mapper;
 
 import net.softsociety.issho.member.domain.Members;
+import net.softsociety.issho.project.domain.ProjectMember;
 
 @Mapper
 public interface MemberDAO {
@@ -14,12 +17,15 @@ public interface MemberDAO {
 
 	public void memberJoin(Members members);
 
+
+
+	public ArrayList<Members> searchPjMem(String prj_domain);
+
 	public int deleteMember(Members members);
 
+	public Members getUserById(String username);
 
-	
-
-
+	public ProjectMember getProjectMemById(String username);
 
 	
 }

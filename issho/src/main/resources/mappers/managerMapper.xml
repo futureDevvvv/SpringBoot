@@ -37,5 +37,27 @@ from members
 </where>
 </select>
 
+<select id="getMemberInfo" resultType="Members" parameterType="String">
+select * 
+from members
+where
+	memb_mail=#{memb_mail}
+</select>
+
+<insert id="insertAttendant" parameterType="InvitationMember">
+INSERT INTO invitation
+(membInv_seq,prj_domain,membInv_recipient)
+VALUES
+(membInv_seq.nextval,#{prj_domain},#{membInv_recipient})
+</insert>
+
+
+<!-- 초대 멤버 검색 -->
+	<select id="invitationIdSearchOne" parameterType="InvitationMember" resultType="int">
+		SELECT COUNT(*)
+		FROM invitation
+		WHERE membInv_recipient = #{membInv_recipient}
+		and prj_domain = #{prj_domain}
+	</select>
 
 </mapper>

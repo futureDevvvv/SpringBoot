@@ -35,25 +35,7 @@ public class ProjectController {
 		return "project/project_new";
 	}
 
-	/**
-	 * 도메인 중복 여부 체크 ajax
-	 * 
-	 * @param prj_domain
-	 * @return
-	 */
-
-	@ResponseBody
-	@PostMapping("/domainCheck")
-	public int domainCheck(String prj_domain) {
-
-		int result = pjservice.domainCheck(prj_domain);
-		
-		log.debug("도메인 : {}", prj_domain);
-		
-		log.debug("결과 : {}", result);
-
-		return result;
-	}
+	
 
 	/**
 	 * 프로젝트 생성 + PM 권한 부여
@@ -74,6 +56,8 @@ public class ProjectController {
 
 		// 프로젝트 생성한 사람에게 pm 권한 부여
 		pjservice.grantPM(pjmb);
+		
+		log.debug("projects : {}", projects);
 
 		return "project/project_new";
 	}

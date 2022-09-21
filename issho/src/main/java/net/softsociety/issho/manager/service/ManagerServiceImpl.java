@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import net.softsociety.issho.manager.dao.ManagerDAO;
+import net.softsociety.issho.manager.domain.InvitationMember;
 import net.softsociety.issho.manager.util.PageNavigator;
 import net.softsociety.issho.member.domain.Members;
 
@@ -16,6 +17,8 @@ public class ManagerServiceImpl implements ManagerService {
 
 	@Autowired
 	private ManagerDAO membersDAO;
+	
+	
 	
 	@Override
 	public ArrayList<Members> listManager(PageNavigator navi, String searchWord) {
@@ -41,5 +44,27 @@ public class ManagerServiceImpl implements ManagerService {
 		return navi;
 	}
 
+	@Override
+	public Members getMemberInfo(String email) {
+		
+		Members members = membersDAO.getMemberInfo(email);
+		
+		return members;
+	}
+
+	@Override
+	public void insertAttendant(InvitationMember invitation) {
+		membersDAO.insertAttendant(invitation);
+	}
+
+	@Override
+	public int invitationIdSearchOne(InvitationMember invitationMember) {
+		int result = membersDAO.invitationIdSearchOne(invitationMember);
+		return result;
+	}
+
+	
+	
+	
 
 }
