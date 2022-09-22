@@ -23,6 +23,27 @@
 	#basicSelection5 {
 	margin-right: 10px;
 }
+
+#staffNotice {
+	margin-left: 10px;
+}
+
+ul#memList li.mem-item {
+	padding: 4px 8px 5px;
+	background-color: #4CD3E3;
+	color: white;
+	border-radius: 30px;
+	margin: 10px 5px 0 0;
+	display: inline-block;
+	font-size: 14px;
+	letter-spacing: -.5px;
+}
+
+ul#memList li.mem-item:hover {
+	background-color: white;
+	color: #4CD3E3;
+	border: 1px solid #4CD3E3;
+}
 </style>
 <title>Insert title here</title>
 </head>
@@ -191,8 +212,6 @@
 						data-bs-target="exampleModal">
 						<i class="fa-solid fa-plus"></i>태스크 추가
 					</button>
-
-
 				</div>
 			</nav>
 			<div class="col-xl-7 col-md-6 m-4">
@@ -218,7 +237,7 @@
 			<div class="modal fade" id="exampleModal" tabindex="-1"
 				aria-labelledby="exampleModalLabel" aria-hidden="true">
 
-				<form>
+				<form th:action="@{/task/addNewTask}" method="POST" id="newTaskForm">
 					<div class="modal-dialog modal-lg">
 						<div class="modal-content">
 							<div class="modal-header">
@@ -239,26 +258,35 @@
 
 								<div class="input-group m-3">
 									<div class="input-group-prepend">
-										<span class="input-group-text" id="basic-addon1">담당자</span>
+										<span class="input-group-text" id="basic-addon1"
+											onclick="showAddMember();">담당자</span> <span id="staffNotice">담당자를
+											추가하지 않을 시, 업무 할당자 본인이 담당자로 배정됩니다.</span>
+										<div id="mems">
+											<ul id="memList">
+											</ul>
+										</div>
+
+										<input type="hidden" id="memList2" name="memList2" value="">
 									</div>
-									<input type="text" class="form-control" id="staffInput"
-										name="staffs" placeholder="담당자를 추가해주세요" aria-label="Username"
-										value="" aria-describedby="basic-addon1">
-									<p>담당자를 추가하지 않을 시, 업무 할당자 본인이 담당자로 배정됩니다.</p>
+
 								</div>
 
-								<div id="chatMem"
-									style="overflow: auto; width: 100%; height: 200px; margin: 10px;">
+								<div id="memDiv">
+									<input type="text" class="form-control" id="staffInput"
+										name="staffs" placeholder="아이디 또는 이름으로 멤버를 검색하세요"
+										aria-label="Username" value="" aria-describedby="basic-addon1">
+									<div id="chatMem"
+										style="overflow: auto; width: 100%; height: 200px; margin: 10px;">
 
-									<table class="table table-hover">
-										<tr th:each="list : ${list}" th:id="${list.memb_mail}"
-											th:name="${list.memb_name}" onclick="appendMem(id);">
-											<td th:text="${list.memb_ogfile}"></td>
-											<td th:text="${list.memb_name}"></td>
-											<td th:text="${list.memb_mail}"></td>
-										</tr>
-									</table>
-
+										<table class="table table-hover">
+											<tr th:each="list : ${list}" th:id="${list.memb_mail}"
+												th:name="${list.memb_name}" onclick="appendMem(id);">
+												<td th:text="${list.memb_ogfile}"></td>
+												<td th:text="${list.memb_name}"></td>
+												<td th:text="${list.memb_mail}"></td>
+											</tr>
+										</table>
+									</div>
 								</div>
 
 								<div class="input-group m-3">
@@ -351,7 +379,8 @@
 							<div class="modal-footer">
 								<button type="button" id="closeNewTask"
 									class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-								<button type="button" class="btn btn-primary" onclick="">등록</button>
+								<button type="button" class="btn btn-primary"
+									onclick="submitForm();">등록</button>
 							</div>
 						</div>
 					</div>
@@ -364,6 +393,10 @@
 		</div>
 	</div>
 	<script>
+		//멤버 검색창 오픈 여부
+		let isOpened = false;
+		$("#memDiv").hide();
+	
 		//다중 파일 업로드
 		var fileNo = 0;
 		var filesArr = new Array();
@@ -472,19 +505,82 @@
 			$(".gj-icon").show();
 		});
 		
-		//담당자 추가
+		//담당자 검색 ajax
 		$("#staffInput").keyup(function(){
 			console.log('keyup 실행');
 			
-			let val = $("#staffInput").val();
-			
-			console.log(val);
-			
-			if(val == '@'){
-				
-				alert('@ 입력됨');
-			}
+		
 		});
+		
+		//
+		function showAddMember(){
+			
+			if(isOpened){
+				$("#memDiv").hide();
+				isOpened = false;
+			} else {
+				$("#memDiv").show();
+				isOpened = true;
+			}
+		}
+		
+		function appendMem(id) {
+			
+			$("#staffNotice").hide();
+
+			console.log('appendMem 실행됨' + id);
+			
+			var list = document.querySelectorAll('li.mem-item');
+
+			let memLists = new Array();
+
+			for (var i = 0; i < list.length; i++) {
+				memLists[i] = list[i].id;
+			}
+
+			var li = $("#memList2").val();
+
+			
+
+			if (memLists.includes(id)) {
+
+				alert('이미 추가된 멤버입니다.');
+
+			} else {
+				
+				li += id + ",";
+
+				$("#memList2").val(li);
+				
+				$.ajax({
+					url : "../member/memSearch",
+					type : "POST",
+					data : {
+						memb_mail : id
+					},
+					success : function(result){
+						$("#memList")
+						.append(
+								"<li class='mem-item' id= "+ id +  ">"
+										+ "<span>"
+										+ result
+										+ "</span>"
+										+ "<span class='del-btn' idx='" + id + "'>&nbsp;x</span></li>");
+					}
+				});
+			}
+		}
+
+		$(document).on("click", ".del-btn", function(e) {
+			var index = $(this).attr("idx");
+			$(this).parent().remove();
+		});
+		
+		//form 전송
+		function submitForm(){
+			$("#newTaskForm").submit();
+			$("#exampleModal").modal("hide");
+		}
 	</script>
 </body>
 </html>
