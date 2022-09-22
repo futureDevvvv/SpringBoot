@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import lombok.extern.slf4j.Slf4j;
-import net.softsociety.issho.chat.domain.Chatroom;
+import net.softsociety.issho.chat.domain.Chatrooms;
 import net.softsociety.issho.chat.service.ChatService;
 import net.softsociety.issho.member.domain.Members;
 import net.softsociety.issho.member.service.MemberService;
@@ -55,7 +55,7 @@ public class ChatHomeController {
 		map.put("chat_member", id);
 		map.put("prj_domain", domain);
 
-		List<Chatroom> list = chatservice.chatList(map);
+		List<Chatrooms> list = chatservice.chatList(map);
 
 		/*
 		 * Collection<ChatRoom> chatRooms = ChatRoomRepository.chatRooms;

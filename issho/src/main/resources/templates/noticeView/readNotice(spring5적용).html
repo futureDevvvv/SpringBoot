@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lagn="ko" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head th:replace="fragments/config :: configFragment">
+<meta charset="UTF-8">
+<title>issho - 공지사항</title>
+
+</head>
+<body>
+<!-- 홍상혁 : 페이징을 위한 자바 스크립트-->
+<script>
+function pagingFormSubmit(currentPage) {
+	var form = $('pagingForm');
+	var page = $('page');
+	page.value = currentPage;
+	form.submit();
+}
+
+//글 삭제
+function deleteBoard(num) {
+	if (confirm('삭제하시겠습니까?')) {
+		location.href = 'delete?notice_seq=' + num;
+	}
+}
+//리플 작성
+function validation() {
+	let notice_contents = $('notice_contents');
+	if (notice_contents.value.length < 5) {
+		alert('리플 내용을 5자 이상으로 입력하세요.');
+		return false;
+	}
+	return true;
+}
+
+//리플 삭제
+function deleteReply(noticeCmt_seq, notice_seq) {
+	if (confirm('삭제하시겠습니까?')) {
+		location.href = 'deleteReply?noticeCmt_seq=' + noticeCmt_seq + '&notice_seq=' + notice_seq;
+	}
+}
+</script>
+
+	<div id="wrapper">
+		<!-- content 시작 -->
+		<th:block th:replace="fragments/sidebar :: sidebar"></th:block>
+		<!-- content 끝 -->
+
+		<div id="content-wrapper" class="d-flex flex-column">
+			<!-- header 시작 -->
+			<th:block th:replace="fragments/header :: navFragment"></th:block>
+			<!-- header 끝 -->
+						
+			<h1>공지사항 조회</h1>
+			
+			<section>
+				<table>
+					<tr>
+					<th style="width: 100px;">제목</th>
+					<td th:text="${notice.notice_name}" style="width: 600px;"></td>
+				</tr>
+				<tr>
+					<th>조회수</th>
+					<td th:text="${notice.notice_hits}"></td>
+				</tr>
+				<tr>
+					<th>작성일</th>
+					<td th:text="${notice.notice_date}"></td>
+				</tr>
+				<tr>
+					<th>첨부파일</th>
+					  <td><a th:href="@{/notice/download(notice_seq=${notice.notice_seq})}" th:text="${notice.notice_ogFilr}"></a></td> 
+				</tr>
+				<tr>
+					<th>내용</th>
+					<td><pre th:text="${notice.notice_contents}"></pre></td>
+				</tr>
+			</table>
+			<br>
+			
+			<div th:if="${#authentication.name} == ${notice.notice_writer}">
+				<a th:href="@{/notice/update(notice_seq=${notice.notice_seq})}">수정</a>
+				<a th:href="|javascript:deleteBoard(${notice.notice_seq})|">삭제</a>
+			</div>
+			<br>
+			<td class="text-center" colspan="2" >
+				<input type="submit" class="btn-primary" th:href="@{notice/noticeList}"value="수정하기"/> 	
+				<input type="reset" class="btn-primary" value="지우기"/>
+			</td>
+			<br>			
+			<td style="text-align:left;" class="col-lg-6">
+				<input type="text" name="searchWord" th:value="${searchWord}">								
+                            <button class="btn btn-primary" type="button" onclick="pagingFormSubmit(1)">
+                     <i class="fas fa-search fa-sm"></i>
+                </button>
+				
+<!--  			<input type="button" onclick="pagingFormSubmit(1)" value="검색"> -->
+			</td>
+			
+			</section>			
+						<!-- footer 시작 -->
+					<th:block th:replace="fragments/footer :: footerFragment"></th:block>
+					<!-- footer 끝 -->
+				</div>
+			</div>
+
+
+
+</body>
+</html>
