@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="net.softsociety.issho.task.dao.TaskDAO">
+<!-- * 테스크 전체 검색 -->
+	<select id="SelectAlltask" parameterType="String" resultType="Task">
+		select
+			task.task_seq AS task_seq
+			,task.prj_domain AS prj_domain
+			,task.task_name AS task_name
+			,task.task_content AS task_content
+			,task.task_sender AS task_sender
+			,task.task_rank AS task_rank
+			,task.task_state AS task_state
+			,task.task_inputdate AS task_inputdate
+			,task.task_startdate AS task_startdate
+			,task.task_enddate AS task_enddate
+			,task.exp_startdate AS exp_startdate
+			,task.exp_enddate AS exp_enddate
+			,task.ptask_num AS ptask_num
+            , memb.memb_name AS memb_name
+		from 
+			task task, members memb
+        where
+            task.task_sender = memb.memb_mail
+            AND task.prj_domain = #{prj_domain}
+	</select>
+
+</mapper>

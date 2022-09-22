@@ -17,6 +17,7 @@ import net.softsociety.issho.member.dao.MemberDAO;
 import net.softsociety.issho.member.domain.Members;
 import net.softsociety.issho.member.service.MemberService;
 import net.softsociety.issho.task.domain.Task;
+import net.softsociety.issho.task.service.TaskService;
 
 @Controller
 @Slf4j
@@ -25,6 +26,9 @@ public class TaskController {
 	
 	@Autowired
 	MemberService memservice;
+	
+	@Autowired
+	TaskService taskservice;
 	
 	@Autowired
 	MemberDAO memDao;
@@ -52,7 +56,12 @@ public class TaskController {
 		model.addAttribute("member", member);
 		model.addAttribute("list", pjMemList);
 		
-		return "taskView/task_List";
+		// 신승훈 * 테스크 전체 검색 + 멤버 테이블 멤버 NAME 검색 
+		ArrayList<Task> tasklist = taskservice.SelectAlltask("scit41");
+		log.debug("tasklist : {}", tasklist);
+		model.addAttribute("tasklist", tasklist);
+		
+		return "taskView/task_List2";
 	}
 	
 	/**
@@ -72,12 +81,12 @@ public class TaskController {
 		
 		//sender를 할당자 아이디로
 		task.setTask_sender(id);
-		
+
 		
 		
 		log.debug("task 객체 : {}", task);
 		log.debug("staffs : {}", memList2);
-		
+
 	}
 
 }

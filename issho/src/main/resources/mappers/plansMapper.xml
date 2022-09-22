@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.softsociety.issho.plans.dao.PlansDAO">
+
+<!-- 일정 저장 -->
+<insert id="savePlan" parameterType="plans">
+	insert 
+	into 
+		plans ( 
+			plan_seq
+			, plan_name
+			, plan_startDate
+			, plan_endDate
+			, plan_place
+			, plan_priority
+			, plan_content
+			, memb_mail
+		)			
+	values (
+			plans_seq.nextval
+			, #{plan_name}
+			, TO_DATE(#{plan_startDate}, 'YYYY-MM-DD HH24:MI')
+			, TO_DATE(#{plan_endDate}, 'YYYY-MM-DD HH24:MI')
+			, #{plan_place}
+			, #{plan_priority}
+			, #{plan_content}
+			, #{memb_mail}
+		)
+	<selectKey keyProperty="plan_seq" resultType="int" order="AFTER">
+		SELECT plans_seq.CURRVAL FROM DUAL
+	</selectKey>
+</insert>
+
+<!-- 일정 저장(참석자) -->
+<insert id="insertAttendant" parameterType="attendant">
+	insert 
+	into 
+		attendant ( 
+			plan_seq
+			, memb_mail
+			<if test="att_whether != null">
+			, att_whether
+			</if>
+		)			
+	values (
+			#{plan_seq}
+			, #{memb_mail}
+			<if test="att_whether != null">
+			, #{att_whether}
+			</if>
+		)
+	<selectKey keyProperty="plan_seq" resultType="int" order="AFTER">
+		SELECT plans_seq.CURRVAL FROM DUAL
+	</selectKey>
+</insert>
+
+<!-- 저장된 일정을 읽음. 근데 result가 객체가 아니라 resultMap이라는 녀석임 -->
+<select id="selectPlansByMemMail" parameterType="String" resultMap="selectAttendantAndPlans">
+	select 
+		attend.plan_seq AS plan_seq
+        , plans.plan_name AS plan_name
+        , plans.plan_startDate AS plan_startDate
+        , plans.plan_endDate AS plan_endDate
+        , plans.plan_place AS plan_place
+        , plans.plan_priority AS plan_priority
+        , plans.plan_content AS plan_content
+		, attend.att_whether AS att_whether
+		, plans.memb_mail AS memb_mail
+	from 
+		attendant attend, plans plans
+	where
+        attend.plan_seq = plans.plan_seq AND
+		attend.memb_mail = #{memb_mail}
+</select>
+
+<!-- 위에서 셀렉한 데이터를 property가 변수 column 컬럼명 -->
+<resultMap type="Plans" id="selectAttendantAndPlans">
+	<!-- 프라이머리 키는 id로 -->
+	<id property="plan_seq" column="plan_seq"/>
+	<!-- 나머지 찌끄래기는 property로 -->
+	<result property="plan_name" column="plan_name"/>
+	<result property="plan_startDate" column="plan_startDate"/>
+	<result property="plan_endDate" column="plan_endDate"/>
+	<result property="plan_place" column="plan_place"/>
+	<result property="plan_priority" column="plan_priority"/>
+	<result property="plan_content" column="plan_content"/>
+	<result property="memb_mail" column="memb_mail"/>
+	<!-- attendantList 라는 객체에 값을 담아주기 위해 추가로 selete 호출 -->
+	<!-- selectAttendantByPlanSeq 라는 셀렉트문 호출 -->
+	<collection property="attendantList" column="plan_seq" javaType="List" ofType="Attendant" select="selectAttendantByPlanSeq">
+		<!-- 추가로 셀렉해온 selectAttendantByPlanSeq 를 Attendant 형태에 맞춰서 세팅 -->
+		<id property="plan_seq" column="plan_seq"></id>
+		<result property="memb_mail" column="memb_mail"/>
+		<result property="att_whether" column="att_whether"/>
+	</collection>
+</resultMap>
+
+
+<select id="selectAttendantByPlanSeq" parameterType="String" resultType="Attendant">
+	select 
+		attend.plan_seq AS plan_seq
+		, attend.memb_mail AS memb_mail
+        , member.memb_name AS memb_name
+		, attend.att_whether AS att_whether
+	from 
+		attendant attend, members member
+	where
+        attend.memb_mail = member.memb_mail AND
+		attend.plan_seq = #{plan_seq}
+</select>
+
+<!-- 프로젝트 참석자 불러오기 -->
+<select id="selectMember" parameterType="String" resultType="Members">
+	select 
+		memb_mail
+		, memb_name
+	from 
+		Members
+<!-- 	WHERE 
+		도메인 -->
+</select>
+
+<!-- 일정 수정 -->
+<update id="updatePlan" parameterType="plans">
+	update plans
+	set
+		plan_name = #{plan_name}
+		, plan_startDate = TO_DATE(#{plan_startDate}, 'YYYY-MM-DD HH24:MI')
+		, plan_endDate = TO_DATE(#{plan_endDate}, 'YYYY-MM-DD HH24:MI')
+		, plan_place = #{plan_place}
+		, plan_priority = #{plan_priority}
+		, plan_content = #{plan_content}
+		, memb_mail = #{memb_mail}
+	where
+		plan_seq = #{plan_seq}
+</update>
+
+<!-- 일정 수정(참석자) -->
+<insert id="updateAttendant" parameterType="attendant">
+	update plans
+	set 
+		attendant ( 
+			plan_seq
+			, memb_mail
+			<if test="att_whether != null">
+			, att_whether
+			</if>
+		)			
+	values (
+			#{plan_seq}
+			, #{memb_mail}
+			<if test="att_whether != null">
+			, #{att_whether}
+			</if>
+		)
+	where
+	plan_seq = #{plan_seq}	
+	<selectKey keyProperty="plan_seq" resultType="int" order="AFTER">
+		SELECT plans_seq.CURRVAL FROM DUAL
+	</selectKey>
+</insert>
+
+<!-- 수정시 삭제할 참석자 -->
+<delete id="deleteAttendant" parameterType="attendant">
+	delete 
+	from 
+		attendant 
+	where 
+		memb_mail = #{memb_mail}
+</delete>	
+
+
+<!-- 특정 프로젝트 참석자 불러오기 -->
+<select id="selectattendants" parameterType="Integer" resultType="attendant">
+	select 
+		memb_mail
+		, att_whether
+	from 
+		attendant
+	where 
+		plan_seq = #{plan_seq}	
+</select>
+
+<!-- 일정 삭제 -->
+<delete id="deletePlan" parameterType="plans">
+	delete 
+	from 
+		plans 
+	where 
+		plan_seq = #{plan_seq}
+</delete>	
+
+</mapper>
