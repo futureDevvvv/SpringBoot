@@ -7,14 +7,14 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Chatroom {
+public class Chatrooms {
 
 	// chatroom
 	private String chatroom_seq;
 	private String chatroom_name;
 	private String prj_domain;
 
-	public Chatroom(String chatroom_seq, String chatroom_name, String prj_domain) {
+	public Chatrooms(String chatroom_seq, String chatroom_name, String prj_domain) {
 		this.chatroom_seq = chatroom_seq;
 		this.chatroom_name = chatroom_name;
 		this.prj_domain = prj_domain;
@@ -23,7 +23,7 @@ public class Chatroom {
 	// chatmember
 	private String chat_member;
 	
-	public Chatroom(String chatroom_seq, String chat_member) {
+	public Chatrooms(String chatroom_seq, String chat_member) {
 		this.chatroom_seq = chatroom_seq;
 		this.chat_member = chat_member;
 	}

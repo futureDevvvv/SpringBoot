@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import net.softsociety.issho.manager.service.ManagerService;
 import net.softsociety.issho.manager.util.PageNavigator;
+import net.softsociety.issho.member.dao.MemberDAO;
 import net.softsociety.issho.member.domain.Members;
 import net.softsociety.issho.member.service.MemberService;
 import net.softsociety.issho.util.FileService;
@@ -34,6 +35,9 @@ public class MemberController {
 
 	@Autowired
 	MemberService memService;
+	
+	@Autowired
+	MemberDAO memDao;
 	
 	@Autowired
 	private WebApplicationContext webApplicationContext;
@@ -170,6 +174,18 @@ public class MemberController {
 		model.addAttribute("searchWord",searchWord);
 		
 		return "member/addressBook";
+	}
+	
+	@PostMapping("/memSearch")
+	@ResponseBody
+	public String memSearch(String memb_mail) {
+		
+		log.debug("memSearch mail : {}", memb_mail);
+		
+		Members member = memDao.getUserById(memb_mail);
+		
+		return member.getMemb_name();
+		
 	}
 	
 

@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.extern.slf4j.Slf4j;
 import net.softsociety.issho.member.dao.MemberDAO;
@@ -20,7 +21,7 @@ import net.softsociety.issho.task.service.TaskService;
 
 @Controller
 @Slf4j
-@RequestMapping("task")
+@RequestMapping("/task")
 public class TaskController {
 	
 	@Autowired
@@ -31,6 +32,17 @@ public class TaskController {
 	
 	@Autowired
 	MemberDAO memDao;
+	
+	
+	/**
+	 * 태스크 리스트 이동
+	 * @param user
+	 * @param model
+	 * @param domain
+	 * @return
+	 * 
+	 * @author 윤영혜
+	 */
 	
 	@GetMapping("/taskList")
 	public String taskList(@AuthenticationPrincipal UserDetails user, Model model, String domain) {
@@ -52,12 +64,29 @@ public class TaskController {
 		return "taskView/task_List2";
 	}
 	
-	@PostMapping("/newProject")
-	public void newProject(@AuthenticationPrincipal UserDetails user, Task task, String staffs) {
+	/**
+	 * 새로운 프로젝트 추가
+	 * @param user
+	 * @param task
+	 * @param staffs
+	 *
+	 *@author 윤영혜
+	 */
 	
+	@PostMapping("/addNewTask")
+	public void newProject(@AuthenticationPrincipal UserDetails user, Task task, String memList2) {
+	
+		//할당자 아이디 받아오기
 		String id = user.getUsername();
 		
+		//sender를 할당자 아이디로
 		task.setTask_sender(id);
+
+		
+		
+		log.debug("task 객체 : {}", task);
+		log.debug("staffs : {}", memList2);
+
 	}
 
 }
