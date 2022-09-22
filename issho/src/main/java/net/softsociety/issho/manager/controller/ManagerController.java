@@ -29,6 +29,8 @@ import net.softsociety.issho.manager.service.ManagerService;
 import net.softsociety.issho.manager.util.PageNavigator;
 import net.softsociety.issho.member.domain.Members;
 import net.softsociety.issho.member.service.MemberService;
+import net.softsociety.issho.project.domain.Projects;
+import net.softsociety.issho.project.service.ProjectService;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -49,6 +51,9 @@ public class ManagerController {
 
 	@Autowired
 	MemberService memberService;
+	
+	@Autowired
+	ProjectService pjService;
 
 	/*
 	 * 메일 전송 서비스
@@ -84,7 +89,7 @@ public class ManagerController {
 
 		// 현재 페이지 글 정보
 		// DB에서 게시판의 모든 글을 조회.ArrayList 타입으로 리턴받음.
-		ArrayList<Members> list = service.listManager(navi, searchWord);
+		ArrayList<Projects> list = pjService.listProjects(navi, searchWord);
 		log.debug("list 결과: {}", list);
 
 		// 리스트를 모델에 저장하고 HTML에서 출력
@@ -95,6 +100,34 @@ public class ManagerController {
 		return "managerView/managerProjects";
 	}
 
+	
+	@ResponseBody
+	@PostMapping("ProjectInfo")
+	public Map<String, Object> ProjectInfo(String domain, Model model) {
+
+		log.debug("프로젝트 도메인 : " + domain);
+
+		Projects projects = new Projects();
+
+		projects.setPrj_domain(domain);
+		
+		projects = pjService.getProjectsInfo(domain);
+		
+		log.debug("프로젝트 정보: " + projects);
+		
+
+		model.addAttribute("projects", projects);
+
+		Map<String, Object> result = new HashMap<>();
+		result.put("projects", projects);
+		
+
+		return result;
+
+	}
+	
+	
+	
 	/**
 	 * 초대 페이지
 	 * 
@@ -132,7 +165,8 @@ public class ManagerController {
 	 * @return
 	 */
 	@GetMapping("/member")
-	public String member(Model model, @RequestParam(name = "page", defaultValue = "1") int page, String searchWord) {
+	public String member(Model model, @RequestParam(name = "page", defaultValue = "1") int page, String searchWord,
+			String email) {
 
 		// 페이지 정보 생성
 		PageNavigator navi = service.getPageNavigator(pagePerGroup, countPerPage, page, searchWord);
@@ -141,11 +175,12 @@ public class ManagerController {
 		// DB에서 게시판의 모든 글을 조회.ArrayList 타입으로 리턴받음.
 		ArrayList<Members> list = service.listManager(navi, searchWord);
 		log.debug("list 결과: {}", list);
-
+		
 		// 리스트를 모델에 저장하고 HTML에서 출력
 		model.addAttribute("navi", navi);
 		model.addAttribute("list", list);
 		model.addAttribute("searchWord", searchWord);
+		
 
 		return "managerView/managerMember";
 	}
@@ -263,25 +298,30 @@ public class ManagerController {
 	 * @param model
 	 * @return
 	 */
-	@GetMapping("ShowMemberInfo")
-	public String memberInfo(String email, Model model) {
+	@ResponseBody
+	@PostMapping("ShowMemberInfo")
+	public Map<String, Object> memberInfo(String memEmail, Model model) {
 
-		log.debug("멤버정보 이메일 : " + email);
+		log.debug("멤버정보 이메일 : " + memEmail);
 
 		Members members = new Members();
 
-		members.setMemb_mail(email);
-
-		members = service.getMemberInfo(email);
-
+		members.setMemb_mail(memEmail);
+		
+		members = service.getMemberInfo(memEmail);
+		log.debug("멤버 정보: " + members);
+		
 		String profileImg = "http://localhost:9990/issho/savedImg/" + members.getMemb_savedfile();
 
 		model.addAttribute("members", members);
 		model.addAttribute("profileImg", profileImg);
 
-		log.debug("멤버 정보: " + members);
+		Map<String, Object> result = new HashMap<>();
+		result.put("members", members);
+		result.put("profileImg", profileImg);
+		
 
-		return "/managerView/memberInfo";
+		return result;
 
 	}
 
