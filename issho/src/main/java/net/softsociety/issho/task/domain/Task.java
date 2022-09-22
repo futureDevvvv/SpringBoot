@@ -24,6 +24,9 @@ public class Task {
 	private String exp_enddate;
 	private int ptask_num;
 	
+	//* 신승훈 멤버 이름
+	private String memb_name;
+	
 	//담당자 attributes
 	private String memb_mail;
 	private int tsuper_perform;
