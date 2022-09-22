@@ -47,7 +47,8 @@
 /* 		let arrStrMemberList = createMemberList(arrMemberList); */
 	    var calendarEl = document.getElementById('calendar');
 	    var calendar = new FullCalendar.Calendar(calendarEl, {
-	        initialView: 'dayGridMonth', 	// 홈페이지에서 다른 형태의 view를 확인할  수 있다.
+	    	timeZone: 'Asia/Seoul',
+	    	initialView: 'dayGridMonth', 	// 홈페이지에서 다른 형태의 view를 확인할  수 있다.
 	        events: createJson(eventList)	// event 추가
 	        , headerToolbar: {
 	            left: 'addEventButton,prev,next today',
@@ -88,7 +89,7 @@
 	        expandRows: true,           // 화면에 맞게 높이 재설정
 	        locale: 'ko',				// 언어설정
 	        eventClick: function (info){// 클릭했을때의 이벤트 (상세보기)
-	        	console.log(info.event);
+	        	console.log(info.event._instance.range.start);
 	       
 	        	$("#DetailcalendarModal").modal("show");						  // modal 나타내기
 	        	$("#updatePlan_seq").val(info.event._def.extendedProps.plan_seq); // 수정시 seq번호 전송
@@ -151,7 +152,9 @@
 	    calendar.render();
 	});
 	
-	function dateFormat(date) {
+	function dateFormat(dateStr) {
+		let date = new Date(dateStr)
+		date.setHours(date.getHours()-9);
         let month = date.getMonth() + 1;
         let day = date.getDate();
         let hour = date.getHours();
@@ -190,10 +193,9 @@
 			plan.attendantList = tempPlan.attendantList;
 			plan.att_whether = tempPlan.att_whether;
 			plan.memb_mail = tempPlan.memb_mail;
-			
 			plans.push(plan);
 	}
-		console.log(plan);
+		
 		return plans;
 	}
 

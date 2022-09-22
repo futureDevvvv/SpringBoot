@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lagn="ko" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head th:replace="fragments/config :: configFragment">
+<meta charset="UTF-8">
+<title>issho - 공지사항</title>
+<script>
+//글쓰기폼 확인
+function validation() {
+	let title = $('#title').val();
+	let contents = $('#contents').val();
+	
+	if (title.length < 5) {
+		alert("제목을 입력하세요.");
+		$('#title').focus();
+		$('#title').select();
+		return false;
+	}
+	
+	if (contents.length < 5) {
+		alert("내용을 입력하세요.");
+		$('#contents').focus();
+		$('#contents').select();
+		return false;
+	}
+	return true;
+}
+</script>	
+
+</head>
+<body>
+<!-- 홍상혁 : 페이징을 위한 자바 스크립트-->
+
+	<div id="wrapper">
+		<!-- content 시작 -->
+		<th:block th:replace="fragments/sidebar :: sidebar"></th:block>
+		<!-- content 끝 -->
+
+		<div id="content-wrapper" class="d-flex flex-column">
+			<!-- header 시작 -->
+			<th:block th:replace="fragments/header :: navFragment"></th:block>
+			<!-- header 끝 -->
+			
+			<!-- [SHHONG] 표 시작 -->
+<!-- 			<div class="container-fluid" width="80%">  -->
+	 			<div class="container-fluid	">
+						
+					<h2 th:text="${noticeDetail}?'공지사항 수정화면':_">공지사항 작성</h2>
+					<p>The .table-bordered class adds border on all sides of the table and cells:</p>            
+					
+					<form class="col-lg-9" th:action="${noticeDetail}?@{updateNotice}:@{writeNotice}" method="post" 
+							enctype="multipart/form-data" onsubmit="return validation();">
+						<th:block th:if="${noticeDetail}">
+							<input type="hidden" name="notice_seq" id="notice_seq" 
+								th:value="${noticeDetail.notice_seq}" />
+						</th:block>
+						<input type="hidden" name="prj_domain" id="prj_domain" 
+								th:value="${noticeDetail}?${noticeDetail.prj_domain}:_" />
+						<table>
+							<tr class="col-lg-8" height="60px">
+								<td class="col-lg-1 text-left"><b>제목 :</b></td>
+								<td class="col-lg-7">
+									<input type="text" th:value="${noticeDetail}?${noticeDetail.notice_name}:_" 
+										class="form-control" id="notice_name" name="notice_name" placeholder="제목을 입력하세요">
+								</td>
+							</tr>
+							<tr class="col-lg-8" >
+								<td class="col-lg-1 text-top text-left"><b>내용 :</b></td>
+								<td class="col-lg-7">
+									<textarea class="form-control" rows="13	" id="notice_contents" name="notice_contents" 
+										th:text="${noticeDetail}?${noticeDetail.notice_contents}:_" placeholder="공지할 내용을 입력하세요"></textarea>
+								</td>
+							</tr>
+							<tr>
+								<td class="col-lg-1 text-left" height="60px"><b>첨부파일 :</b></td>
+								<td><input class="col-lg-7" type="file" id="upload" name="upload" 
+										th:text="${noticeDetail}?${noticeDetail.notice_ogFilr}:_"></td>
+							</tr>
+							<tr>
+								<td class="text-center" colspan="2" >
+									<input type="submit" class="btn btn-primary" 
+											th:value="${noticeDetail}?'　수정　':'　저장　'"/> 	
+									<input type="reset" class="btn btn-primary" value="다시입력"/>
+								</td>
+							</tr>
+						</table>
+					</form>
+				<br><br>
+			</div>
+			
+			<!-- [SHHONG] 표 끝 -->
+			
+			<!-- footer 시작 -->
+			<th:block th:replace="fragments/footer :: footerFragment"></th:block>
+			<!-- footer 끝 -->
+		</div>
+	</div>
+
+</body>
+</html>

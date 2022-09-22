@@ -73,7 +73,6 @@
 		attend.memb_mail = #{memb_mail}
 </select>
 
-
 <!-- 위에서 셀렉한 데이터를 property가 변수 column 컬럼명 -->
 <resultMap type="Plans" id="selectAttendantAndPlans">
 	<!-- 프라이머리 키는 id로 -->
