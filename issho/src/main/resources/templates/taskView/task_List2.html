@@ -31,9 +31,22 @@
 		$('.clickTask').click(function () {
 			console.log($(this).attr('taskSeq'));
 			
-			
 			$("#showTaskModal").modal("show");
-
+			
+			$.ajax({
+				url: 'showTaskModal',
+				type: 'post',
+				data: { taskSeq: taskSeq },
+				dataType: 'JSON',
+				success: function() {
+					alert('success');
+				},
+				error: function() {
+					alert('error');
+					return false;
+				}
+			});
+			
         	// Modal 안에 정보 세팅
         	$("#basic_addon_1").val();
         	$("#basic_addon_2").val();
