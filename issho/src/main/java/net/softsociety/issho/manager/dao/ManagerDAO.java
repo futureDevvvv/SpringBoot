@@ -22,4 +22,8 @@ public interface ManagerDAO {
 	public void insertAttendant(InvitationMember invitation);
 
 	public int invitationIdSearchOne(InvitationMember invitationMember);
+
+	public void updateAccept(InvitationMember invitation);
+
+	public InvitationMember getOneObject(InvitationMember invitation);
 }

@@ -1,14 +1,13 @@
 package net.softsociety.issho.member.service;
 
 import java.util.ArrayList;
-
+import net.softsociety.issho.manager.domain.InvitationMember;
 import java.util.Map;
-
-
 import net.softsociety.issho.member.domain.Members;
 import net.softsociety.issho.util.PageNavigator;
 
 public interface MemberService {
+
 	public ArrayList<Members> listMembers(Members members);
 	
 	public int idSearchOne(String memb_mail);
@@ -18,6 +17,9 @@ public interface MemberService {
 	public ArrayList<Members> searchPjMem(String prj_domain);
 
 	public int deleteMember(Members members);
+	
+	//초대여부 확인 후 수락 여부 변경해주는 메소드
+	public InvitationMember enterProject(InvitationMember invitation);
 
 	public PageNavigator getNoticePageNavi(int pagePerGroup, int countPerPage, int page, String type,
 			String searchWord);
