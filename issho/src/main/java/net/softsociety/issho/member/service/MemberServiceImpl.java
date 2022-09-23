@@ -83,6 +83,7 @@ public class MemberServiceImpl implements MemberService {
 			membersDAO.updateAccept(invitation);
 		}
 		return member;
+	}
 
 	public PageNavigator getNoticePageNavi(int pagePerGroup, int countPerPage, int page, String type,
 			String searchWord) {
