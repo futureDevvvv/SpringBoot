@@ -2,28 +2,86 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="net.softsociety.issho.task.dao.TaskDAO">
-<!-- * 테스크 전체 검색 -->
-	<select id="SelectAlltask" parameterType="String" resultType="Task">
+	<!-- * 테스크 전체 검색 -->
+	<select id="SelectAlltask" parameterType="String"
+		resultType="Task">
 		select
-			task.task_seq AS task_seq
-			,task.prj_domain AS prj_domain
-			,task.task_name AS task_name
-			,task.task_content AS task_content
-			,task.task_sender AS task_sender
-			,task.task_rank AS task_rank
-			,task.task_state AS task_state
-			,task.task_inputdate AS task_inputdate
-			,task.task_startdate AS task_startdate
-			,task.task_enddate AS task_enddate
-			,task.exp_startdate AS exp_startdate
-			,task.exp_enddate AS exp_enddate
-			,task.ptask_num AS ptask_num
-            , memb.memb_name AS memb_name
-		from 
-			task task, members memb
-        where
-            task.task_sender = memb.memb_mail
-            AND task.prj_domain = #{prj_domain}
+		task.task_seq AS task_seq
+		,task.prj_domain AS
+		prj_domain
+		,task.task_name AS task_name
+		,task.task_content AS
+		task_content
+		,task.task_sender AS task_sender
+		,task.task_rank AS
+		task_rank
+		,task.task_state AS task_state
+		,task.task_inputdate AS
+		task_inputdate
+		,task.task_startdate AS task_startdate
+		,task.task_enddate AS task_enddate
+		,task.exp_startdate AS exp_startdate
+		,task.exp_enddate AS exp_enddate
+		,task.ptask_num AS ptask_num
+		,
+		memb.memb_name AS memb_name
+		from
+		task task, members memb
+		where
+		task.task_sender = memb.memb_mail
+		AND task.prj_domain = #{prj_domain}
 	</select>
+
+	<insert id="addNewTask" parameterType="Task">
+		<!-- 구문 실행 후 방금 넣은 데이터의 아이디를 조회하자 -->
+		<selectKey keyProperty="task_seq" resultType="int"
+			order="BEFORE">
+			SELECT task_seq.nextval FROM DUAL
+		</selectKey>
+
+		INSERT INTO task(task_seq, prj_domain, task_name, task_content, task_sender, task_rank, task_state,
+		task_inputdate,
+		<if test="task_startdate != null">
+		task_startdate,
+		</if> 
+		<if test="task_enddate != null">
+		task_enddate,
+		</if>
+		<if test="exp_startdate != null">
+		exp_startdate, 
+		</if>
+		<if test="exp_enddate != null">
+		exp_enddate,
+		</if>
+		ptask_num
+		 )
+		VALUES(#{task_seq}, #{prj_domain}, #{task_name},
+		#{task_content}, #{task_sender}, #{task_rank}, #{task_state},
+		sysdate, 
+		<if test="task_startdate != null">
+		#{task_startdate},
+		</if> 
+		<if test="task_enddate != null">
+		#{task_enddate},
+		</if>
+		<if test="exp_startdate != null">
+		#{exp_startdate}, 
+		</if>
+		<if test="exp_enddate != null">
+		#{exp_enddate},
+		</if>
+		 #{ptask_num})
+	</insert>
+
+	<insert id="addStaffs" parameterType="Taskstaff">
+		INSERT INTO taskstaff
+		VALUES(#{task_seq}, #{memb_mail}, #{tsuper_perform})
+	</insert>
+
+	<insert id="addFiles" parameterType="Taskfile">
+		INSERT INTO taskfile
+		VALUES(tfile_seq.nextval, #{task_seq}, #{tfile_ogfile}, #{tfile_savefile})
+	</insert>
+
 
 </mapper>

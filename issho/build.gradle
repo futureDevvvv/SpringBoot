@@ -60,6 +60,9 @@ dependencies {
 	
 	//신승훈
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.4'
+	
+	//파일 업로드 관련
+	implementation 'commons-io:commons-io:2.6'
 
 	//Excel Download apache
 	implementation group: 'org.apache.poi', name: 'poi', version: '4.1.2'

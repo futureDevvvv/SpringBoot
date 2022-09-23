@@ -28,10 +28,13 @@ public interface ManagerService {
 	//초대 메일 중복 확인
 	public int invitationIdSearchOne(InvitationMember invitationMember);
 
+
 	//드라이브 파일 리스트
 	public ArrayList<DriveFile> listDriveFile(PageNavigator navi, String searchWord);
 
 	
+
+
 	
 	
 }

@@ -2,6 +2,7 @@ package net.softsociety.issho.member.controller;
 
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,27 +37,29 @@ public class MemberController {
 
 	@Autowired
 	MemberService memService;
-	
+
 	@Autowired
+	ServletContext servletContext;
+
 	MemberDAO memDao;
 	
 	@Autowired
 	private WebApplicationContext webApplicationContext;
+
 	
-	
-	//여기서부터 김지윤 작성
+	// 여기서부터 김지윤 작성
 	@Autowired
 	ManagerService manService;
-	
-	//게시판 목록의 페이지당 글 수
+
+	// 게시판 목록의 페이지당 글 수
 	@Value("${user.manager.members.page}")
 	int countPerPage;
-	
-	//게시판 목록의 페이지 이동 링크 수
+
+	// 게시판 목록의 페이지 이동 링크 수
 	@Value("${user.manager.members.group}")
 	int pagePerGroup;
-	
-	//첨부파일 저장할 경로
+
+	// 첨부파일 저장할 경로
 	@Value("${spring.servlet.multipart.location}")
 	String uploadPath;
 
@@ -79,19 +82,34 @@ public class MemberController {
 	public String join(Members members, @RequestParam MultipartFile upload) {
 
 		log.debug("전달받은 객체 : {}", members);
-
-		 /* //resources의 상위 디렉토리까지의 경로가 저장됨. 
-		  String webRoot = webApplicationContext.getServletContext().getRealPath("/"); 
-		  String imgRoot = webRoot + "resources/savedImg";
-		  
-		  log.debug("webRoot : {}", webRoot); 
-		  log.debug("imgRoot : {}", imgRoot);
-		  
-		  if (upload != null && !upload.isEmpty()) { String savedfile =
-		  FileService.saveFile(upload, webRoot + imgRoot);
-		  members.setMemb_ogfile(upload.getOriginalFilename());
-		  members.setMemb_savedfile(savedfile); }*/
 		
+		String realpath = servletContext.getRealPath("/resources");
+		
+		log.debug(realpath);
+
+		// resources의 상위 디렉토리까지의 경로가 저장됨.
+		//String webRoot = webApplicationContext.getServletContext().getRealPath("/");
+		//String imgRoot = webRoot + "resources/savedImg";
+
+		//log.debug("webRoot : {}", webRoot);
+		//log.debug("imgRoot : {}", imgRoot);
+
+		if (upload != null && !upload.isEmpty()) {
+			String savedfile = FileService.saveFile(upload, realpath + "/upload");
+			members.setMemb_ogfile(upload.getOriginalFilename());
+			members.setMemb_savedfile(savedfile);
+		}
+
+		/*
+		 * if(upload != null && !upload.isEmpty()) { try { String absolutePath = new
+		 * ClassPathResource(uploadPath).getFile().getAbsolutePath();
+		 * log.debug("absolutePath : {}", absolutePath); String savedfile =
+		 * FileService.saveFile(upload, absolutePath);
+		 * members.setMemb_ogfile(upload.getOriginalFilename());
+		 * members.setMemb_savedfile(savedfile); } catch (IOException e) { // TODO
+		 * Auto-generated catch block e.printStackTrace(); } }
+		 */
+
 		if(upload != null && !upload.isEmpty()) {
 		
 			/*
@@ -106,7 +124,7 @@ public class MemberController {
 		
 		}		
 	
-	
+
 		log.debug("업로드 처리후 : {}", members);
 
 		memService.memberJoin(members);
@@ -128,11 +146,10 @@ public class MemberController {
 
 		int result = memService.idSearchOne(memb_mail);
 
-		log.debug("결과 : {}", result);
+		log.debug("idCheck 결과 : {}", result);
 
 		return result;
 	}
-
 
 	/**
 	 * 로그인 폼 이동
@@ -144,8 +161,7 @@ public class MemberController {
 		return "member/member_login";
 	}
 
-	
-	
+
 	/**
 	 * 주소록 폼 이동
 	 * 
@@ -156,26 +172,25 @@ public class MemberController {
 	 * @return
 	 */
 	@GetMapping("/addressBook")
-	public String addressBook(Model model
-			,@RequestParam(name="page",defaultValue = "1") int page
-			,String searchWord) {
-		
-		//페이지 정보 생성
-		PageNavigator navi = manService.getPageNavigator(
-				pagePerGroup,countPerPage,page,searchWord);
-		
-		//현재 페이지 글 정보
-		//DB에서 게시판의 모든 글을 조회.ArrayList 타입으로 리턴받음.
-		ArrayList<Members> list = manService.listManager(navi,searchWord);
-		log.debug("list 결과: {}",list);
-		
-		//리스트를 모델에 저장하고 HTML에서 출력
-		model.addAttribute("navi",navi);
-		model.addAttribute("list",list);
-		model.addAttribute("searchWord",searchWord);
-		
+	public String addressBook(Model model, @RequestParam(name = "page", defaultValue = "1") int page,
+			String searchWord) {
+
+		// 페이지 정보 생성
+		PageNavigator navi = manService.getPageNavigator(pagePerGroup, countPerPage, page, searchWord);
+
+		// 현재 페이지 글 정보
+		// DB에서 게시판의 모든 글을 조회.ArrayList 타입으로 리턴받음.
+		ArrayList<Members> list = manService.listManager(navi, searchWord);
+		log.debug("list 결과: {}", list);
+
+		// 리스트를 모델에 저장하고 HTML에서 출력
+		model.addAttribute("navi", navi);
+		model.addAttribute("list", list);
+		model.addAttribute("searchWord", searchWord);
+
 		return "member/addressBook";
 	}
+
 	
 	@PostMapping("/memSearch")
 	@ResponseBody
@@ -186,6 +201,18 @@ public class MemberController {
 		Members member = memDao.getUserById(memb_mail);
 		
 		return member.getMemb_name();
+		
+	}
+
+	@PostMapping("/memSearchByIdName")
+	@ResponseBody
+	public List<Members> memSearchByIdName(String searchWord) {
+		
+		log.debug("searchWord : {}", searchWord);
+		
+		List<Members> list = memDao.memSearchByIdName(searchWord);
+		
+		return list;
 		
 	}
 	

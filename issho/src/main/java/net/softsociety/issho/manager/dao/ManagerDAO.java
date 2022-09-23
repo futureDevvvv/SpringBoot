@@ -24,6 +24,12 @@ public interface ManagerDAO {
 
 	public int invitationIdSearchOne(InvitationMember invitationMember);
 
+
 	public ArrayList<DriveFile> listDriveFile(
 			HashMap<String, String> map, RowBounds rb);
+
+	public void updateAccept(InvitationMember invitation);
+
+	public InvitationMember getOneObject(InvitationMember invitation);
+
 }
