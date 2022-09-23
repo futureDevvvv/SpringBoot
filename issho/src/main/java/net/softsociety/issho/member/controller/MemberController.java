@@ -2,6 +2,7 @@ package net.softsociety.issho.member.controller;
 
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -185,6 +186,18 @@ public class MemberController {
 		Members member = memDao.getUserById(memb_mail);
 		
 		return member.getMemb_name();
+		
+	}
+
+	@PostMapping("/memSearchByIdName")
+	@ResponseBody
+	public List<Members> memSearchByIdName(String searchWord) {
+		
+		log.debug("searchWord : {}", searchWord);
+		
+		List<Members> list = memDao.memSearchByIdName(searchWord);
+		
+		return list;
 		
 	}
 	
