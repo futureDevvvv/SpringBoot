@@ -33,7 +33,7 @@ import net.softsociety.issho.util.FileService;
 import net.softsociety.issho.util.PageNavigator;
 
 @Slf4j
-@RequestMapping("notice")
+@RequestMapping("**/notice")
 @Controller
 public class NoticeController {
 	

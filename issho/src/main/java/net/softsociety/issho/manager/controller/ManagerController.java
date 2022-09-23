@@ -36,7 +36,7 @@ import net.softsociety.issho.task.service.TaskService;
 
 @Slf4j
 @Controller
-@RequestMapping("manager")
+@RequestMapping("**/manager")
 public class ManagerController {
 
 	/*
