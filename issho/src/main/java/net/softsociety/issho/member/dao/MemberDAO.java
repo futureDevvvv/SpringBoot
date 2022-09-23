@@ -15,7 +15,6 @@ public interface MemberDAO {
 
 	public void memberJoin(Members members);
 
-
 	public ArrayList<Members> searchPjMem(String prj_domain);
 
 	public int deleteMember(Members members);

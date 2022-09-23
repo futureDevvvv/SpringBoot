@@ -12,7 +12,7 @@
 	</select>
 	
 	<select id="idSearchOne" parameterType="String" resultType="int">
-		SELECT *
+		SELECT COUNT(*)
 		FROM members
 		WHERE memb_mail = #{memb_mail}
 	</select>

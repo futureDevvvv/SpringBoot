@@ -18,7 +18,7 @@
 		VALUES(#{prj_domain}, #{memb_mail}, #{pjmb_right})
 	</insert>
 	
-	<select id="searchOne" parameterType="String" resultType="Projects">
+	<select id="searchOne" parameterType="Projects" resultType="Projects">
 		SELECT *
 		FROM projects
 		WHERE prj_domain = #{prj_domain}

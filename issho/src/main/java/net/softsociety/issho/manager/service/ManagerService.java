@@ -26,8 +26,6 @@ public interface ManagerService {
 
 	//초대 메일 중복 확인
 	public int invitationIdSearchOne(InvitationMember invitationMember);
-
-	
 	
 	
 }
