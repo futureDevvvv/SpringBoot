@@ -81,4 +81,24 @@
 		AND membInv_recipient = #{membInv_recipient}
 	</update>
 
+<select id="listDriveFile" parameterType="Map" resultType="DriveFile">
+select
+	driveFile_seq
+	,driveFolder_seq2
+	,driveFile_ogFile
+	,driveFile_saveFile
+	,driveFolder_seq
+	,driveFile_writer
+	,driveFile_type
+	,driveFile_date
+from driveFile
+<where>
+<if test="searchWord != null">
+	driveFile_saveFile like '%' || #{searchWord} || '%'	
+</if>
+</where>
+order by 
+	1 desc
+</select>
+
 </mapper>

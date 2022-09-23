@@ -2,6 +2,8 @@ package net.softsociety.issho.manager.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -29,6 +31,8 @@ import net.softsociety.issho.member.domain.Members;
 import net.softsociety.issho.member.service.MemberService;
 import net.softsociety.issho.project.domain.Projects;
 import net.softsociety.issho.project.service.ProjectService;
+import net.softsociety.issho.task.domain.Task;
+import net.softsociety.issho.task.service.TaskService;
 
 @Slf4j
 @Controller
@@ -46,6 +50,9 @@ public class ManagerController {
 	
 	@Autowired
 	ProjectService pjService;
+	
+	@Autowired
+	TaskService taskService;
 
 	/*
 	 * 메일 전송 서비스
@@ -105,13 +112,18 @@ public class ManagerController {
 		
 		projects = pjService.getProjectsInfo(domain);
 		
+		ArrayList<Task> tasklist = taskService.SelectAlltask("scit42");
+		
 		log.debug("프로젝트 정보: " + projects);
+		log.debug("태스크 정보 : {}", tasklist);
 		
 
-		model.addAttribute("projects", projects);
+		//model.addAttribute("projects", projects);
+		//model.addAttribute("tasklist2", tasklist);
 
 		Map<String, Object> result = new HashMap<>();
 		result.put("projects", projects);
+		result.put("tasklist", tasklist);
 		
 
 		return result;

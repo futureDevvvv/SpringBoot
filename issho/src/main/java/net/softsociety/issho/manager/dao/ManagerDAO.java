@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.session.RowBounds;
 
 import net.softsociety.issho.manager.domain.InvitationMember;
+import net.softsociety.issho.member.domain.DriveFile;
 import net.softsociety.issho.member.domain.Members;
 
 
@@ -23,7 +24,12 @@ public interface ManagerDAO {
 
 	public int invitationIdSearchOne(InvitationMember invitationMember);
 
+
+	public ArrayList<DriveFile> listDriveFile(
+			HashMap<String, String> map, RowBounds rb);
+
 	public void updateAccept(InvitationMember invitation);
 
 	public InvitationMember getOneObject(InvitationMember invitation);
+
 }
