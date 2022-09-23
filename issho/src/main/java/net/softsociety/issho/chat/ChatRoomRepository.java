@@ -11,7 +11,7 @@ import org.springframework.web.socket.WebSocketSession;
 
 import lombok.extern.slf4j.Slf4j;
 import net.softsociety.issho.chat.dao.ChatDAO;
-import net.softsociety.issho.chat.domain.Chatroom;
+import net.softsociety.issho.chat.domain.Chatrooms;
 
 /**
  * @brief 다중 채팅방이므로 (여러) 채팅방을 관리해줄 자바 클래스.
@@ -47,7 +47,7 @@ public class ChatRoomRepository {
 		chatRoomMap.put(chatRoom.getId(), chatRoom);
 
 		// chatroom DB에 insert
-		Chatroom chroom = new Chatroom(uuid, chatroom_name, prj_domain);
+		Chatrooms chroom = new Chatrooms(uuid, chatroom_name, prj_domain);
 
 		// dao 호출
 		chatdao.openNewChat(chroom);

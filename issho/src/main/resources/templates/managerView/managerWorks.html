@@ -4,11 +4,14 @@
 <head th:replace="fragmentsManager/config :: configFragment">
 <meta charset="UTF-8">
 <title>구성원 페이지</title>
+<script th:src="@{/js/jquery-3.6.0.min.js}"></script>
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<style>
 
-
-
+</style>
 </head>
 <body>
+
 
 	<div id="wrapper">
 		<!-- content 시작 -->
@@ -18,130 +21,238 @@
 		<div id="content-wrapper" class="d-flex flex-column">
 			<!-- header 시작 -->
 			<th:block th:replace="fragmentsManager/header :: navFragment"></th:block>
-			
+
 			<!-- header 끝 -->
 			<div class="container-fluid">
 
-                    <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">업무 관리</h1>
+				<!-- Page Heading -->
+				<h1 class="h3 mb-2 text-gray-800">업무 관리</h1>
 
-                    <!-- DataTales Example -->
-                    <div class="card shadow mb-4">
-                        <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">멤버별 업무 리스트</h6>
-                        </div>
-                        
-                          <div class="col-sm-12 col-md-6">
-                                <div id="dataTable_filter" class="dataTables_filter">
-                                <form id="pagingForm" method="get" th:action="@{/manager/works}">
-                                <input type="hidden" name="page" id="page" >
-                                
-                                <div id="listTop">
-                               	
-                             
-								<p>전체 업무 수 : <span th:text="${navi.totalRecordsCount}"></span></p>
-								
-                                <label class="listTop">Search:
-                                <input type="text" class="listTop" name="searchWord" th:value="${searchWord}">
-                                <button class="btn btn-primary" type="button" onclick="pagingFormSubmit(1)">
-				                     <i class="fas fa-search fa-sm"></i>
-				                   </button>
-                                </label>
-                                
-                                <input type="button" value="PDF">
-                                <input type="button" value="excel">
-                                
-                             	</div>
-                                </form>
-                                </div>
-                                </div>
-                        
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
-                                <div class="row"><div class="col-sm-12 col-md-6">
-                                <div class="dataTables_length" id="dataTable_length">
-                              
-                                </div>
-                                </div>
-                                
-                                
-                                
-                                
-                                
-                              
-                                </div>
-                                <div class="row">
-                                <div class="col-sm-12">
-                                <form action="">
-                                <table class="table table-bordered dataTable" id="dataTable" width="100%" cellspacing="0" role="grid" aria-describedby="dataTable_info" style="width: 100%;">
-                                    <thead>
-                                        <tr role="row">
-                                        <th class="sorting sorting_asc" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-sort="ascending" style="width: 133px;">선택</th>
-                                        <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 50px;">이메일</th>
-                                        <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 50px;">이름</th>
-                                        <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 50px;">권한</th>
-                                        <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 50px;">작업량(개인별)</th>
-                                        <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 50px;">작업량(업무별)</th>
-                                        <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1"  style="width: 50px;">업무능률</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr class="odd" th:each="l:${list}">
-                                    <td class="sorting_1" id="selectWorks">
-                                    			<input type="checkbox"></td>
-                                            <td th:text=${l.memb_mail}></td>
-                                            <td th:text=${l.memb_name}></td>
-                                            <td th:text=${l.rolename}></td>
-                                            <td>개인별작업량표시</td>
-                                            <td>업무별작업량표시</td>
-                                            <td>업무능률표시</td>
-                                        </tr>
-                                        </tbody>
-                                      
-                                </table>
-                                </form>
-                                </div>
-                                </div>
-                                                             </div>
-                             </div>
-                             </div>
-                             </div>
-                                
-                                <div class="navigator">
-                                <a th:href="|javascript:pagingFormSubmit(${navi.currentPage - navi.pagePerGroup})|">◁◁</a>
-								<a th:href="|javascript:pagingFormSubmit(${navi.currentPage - 1})|">◀</a> 
+				<!-- DataTales Example -->
+				<div class="card shadow mb-4">
+					<div class="card-header py-3">
+						<h6 class="m-0 font-weight-bold text-primary">멤버별 업무 리스트</h6>
+					</div>
 
-								<span th:each="counter : ${#numbers.sequence(navi.startPageGroup, navi.endPageGroup)}"> 
-								<th:block th:if="${counter == navi.currentPage}"><b></th:block>
-								<a th:text="${counter}" th:href="|javascript:pagingFormSubmit(${counter})|"></a>&nbsp;
-								<th:block th:if="${counter == navi.currentPage}"></b></th:block>
-								</span>
-	
-								<a th:href="|javascript:pagingFormSubmit(${navi.currentPage + 1})|">▶</a> 
-								<a th:href="|javascript:pagingFormSubmit(${navi.currentPage + navi.pagePerGroup})|">▷▷</a>
-								<br><br>
+									
+
+					<div class="w3-clear nextprev">
+						<div class="w3-left w3-btn">
+							<form class="form-inline" id="pagingForm" method="get"
+								th:action="@{/manager/works}">
+								<input type="hidden" name="page" id="page">
+
+								<div id="listTop" class="w3-left w3-btn">
+
+
+									<label class="mr-sm-2" id="listTop1"> <input
+										type="text" class="form-control mb-2 mr-sm-2" id="listTop1"
+										name="searchWord" th:value="${searchWord}">
+										<button class="btn btn-primary mb-2" type="button"
+											onclick="pagingFormSubmit(1)">
+											<i class="fas fa-search fa-sm"></i>
+										</button>
+							</form>
+							<form th:action="@{/manager/excelDownload}" method="get"
+								class="form-inline" id="excelDownloadForm">
+								<input type="button" value="excel"
+									class="btn btn-success form-control mb-2 mr-sm-2"
+									style="margin-left: 840px;" onclick="checkedBox()"> 
+							</form>
+									<a th:href = "@{/manager/pdf}" class="btn btn-danger form-control mb-2 mr-sm-2" >PDF</a>
+									
 								
+									
+							</label>
+
+
+
+						</div>
+					</div>
+				</div>
+
+				<div class="card-body">
+					<div class="table-responsive">
+						<div id="dataTable_wrapper"
+							class="dataTables_wrapper dt-bootstrap4">
+							<div class="row">
+								<div class="col-sm-12 col-md-6">
+									<div class="dataTables_length" id="dataTable_length"></div>
 								</div>
+							</div>
+						</div>
+					</div>
 
-                             
-                </div>
-			<!-- footer 시작 -->
-			<th:block th:replace="fragmentsManager/footer :: footerFragment"></th:block>
-			<!-- footer 끝 -->
+					<div class="row">
+						<div class="col-sm-12">
+							<!-- 체크박스 선택시 전송할 폼 -->
+							<form th:action="@{/manager/excelDownload}" method="POST"
+								id="chkForm">
+								<input type="hidden" name="email" id="email" value="">
+							</form>
+							
+							<form form th:action="@{manager/multiChecked}" method="get">
+								<table class="table table-bordered dataTable" id="dataTable"
+									width="100%" cellspacing="0" role="grid"
+									aria-describedby="dataTable_info" style="width: 100%;">
+									<thead>
+										<tr role="row">
+											<th class="sorting sorting_asc" tabindex="0"
+												aria-controls="dataTable" rowspan="1" colspan="1"
+												aria-sort="ascending" style="width: 30px; text-align: center;">선택</th>
+											<th class="sorting" tabindex="0" aria-controls="dataTable"
+												rowspan="1" colspan="1" style="width: 100px;">이메일</th>
+											<th class="sorting" tabindex="0" aria-controls="dataTable"
+												rowspan="1" colspan="1" style="width: 80px;">이름</th>
+											<th class="sorting" tabindex="0" aria-controls="dataTable"
+												rowspan="1" colspan="1" style="width: 50px;">권한</th>
+											<th class="sorting" tabindex="0" aria-controls="dataTable"
+												rowspan="1" colspan="1" style="width: 80px;">작업량(개인별)</th>
+											<th class="sorting" tabindex="0" aria-controls="dataTable"
+												rowspan="1" colspan="1" style="width: 80px;">작업량(업무별)</th>
+											<th class="sorting" tabindex="0" aria-controls="dataTable"
+												rowspan="1" colspan="1" style="width: 80px;">업무능률</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr class="odd" th:each="l:${list}">
+											<td class="sorting_1" id="selectWorks" style="text-align: center; "><input
+												type="checkbox" name="checkedValue"
+												th:value="${l.memb_mail}" style="vertical-align: middle;"></td>
+											<td th:text=${l.memb_mail} id="email" th:id="newTask"
+												data-toggle="modal" th:infoEmail="${l.memb_mail}"></td>
+											<td th:text=${l.memb_name}></td>
+											<td th:text=${l.rolename}></td>
+											<td>개인별작업량표시</td>
+											<td>업무별작업량표시</td>
+											<td>업무능률표시</td>
+										</tr>
+									</tbody>
+
+								</table>
+							</form>
+						</div>
+					</div>
+
+
+				</div>
+			</div>
+
+			<div class="navigator">
+				<a class="btn btn-primary"
+					th:href="|javascript:pagingFormSubmit(${navi.currentPage - 1})|">Previous</a>
+
+				<span
+					th:each="counter : ${#numbers.sequence(navi.startPageGroup, navi.endPageGroup)}">
+					<th:block th:if="${counter == navi.currentPage}">
+						<b>
+					</th:block> <a class="btn btn-light" th:text="${counter}"
+					th:href="|javascript:pagingFormSubmit(${counter})|"></a>&nbsp; <th:block
+						th:if="${counter == navi.currentPage}">
+						</b>
+					</th:block>
+				</span> <a class="btn btn-primary"
+					th:href="|javascript:pagingFormSubmit(${navi.currentPage + 1})|">Next</a>
+				<br> <br>
+
+			</div>
+
+
+		</div>
+		<!-- footer 시작 -->
+		<th:block th:replace="fragmentsManager/footer :: footerFragment"></th:block>
+		<!-- footer 끝 -->
+	</div>
+
+
+	<!-- 태스크 추가 modal -->
+	<div class="modal fade" id="exampleModal" tabindex="-1"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-ml">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title fw-bold mb-0" id="exampleModalLabel">업무
+						정보</h5>
+
+				</div>
+				<div class="modal-body p-5 pt-0"></div>
+				<div class="modal-footer">
+					<button type="button" id="closeNewTask" class="btn btn-secondary"
+						data-bs-dismiss="modal">확인</button>
+
+				</div>
+			</div>
 		</div>
 	</div>
-	
-<script>
-function pagingFormSubmit(currentPage) {
-	var form = document.getElementById('pagingForm');
-	var page = document.getElementById('page');
-	page.value = currentPage;
-	form.submit();
-}
-</script>
 
+
+	<script>
+		function pagingFormSubmit(currentPage) {
+			var form = document.getElementById('pagingForm');
+			var page = document.getElementById('page');
+			page.value = currentPage;
+			form.submit();
+		}
+		function checkBoxChange(Memail) {
+			var email = document.getElementById('email');
+			var form = document.getElementById('excelDownloadForm');
+			email.value = Memail;
+			form.submit();
+		}
+
+		//새로운 태스크 모달창 제어
+		$("#newTask").click(function(e) {
+			e.preventDefault();
+			$("#exampleModal").modal("show");
+		});
+
+		$("#closeNewTask").click(function(e) {
+			e.preventDefault();
+			$("#exampleModal").modal("hide");
+		})
+
+		//체크 박스
+		function checkedBox() {
+			var checkedBox_length = document.getElementsByName("checkedValue").length;
+			var checkedBoxArray = new Array();
+
+			let emailVal = $("#email").val();
+
+			for (var i = 0; i < checkedBox_length; i++) {
+				if (document.getElementsByName("checkedValue")[i].checked == true) {
+					emailVal = emailVal
+							+ document.getElementsByName("checkedValue")[i].value
+							+ ",";
+
+					/* checkedBoxArray.push(document
+							.getElementsByName("checkedValue")[i].value); */
+				}
+			}
+			$("#email").val(emailVal);
+			alert(emailVal);
+			$("#chkForm").submit();
+			$("#email").val("");
+
+			//console.log(checkedBoxArray);
+
+			/* 			$.ajax({
+			 url : "excelDownload",
+			 type : "POST",
+			 data : JSON.stringify(checkedBoxArray),
+			 contentType : "application/json",
+			 success : function() {
+			 },
+			 error : function(request, status, error) {
+			 alert("code:" + request.status + "\n" + "message:"
+			 + request.responseText + "\n" + "error:" + error);
+			 }
+			 }); */
+
+		}
+		
+	
+	</script>
+	<script th:src="@{/js/jquery-3.6.0.min.js}"></script>
 
 </body>
 </html>
-	

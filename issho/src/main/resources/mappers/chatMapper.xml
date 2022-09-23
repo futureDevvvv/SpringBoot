@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.softsociety.issho.chat.dao.ChatDAO">
 
-	<select id="chatList" parameterType="Map" resultType="Chatroom">
+	<select id="chatList" parameterType="Map" resultType="Chatrooms">
 		SELECT
 		c.chatroom_seq as chatroom_seq, c.chatroom_name as chatroom_name,
 		(SELECT MAX(chatmsg_sendDate) FROM chatmsg) as chatmsg_senddate
@@ -13,13 +13,13 @@
 		WHERE c.prj_domain = #{prj_domain} AND m.chat_member= #{chat_member}
 	</select>
 
-	<insert id="openNewChat" parameterType="Chatroom">
+	<insert id="openNewChat" parameterType="Chatrooms">
 		INSERT INTO
 		chatroom(chatroom_seq, chatroom_name, prj_domain)
 		VALUES(#{chatroom_seq}, #{chatroom_name}, #{prj_domain})
 	</insert>
 
-	<insert id="addChatMem" parameterType="Chatroom">
+	<insert id="addChatMem" parameterType="Chatrooms">
 		INSERT INTO chatmember
 		VALUES(#{chatroom_seq}, #{chat_member})
 	</insert>

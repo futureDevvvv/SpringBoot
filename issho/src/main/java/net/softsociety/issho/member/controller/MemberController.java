@@ -1,14 +1,11 @@
 package net.softsociety.issho.member.controller;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 
-import javax.servlet.ServletContext;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,19 +18,20 @@ import org.springframework.web.multipart.MultipartFile;
 
 import net.softsociety.issho.manager.service.ManagerService;
 import net.softsociety.issho.manager.util.PageNavigator;
+import net.softsociety.issho.member.dao.MemberDAO;
 import net.softsociety.issho.member.domain.Members;
 import net.softsociety.issho.member.service.MemberService;
 import net.softsociety.issho.util.FileService;
 
 @lombok.extern.slf4j.Slf4j
-@Controller
-@RequestMapping("/member")
 /**
  * @brief 멤버 관련 컨트롤러 : 회원가입
  * @author 윤영혜
  *
  */
 
+@Controller
+@RequestMapping("/member")
 public class MemberController {
 
 	@Autowired
@@ -41,6 +39,12 @@ public class MemberController {
 
 	@Autowired
 	ServletContext servletContext;
+
+	MemberDAO memDao;
+	
+	@Autowired
+	private WebApplicationContext webApplicationContext;
+
 	
 	// 여기서부터 김지윤 작성
 	@Autowired
@@ -105,6 +109,21 @@ public class MemberController {
 		 * Auto-generated catch block e.printStackTrace(); } }
 		 */
 
+		if(upload != null && !upload.isEmpty()) {
+		
+			/*
+			 * String absolutePath = new
+			 * ClassPathResource(uploadPath).getFile().getAbsolutePath();
+			 * log.debug("absolutePath : {}", absolutePath);
+			 */
+				log.debug("uploadPath : {}", uploadPath);
+				String savedfile = FileService.saveFile(upload, uploadPath);
+				members.setMemb_ogfile(upload.getOriginalFilename());
+				members.setMemb_savedfile(savedfile);
+		
+		}		
+	
+
 		log.debug("업로드 처리후 : {}", members);
 
 		memService.memberJoin(members);
@@ -141,6 +160,7 @@ public class MemberController {
 		return "member/member_login";
 	}
 
+
 	/**
 	 * 주소록 폼 이동
 	 * 
@@ -169,5 +189,31 @@ public class MemberController {
 
 		return "member/addressBook";
 	}
+
+	
+	@PostMapping("/memSearch")
+	@ResponseBody
+	public String memSearch(String memb_mail) {
+		
+		log.debug("memSearch mail : {}", memb_mail);
+		
+		Members member = memDao.getUserById(memb_mail);
+		
+		return member.getMemb_name();
+		
+	}
+
+	@PostMapping("/memSearchByIdName")
+	@ResponseBody
+	public List<Members> memSearchByIdName(String searchWord) {
+		
+		log.debug("searchWord : {}", searchWord);
+		
+		List<Members> list = memDao.memSearchByIdName(searchWord);
+		
+		return list;
+		
+	}
+	
 
 }

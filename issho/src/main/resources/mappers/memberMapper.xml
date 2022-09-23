@@ -4,6 +4,26 @@
 
 <mapper namespace="net.softsociety.issho.member.dao.MemberDAO">
 
+	<!-- 멤버 목록 -->
+	<select id="listMembers" parameterType="Map" resultType="Members">
+	select
+		memb_mail
+		,memb_name
+		,memb_ogFile
+		,memb_savedFile
+		,memb_work
+		,memb_phone
+		,rolename
+	from members
+	<where>
+	<if test="searchWord != null">
+		memb_name like '%' || #{searchWord} || '%'	
+	</if>
+	</where>
+	order by 
+		1 desc
+	</select>
+
 	<!-- 멤버 검색 -->
 	<select id="getUserById" parameterType="String" resultType="Members">
 		SELECT *
@@ -54,6 +74,13 @@
 		prj_domain, p.pjmb_right as pjmb_right
 		FROM members m, projectmember p
 		WHERE p.memb_mail = m.memb_mail AND p.prj_domain = #{prj_domain}
+	</select>
+
+	<!-- 아이디와 이름으로 멤버 검색 -->
+	<select id="memSearchByIdName" parameterType="String" resultType="Members">
+		SELECT * FROM members
+		WHERE memb_mail LIKE '%' || #{searchWord} || '%'
+		OR memb_name LIKE '%' || #{searchWord} || '%'
 	</select>
 
 </mapper>

@@ -18,8 +18,7 @@ public class HomeController {
 
 	@Autowired
 	ProjectService pjservice;
-
-	// 123
+  
 	/**
 	 * @brief 메인화면 이동
 	 * @author 윤영혜
