@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<th:block th:replace="fragments/config :: head"></th:block>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div id="wrapper">
+		<!-- content 시작 -->
+		<th:block th:replace="fragments/sidebar :: sidebar"></th:block>
+		<!-- content 끝 -->
+
+		<div id="content-wrapper" class="d-flex flex-column">
+			<!-- header 시작 -->
+			<th:block th:replace="fragments/header :: navFragment"></th:block>
+
+			<div>
+				<h2>간트</h2>
+			</div>
+			<!-- header 끝 -->
+			<!-- footer 시작 -->
+			<th:block th:replace="fragments/footer :: footerFragment"></th:block>
+			<!-- footer 끝 -->
+		</div>
+	</div>
+
+</body>
+</html>
