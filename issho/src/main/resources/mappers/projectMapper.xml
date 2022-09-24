@@ -18,10 +18,35 @@
 		VALUES(#{prj_domain}, #{memb_mail}, #{pjmb_right})
 	</insert>
 	
-	<select id="searchOne" parameterType="String" resultType="Projects">
+	<select id="searchOne" parameterType="Projects" resultType="Projects">
 		SELECT *
 		FROM projects
 		WHERE prj_domain = #{prj_domain}
 	</select>
+	
+	<!-- 관리자페이지 프로젝트 리스트 -->
+	<select id="listProjects" parameterType="Map" resultType="Projects">
+		select
+		prj_domain
+		,prj_name
+		,prj_date
+		,prj_enabled
+	from projects
+	<where>
+	<if test="searchWord != null">
+		prj_name like '%' || #{searchWord} || '%'	
+	</if>
+	</where>
+	order by 
+		1 desc
+	</select>
+	
+	<!-- 관리자 페이지 프로젝트 상세페이지  -->
+	<select id="getProjectsInfo" resultType="Projects" parameterType="String">
+	select * 
+	from projects
+	where
+		prj_domain=#{prj_domain}
+</select>
 
 </mapper>

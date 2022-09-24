@@ -6,10 +6,13 @@ import java.util.Date;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * 파일 관련 유틸
  * 업로드한 파일의 저장 & 서버에 저장된 파일 삭제 등의 기능 제공
  */
+@Slf4j
 public class FileService {
 
 	/**
@@ -56,6 +59,7 @@ public class FileService {
 		//같은 이름의 파일이 있는 경우의 처리
 		while (true) {
 			serverFile = new File(uploadPath + "/" + savedFilename + ext);
+			
 			//같은 이름의 파일이 없으면 나감.
 			if ( !serverFile.isFile()) break;	//파일로서 존재하는지 여부 확인.
 			//같은 이름의 파일이 있으면 이름 뒤에 long 타입의 시간정보를 덧붙임.

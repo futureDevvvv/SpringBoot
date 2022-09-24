@@ -6,6 +6,9 @@
 <title>구성원 페이지</title>
 <script th:src="@{/js/jquery-3.6.0.min.js}"></script>
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<style>
+
+</style>
 </head>
 <body>
 
@@ -96,26 +99,26 @@
 										<tr role="row">
 											<th class="sorting sorting_asc" tabindex="0"
 												aria-controls="dataTable" rowspan="1" colspan="1"
-												aria-sort="ascending" style="width: 133px;">선택</th>
+												aria-sort="ascending" style="width: 30px; text-align: center;">선택</th>
 											<th class="sorting" tabindex="0" aria-controls="dataTable"
-												rowspan="1" colspan="1" style="width: 50px;">이메일</th>
+												rowspan="1" colspan="1" style="width: 100px;">이메일</th>
 											<th class="sorting" tabindex="0" aria-controls="dataTable"
-												rowspan="1" colspan="1" style="width: 50px;">이름</th>
+												rowspan="1" colspan="1" style="width: 80px;">이름</th>
 											<th class="sorting" tabindex="0" aria-controls="dataTable"
 												rowspan="1" colspan="1" style="width: 50px;">권한</th>
 											<th class="sorting" tabindex="0" aria-controls="dataTable"
-												rowspan="1" colspan="1" style="width: 50px;">작업량(개인별)</th>
+												rowspan="1" colspan="1" style="width: 80px;">작업량(개인별)</th>
 											<th class="sorting" tabindex="0" aria-controls="dataTable"
-												rowspan="1" colspan="1" style="width: 50px;">작업량(업무별)</th>
+												rowspan="1" colspan="1" style="width: 80px;">작업량(업무별)</th>
 											<th class="sorting" tabindex="0" aria-controls="dataTable"
-												rowspan="1" colspan="1" style="width: 50px;">업무능률</th>
+												rowspan="1" colspan="1" style="width: 80px;">업무능률</th>
 										</tr>
 									</thead>
 									<tbody>
 										<tr class="odd" th:each="l:${list}">
-											<td class="sorting_1" id="selectWorks"><input
+											<td class="sorting_1" id="selectWorks" style="text-align: center; "><input
 												type="checkbox" name="checkedValue"
-												th:value="${l.memb_mail}"></td>
+												th:value="${l.memb_mail}" style="vertical-align: middle;"></td>
 											<td th:text=${l.memb_mail} id="email" th:id="newTask"
 												data-toggle="modal" th:infoEmail="${l.memb_mail}"></td>
 											<td th:text=${l.memb_name}></td>
@@ -228,6 +231,7 @@
 			$("#email").val(emailVal);
 			alert(emailVal);
 			$("#chkForm").submit();
+			$("#email").val("");
 
 			//console.log(checkedBoxArray);
 

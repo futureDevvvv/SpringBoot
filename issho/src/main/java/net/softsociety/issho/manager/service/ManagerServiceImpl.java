@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import net.softsociety.issho.manager.dao.ManagerDAO;
 import net.softsociety.issho.manager.domain.InvitationMember;
 import net.softsociety.issho.manager.util.PageNavigator;
+import net.softsociety.issho.member.domain.DriveFile;
 import net.softsociety.issho.member.domain.Members;
 
 @Service
@@ -61,6 +62,16 @@ public class ManagerServiceImpl implements ManagerService {
 	public int invitationIdSearchOne(InvitationMember invitationMember) {
 		int result = membersDAO.invitationIdSearchOne(invitationMember);
 		return result;
+	}
+
+	@Override
+	public ArrayList<DriveFile> listDriveFile(PageNavigator navi, String searchWord) {
+		HashMap<String, String> map = new HashMap<>();
+		map.put("searchWord", searchWord);
+		RowBounds rb = new RowBounds(navi.getStartRecord(),navi.getCountPerPage());
+		ArrayList<DriveFile> list = membersDAO.listDriveFile(map, rb);
+		
+		return list;
 	}
 
 	

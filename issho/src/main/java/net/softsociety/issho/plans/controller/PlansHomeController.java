@@ -28,7 +28,7 @@ import net.softsociety.issho.util.ArrayOverlapDelete;
 
 
 @Slf4j
-@RequestMapping("plans")
+@RequestMapping("**/plans")
 @Controller
 public class PlansHomeController {
 	
