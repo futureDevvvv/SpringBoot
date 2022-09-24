@@ -157,4 +157,6 @@ public class TaskController {
 		log.debug("task 객체 처리 후 : {}", task);
 		return "redirect:/task/taskList";
 	}
+	
+	
 }

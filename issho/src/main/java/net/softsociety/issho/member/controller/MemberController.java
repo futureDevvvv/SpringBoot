@@ -200,6 +200,4 @@ public class MemberController {
 		return list;
 		
 	}
-	
-
 }
