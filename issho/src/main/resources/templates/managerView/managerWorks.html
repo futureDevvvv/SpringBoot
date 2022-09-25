@@ -4,8 +4,11 @@
 <head th:replace="fragmentsManager/config :: configFragment">
 <meta charset="UTF-8">
 <title>구성원 페이지</title>
-<script th:src="@{/js/jquery-3.6.0.min.js}"></script>
-<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<script th:src="@{/js/html2canvas.js?ver=113111}"></script>
+<script th:src="@{/js/jquery-3.6.0.min.js?ver=123}"></script>
+<script th:src="@{/js/jspdf.min.js?ver=131}"></script>
+
+
 <style>
 
 </style>
@@ -59,9 +62,11 @@
 									class="btn btn-success form-control mb-2 mr-sm-2"
 									style="margin-left: 840px;" onclick="checkedBox()"> 
 							</form>
-									<a th:href = "@{/manager/pdf}" class="btn btn-danger form-control mb-2 mr-sm-2" >PDF</a>
+									<a id="savePdfBtn" class="btn btn-danger form-control mb-2 mr-sm-2" >PDF</a>
 									
-								
+							<script th:src="@{/js/html2canvas.js?ver=113111}"></script>
+							<script th:src="@{/js/jquery-3.6.0.min.js?ver=123}"></script>
+							<script th:src="@{/js/jspdf.min.js?ver=131}"></script>	
 									
 							</label>
 
@@ -90,7 +95,7 @@
 								id="chkForm">
 								<input type="hidden" name="email" id="email" value="">
 							</form>
-							
+							<div id="pdfDiv">
 							<form form th:action="@{manager/multiChecked}" method="get">
 								<table class="table table-bordered dataTable" id="dataTable"
 									width="100%" cellspacing="0" role="grid"
@@ -131,6 +136,7 @@
 
 								</table>
 							</form>
+							</div>
 						</div>
 					</div>
 
@@ -249,10 +255,40 @@
 			 }); */
 
 		}
+		//pdf
+		$('#savePdfBtn').click(function() {
+		    html2canvas($('#pdfDiv')[0]).then(function(canvas) {
+		        // 캔버스를 이미지로 변환
+		        let imgData = canvas.toDataURL('image/png');
+
+		        let margin = 10; // 출력 페이지 여백설정
+		        let imgWidth = 210 - (10 * 2); // 이미지 가로 길이(mm) A4 기준
+		        let pageHeight = imgWidth * 1.414;  // 출력 페이지 세로 길이 계산 A4 기준
+		        let imgHeight = canvas.height * imgWidth / canvas.width;
+		        let heightLeft = imgHeight;
+
+		        let doc = new jsPDF('p', 'mm');
+		        let position = margin;
+
+		        // 첫 페이지 출력
+		        doc.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight);
+		        heightLeft -= pageHeight;
+
+		        // 한 페이지 이상일 경우 루프 돌면서 출력
+		        while (heightLeft >= 20) {
+		            position = heightLeft - imgHeight;
+		            doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+		            doc.addPage();
+		            heightLeft -= pageHeight;
+		        }
+
+		        // 파일 저장
+		        doc.save('멤버별 업무리스트.pdf');
+		    });
+		});
 		
-	
 	</script>
-	<script th:src="@{/js/jquery-3.6.0.min.js}"></script>
+
 
 </body>
 </html>
