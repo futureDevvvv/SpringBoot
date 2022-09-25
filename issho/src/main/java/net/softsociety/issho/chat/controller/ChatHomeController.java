@@ -11,10 +11,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import lombok.extern.slf4j.Slf4j;
+import net.softsociety.issho.chat.domain.ChatMsg;
 import net.softsociety.issho.chat.domain.Chatrooms;
 import net.softsociety.issho.chat.service.ChatService;
 import net.softsociety.issho.member.domain.Members;
@@ -57,16 +57,15 @@ public class ChatHomeController {
 
 		List<Chatrooms> list = chatservice.chatList(map);
 
-		/*
-		 * Collection<ChatRoom> chatRooms = ChatRoomRepository.chatRooms;
-		 * 
-		 * model.addAttribute("collection", chatRooms);
-		 */
+		List<ChatMsg> chatmsg = chatservice.recentMsgs();
+		
+		log.debug("chatmsg : {}", chatmsg);
 
 		Projects project = pjservice.searchOne(domain);
 
 		model.addAttribute("project", project);
 		model.addAttribute("list", list);
+		model.addAttribute("msg", chatmsg);
 
 		return "chat/chat_home";
 	}

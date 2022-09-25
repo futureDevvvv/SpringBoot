@@ -30,4 +30,9 @@ public interface ChatDAO {
 	//메시지 인서트
 	void insertMsg(ChatMsg msg);
 
+	//최신 메시지 리스트
+	List<ChatMsg> recentMsgs();
+
+	Chatrooms chatroomInfo(String chatroom_seq);
+
 }

@@ -4,13 +4,22 @@
 
 	<select id="chatList" parameterType="Map" resultType="Chatrooms">
 		SELECT
-		c.chatroom_seq as chatroom_seq, c.chatroom_name as chatroom_name,
-		(SELECT MAX(chatmsg_sendDate) FROM chatmsg) as chatmsg_senddate
-		FROM chatroom c LEFT OUTER JOIN chatmember m
-		ON(c.chatroom_seq = m.chatroom_seq)
-		LEFT OUTER JOIN chatmsg g
-		ON (c.chatroom_seq = c.chatroom_seq)
-		WHERE c.prj_domain = #{prj_domain} AND m.chat_member= #{chat_member}
+		c.chatroom_seq AS chatroom_seq, c.chatroom_name AS chatroom_name,
+		c.prj_domain AS prj_domain, m.chat_member AS chat_member
+		FROM chatroom
+		c, chatmember m
+		WHERE c.chatroom_seq = m.chatroom_seq
+		AND c.prj_domain =
+		#{prj_domain}
+		AND m.chat_member = #{chat_member}
+	</select>
+
+	<select id="recentMsgs" resultType="ChatMsg">
+		select chatroom_seq,
+		chatmsg_seq, chatmsg_content, chatmsg_sendDate from chatmsg
+		where (chatroom_seq, chatmsg_sendDate)
+		in (select chatroom_seq, max(chatmsg_sendDate) from chatmsg group by
+		chatroom_seq)
 	</select>
 
 	<insert id="openNewChat" parameterType="Chatrooms">
@@ -23,20 +32,28 @@
 		INSERT INTO chatmember
 		VALUES(#{chatroom_seq}, #{chat_member})
 	</insert>
-	
-	<select id="chatMemList" parameterType="String" resultType="Members">
+
+	<select id="chatMemList" parameterType="String"
+		resultType="Members">
 		SELECT * FROM chatmember
 		WHERE chatroom_seq=#{chatroom_seq}
 	</select>
-	
-	<select id="chatMsgs" parameterType="String" resultType="ChatMsg">
+
+	<select id="chatMsgs" parameterType="String"
+		resultType="ChatMsg">
 		SELECT * FROM chatmsg
 		WHERE chatroom_seq=#{chatroom_seq}
 	</select>
-	
+
 	<insert id="insertMsg" parameterType="ChatMsg">
 		INSERT INTO chatmsg
-		VALUES(#{chatroom_seq}, chatmsg_seq.NEXTVAL, #{chatmsg_recipient}, sysdate, #{chatmsg_content})
+		VALUES(#{chatroom_seq}, chatmsg_seq.NEXTVAL, #{chatmsg_recipient},
+		sysdate, #{chatmsg_content})
 	</insert>
+	
+	<select id="chatroomInfo" parameterType="String" resultType="Chatrooms">
+		SELECT * FROM chatroom
+		WHERE chatroom_seq = #{chatroom_seq}
+	</select>
 
 </mapper>
