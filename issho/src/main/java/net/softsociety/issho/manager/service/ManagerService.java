@@ -2,9 +2,9 @@ package net.softsociety.issho.manager.service;
 
 import java.util.ArrayList;
 
+import net.softsociety.issho.manager.domain.DriveFile;
 import net.softsociety.issho.manager.domain.InvitationMember;
 import net.softsociety.issho.manager.util.PageNavigator;
-import net.softsociety.issho.member.domain.DriveFile;
 import net.softsociety.issho.member.domain.Members;
 
 
@@ -31,6 +31,8 @@ public interface ManagerService {
 
 	//드라이브 파일 리스트
 	public ArrayList<DriveFile> listDriveFile(PageNavigator navi, String searchWord);
+
+	public int insertDrive(DriveFile driveFile);
 
 	
 

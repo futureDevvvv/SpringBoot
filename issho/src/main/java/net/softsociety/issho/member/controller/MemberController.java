@@ -18,10 +18,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.multipart.MultipartFile;
 
+import net.softsociety.issho.manager.domain.DriveFile;
 import net.softsociety.issho.manager.service.ManagerService;
 import net.softsociety.issho.manager.util.PageNavigator;
 import net.softsociety.issho.member.dao.MemberDAO;
-import net.softsociety.issho.member.domain.DriveFile;
 import net.softsociety.issho.member.domain.Members;
 import net.softsociety.issho.member.service.MemberService;
 import net.softsociety.issho.util.FileService;
@@ -164,34 +164,7 @@ public class MemberController {
 	}
 
 
-	/**
-	 * 주소록 폼 이동
-	 * 
-	 * @author 김지윤
-	 * @param model
-	 * @param page
-	 * @param searchWord
-	 * @return
-	 */
-	@GetMapping("/addressBook")
-	public String addressBook(Model model, @RequestParam(name = "page", defaultValue = "1") int page,
-			String searchWord) {
 
-		// 페이지 정보 생성
-		PageNavigator navi = manService.getPageNavigator(pagePerGroup, countPerPage, page, searchWord);
-
-		// 현재 페이지 글 정보
-		// DB에서 게시판의 모든 글을 조회.ArrayList 타입으로 리턴받음.
-		ArrayList<Members> list = manService.listManager(navi, searchWord);
-		log.debug("list 결과: {}", list);
-
-		// 리스트를 모델에 저장하고 HTML에서 출력
-		model.addAttribute("navi", navi);
-		model.addAttribute("list", list);
-		model.addAttribute("searchWord", searchWord);
-
-		return "member/addressBook";
-	}
 
 	
 	@PostMapping("/memSearch")
@@ -217,55 +190,6 @@ public class MemberController {
 		return list;
 		
 	}
-	
-	/**
-	 * 드라이브 폼으로 이동
-	 * @param model
-	 * @param page
-	 * @param searchWord
-	 * @return
-	 */
-	@GetMapping("/drive")
-	public String drive(Model model
-			,@RequestParam(name="page",defaultValue = "1") int page
-			,String searchWord) {
-		//페이지 정보 생성
-				PageNavigator navi = manService.getPageNavigator(
-						pagePerGroup,countPerPage,page,searchWord);
-				
-				//현재 페이지 글 정보
-				//DB에서 게시판의 모든 글을 조회.ArrayList 타입으로 리턴받음.
-				ArrayList<DriveFile> list = manService.listDriveFile(navi,searchWord);
-				log.debug("list 결과: {}",list);
-				
-				//리스트를 모델에 저장하고 HTML에서 출력
-				model.addAttribute("navi",navi);
-				model.addAttribute("list",list);
-				model.addAttribute("searchWord",searchWord);
 
-		return "member/drive";
-	}
-	
-	
-	/**
-	 * 드라이브 파일 저장
-	 * @param driveFile
-	 * @param upload
-	 * @return
-	 */
-	@PostMapping("/drive")
-	public String drive(DriveFile driveFile, @RequestParam MultipartFile upload) {
-
-		if(upload != null && !upload.isEmpty()) {
-
-				log.debug("uploadPath : {}", uploadPath);
-				String uploadDrive = uploadPath + "/drive";
-				String savedfile = FileService.saveFile(upload, uploadDrive);
-				driveFile.setDriveFile_ogFile(upload.getOriginalFilename());
-				driveFile.setDriveFile_saveFile(savedfile);
-		}	
-		
-		return "redirect:/";
-	}
 
 }

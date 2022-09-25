@@ -47,7 +47,7 @@
 						<div class="w3-clear nextprev">
 										<div class="w3-left w3-btn">
 											<form class="form-inline" id="pagingForm" method="get"
-												th:action="@{/manager/invitation}">
+												action="./manager/invitation">
 												
 												<input type="hidden" name="page" id="page"> 
 												<div id="listTop" class="w3-left w3-btn">
@@ -178,7 +178,7 @@
                      
                   </div>
 				 <div class="modal-body p-5 pt-0">
-				        <form th:action="@{/manager/mailSender2}" id="mailForm" method="post" >
+				        <form action="./manager/mailSender2" id="mailForm" method="post" >
 				          <div class="form-floating mb-3">
 				            <label for="floatingInpu">Project Name</label>
 				            <input type="text" name="prj_domain" class="form-control rounded-3" id="prj_domain" placeholder="Project name">
