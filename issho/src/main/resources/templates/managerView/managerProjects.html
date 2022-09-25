@@ -4,12 +4,14 @@
 <head th:replace="fragmentsManager/config :: configFragment">
 <meta charset="UTF-8">
 <title>구성원 페이지</title>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
 
 
 </head>
 <body>
 
+	
+	
 	<div id="wrapper">
 		<!-- content 시작 -->
 		<th:block th:replace="fragmentsManager/sidebar :: sidebar"></th:block>
@@ -34,7 +36,7 @@
                         
                                 <div class="w3-clear nextprev">
                                 <div class="form-inline">
-                                <form class="form-inline" id="pagingForm" method="get" th:action="@{/manager/project}">
+                                <form class="form-inline" id="pagingForm" method="get" action="./manager/project">
                                 <input type="hidden" name="page" id="page" >
      							
                                	
@@ -128,7 +130,15 @@
 				<div class="modal-content">
 				
 				
-				
+				<!-- 차트 연습 -->
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<canvas id="myChartOne"></canvas>
+				<a href="./manager/chart">차트</a>
+			</div>
+		</div>
+	</div>
 		
 					<div class="modal-header" style="padding: 1rem;">
 					<h3 class="modal-title fw-bold mb-0" id="exampleModalLabel">프로젝트 명:  <span id="modalPjtName"></span></h3>
@@ -179,19 +189,24 @@ function pagingFormSubmit(currentPage) {
 				$('#modalPjtDate').text(resultMap.projects.prj_date);
 				$('#modalPjtEnabled').text(resultMap.projects.prj_enabled);
 				
+				resultMap.taskList.forEach(function (taskList,index,array){
+					alert(taskList);
+				});
+				
+				
 				let result="";
 				
 				result += '<table class="table table-bordered dataTable" id="dataTable" cellspacing="0" role="grid" aria-describedby="dataTable_info" style="width: 100%;">'
 							+ '<thead>'
 							+	'<tr role="row">'
-							+		'<th class="sorting sorting_asc" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-sort="ascending" style="width: 50px;">태스크 명</th>'
-							+		'<th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 30px;">담당자</th>'
-							+		'<th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 50px;">우선순위</th>'
-							+		'<th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 50px;">진행상태</th>'
-							+		'<th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 30px;">시작일</th>'
-							+		'<th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 30px;">종료일</th>'
-							+		'<th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 30px;">D-DAY</th>'
-							+		'<th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 50px;">협조요청</th>'
+							+		'<th class="sorting sorting_asc" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-sort="ascending" style="width: 20px;">태스크명</th>'
+							+		'<th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 60px;">담당자</th>'
+							+		'<th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 60px;">우선순위</th>'
+							+		'<th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 60px;">진행상태</th>'
+							+		'<th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 60px;">시작일</th>'
+							+		'<th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 60px;">종료일</th>'
+							+		'<th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 20px;">D-DAY</th>'
+							+		'<th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 20px;">협조요청</th>'
 							+	'</tr>'
 							+ '</thead>'
 							+'<tbody> ';						
@@ -200,7 +215,9 @@ function pagingFormSubmit(currentPage) {
 				$.each(resultMap.tasklist, function(index, item){
 						result +='<tr class="odd" >'
 							+	'<td class="sorting_1">'
-							+		resultMap.tasklist.task_name
+							+		resultMap.taskList.task_name
+							+	'</td>'
+							+	'<td>'
 							+	'</td>'
 							+	'<td>'
 							+	'</td>'
@@ -241,8 +258,26 @@ $("#closeNewTask").click(function(e) {
 	$("#exampleModal").modal("hide");
 })
 
-</script>
+let myChartOne = document.getElementById('myChartOne').getContext('2d');
 
+let barChart = new Chart(myChartOne,{
+	type : 'bar', //pir,line,doughnut,polarArea
+	data : {
+		labels :['학원','연구원','출판사','미디어사','위니브'],
+		datasets : [{
+			labels :'바울랩 매출액',
+		data : [
+			10,
+			100,
+			100,
+			200,
+			1000
+		]
+		}]	
+	}
+})
+
+</script>
 </body>
 </html>
 	

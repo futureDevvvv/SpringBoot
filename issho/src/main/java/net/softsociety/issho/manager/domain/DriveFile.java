@@ -1,4 +1,4 @@
-package net.softsociety.issho.member.domain;
+package net.softsociety.issho.manager.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

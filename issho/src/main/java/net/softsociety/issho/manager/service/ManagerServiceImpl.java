@@ -8,9 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import net.softsociety.issho.manager.dao.ManagerDAO;
+import net.softsociety.issho.manager.domain.DriveFile;
 import net.softsociety.issho.manager.domain.InvitationMember;
 import net.softsociety.issho.manager.util.PageNavigator;
-import net.softsociety.issho.member.domain.DriveFile;
 import net.softsociety.issho.member.domain.Members;
 
 @Service
@@ -72,6 +72,11 @@ public class ManagerServiceImpl implements ManagerService {
 		ArrayList<DriveFile> list = membersDAO.listDriveFile(map, rb);
 		
 		return list;
+	}
+
+	@Override
+	public int insertDrive(DriveFile driveFile) {
+		return membersDAO.insertDrive(driveFile);
 	}
 
 	

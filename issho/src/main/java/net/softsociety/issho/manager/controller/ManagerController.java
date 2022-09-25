@@ -14,6 +14,9 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,8 +24,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import lombok.extern.slf4j.Slf4j;
+import net.softsociety.issho.manager.domain.DriveFile;
 import net.softsociety.issho.manager.domain.InvitationMember;
 import net.softsociety.issho.manager.service.MailSenderService;
 import net.softsociety.issho.manager.service.ManagerService;
@@ -33,6 +38,7 @@ import net.softsociety.issho.project.domain.Projects;
 import net.softsociety.issho.project.service.ProjectService;
 import net.softsociety.issho.task.domain.Task;
 import net.softsociety.issho.task.service.TaskService;
+import net.softsociety.issho.util.FileService;
 
 @Slf4j
 @Controller
@@ -112,18 +118,16 @@ public class ManagerController {
 		
 		projects = pjService.getProjectsInfo(domain);
 		
-		ArrayList<Task> tasklist = taskService.SelectAlltask("scit42");
+		ArrayList<Task> taskList = taskService.SelectAlltask(domain);
+		
 		
 		log.debug("프로젝트 정보: " + projects);
-		log.debug("태스크 정보 : {}", tasklist);
+		log.debug("태스크 정보 : {}", taskList);
 		
-
-		//model.addAttribute("projects", projects);
-		//model.addAttribute("tasklist2", tasklist);
 
 		Map<String, Object> result = new HashMap<>();
 		result.put("projects", projects);
-		result.put("tasklist", tasklist);
+		result.put("taskList", taskList);
 		
 
 		return result;
@@ -205,7 +209,7 @@ public class ManagerController {
 
 		int result = memberService.deleteMember(members);
 
-		return "redirect:/manager/member";
+		return "redirect:./manager/member";
 	}
 
 	/**
@@ -270,7 +274,7 @@ public class ManagerController {
 		log.debug("메일초대 도메인" + invitation.getPrj_domain());
 		log.debug("메일초대인 메일" + invitation.getMembInv_recipient());
 
-		return "redirect:/manager/invitation";
+		return "redirect:./manager/invitation";
 	}
 
 	/**
@@ -280,7 +284,7 @@ public class ManagerController {
 	 * @return 결과값
 	 */
 	@ResponseBody
-	@PostMapping("/mailIdCheck")
+	@PostMapping("mailIdCheck")
 	public int idCheck(InvitationMember invitationMember, String membInv_recipient, String prj_domain) {
 
 		log.debug("이메일 : {}", membInv_recipient);
@@ -387,7 +391,7 @@ public class ManagerController {
 		// 컨텐츠 타입과 파일명 지정
 		response.setContentType("ms-vnd/excel");
 //        response.setHeader("Content-Disposition", "attachment;filename=example.xls");
-		response.setHeader("Content-Disposition", "attachment;filename=example.xlsx");
+		response.setHeader("Content-Disposition", "attachment;filename=업무 리스트.xlsx");
 
 		// Excel File Output
 		wb.write(response.getOutputStream());
@@ -395,7 +399,91 @@ public class ManagerController {
 	}
 	
 	
+	/**
+	 * 드라이브 폼으로 이동
+	 * @param model
+	 * @param page
+	 * @param searchWord
+	 * @return
+	 */
+	@GetMapping("drive")
+	public String drive(Model model
+			,@RequestParam(name="page",defaultValue = "1") int page
+			,String searchWord) {
+		//페이지 정보 생성
+				PageNavigator navi = service.getPageNavigator(
+						pagePerGroup,countPerPage,page,searchWord);
+				
+				//현재 페이지 글 정보
+				//DB에서 게시판의 모든 글을 조회.ArrayList 타입으로 리턴받음.
+				ArrayList<DriveFile> list = service.listDriveFile(navi,searchWord);
+				log.debug("list 결과: {}",list);
+				
+				//리스트를 모델에 저장하고 HTML에서 출력
+				model.addAttribute("navi",navi);
+				model.addAttribute("list",list);
+				model.addAttribute("searchWord",searchWord);
+
+		return "managerView/drive";
+	}
+	
+	
+	/**
+	 * 드라이브 파일 저장
+	 * @param driveFile
+	 * @param upload
+	 * @return
+	 */
+	@PostMapping("/drive")
+	public String drive(DriveFile driveFile, @RequestParam MultipartFile upload) {
+
+		if(upload != null && !upload.isEmpty()) {
+
+				log.debug("uploadPath : {}", uploadPath);
+				String uploadDrive = uploadPath + "/drive";
+				String savedfile = FileService.saveFile(upload, uploadDrive);
+				driveFile.setDriveFile_ogFile(upload.getOriginalFilename());
+				driveFile.setDriveFile_saveFile(savedfile);
+				
+		}	
+		int result = service.insertDrive(driveFile);
+		
+		return "redirect:./manager/drive";
+	}
+	
+	/**
+	 * 주소록 폼 이동
+	 * 
+	 * @author 김지윤
+	 * @param model
+	 * @param page
+	 * @param searchWord
+	 * @return
+	 */
+	@GetMapping("addressBook")
+	public String addressBook(Model model, @RequestParam(name = "page", defaultValue = "1") int page,
+			String searchWord) {
+		
+		// 페이지 정보 생성
+		PageNavigator navi = service.getPageNavigator(pagePerGroup, countPerPage, page, searchWord);
+
+		// 현재 페이지 글 정보
+		// DB에서 게시판의 모든 글을 조회.ArrayList 타입으로 리턴받음.
+		ArrayList<Members> list = service.listManager(navi, searchWord);
+		log.debug("list 결과: {}", list);
+
+		// 리스트를 모델에 저장하고 HTML에서 출력
+		model.addAttribute("navi", navi);
+		model.addAttribute("list", list);
+		model.addAttribute("searchWord", searchWord);
+
+		return "managerView/addressBook";
+	}
 	
 
-
+	
+	@GetMapping("chart")
+	public String chart() {
+		return "managerView/chart";
+	}
 }
