@@ -57,4 +57,20 @@ public class ChatServiceImpl implements ChatService{
 		
 	}
 
+	@Override
+	public List<ChatMsg> recentMsgs() {
+
+		List<ChatMsg> list = chatDao.recentMsgs();
+		
+		return list;
+	}
+
+	@Override
+	public Chatrooms chatroomInfo(String roomid) {
+
+		Chatrooms chatroom = chatDao.chatroomInfo(roomid);
+		
+		return chatroom;
+	}
+
 }

@@ -19,4 +19,8 @@ public interface ChatService {
 
 	void insertMsg(ChatMsg msg);
 
+	List<ChatMsg> recentMsgs();
+
+	Chatrooms chatroomInfo(String roomid);
+
 }
