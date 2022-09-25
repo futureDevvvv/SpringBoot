@@ -29,7 +29,7 @@ import net.softsociety.issho.util.FileService;
 
 @Controller
 @Slf4j
-@RequestMapping("/task")
+@RequestMapping("**/task")
 public class TaskController {
 
 	@Autowired
