@@ -237,7 +237,7 @@ ul#memList li.mem-item:hover {
 			<div class="modal fade" id="exampleModal" tabindex="-1"
 				aria-labelledby="exampleModalLabel" aria-hidden="true">
 
-				<form th:action="@{/task/addNewTask}" method="POST" id="newTaskForm"
+				<form action="./task/addNewTask" method="POST" id="newTaskForm"
 					enctype="multipart/form-data">
 					<div class="modal-dialog modal-lg">
 						<div class="modal-content">
@@ -529,7 +529,9 @@ ul#memList li.mem-item:hover {
 
 				$("#memList2").val(li);
 
+
 				$.ajax({
+
 							url : "../../member/memSearch",
 							type : "POST",
 							data : {

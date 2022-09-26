@@ -4,11 +4,14 @@
 <head th:replace="fragmentsManager/config :: configFragment">
 <meta charset="UTF-8">
 <title>구성원 페이지</title>
-
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js?ver=1"></script>
 
 
 </head>
 <body>
+
+
 
 	<div id="wrapper">
 		<!-- content 시작 -->
@@ -18,141 +21,189 @@
 		<div id="content-wrapper" class="d-flex flex-column">
 			<!-- header 시작 -->
 			<th:block th:replace="fragmentsManager/header :: navFragment"></th:block>
-			
+
 			<!-- header 끝 -->
 			<div class="container-fluid">
 
-                    <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">프로젝트 관리</h1>
+				<!-- Page Heading -->
+				<h1 class="h3 mb-2 text-gray-800">프로젝트 관리</h1>
 
-                    <!-- DataTales Example -->
-                    <div class="card shadow mb-4">
-                        <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">프로젝트 리스트</h6>
-                            
-                        </div>
-                        
-                                <div class="w3-clear nextprev">
-                                <div class="form-inline">
-                                <form class="form-inline" id="pagingForm" method="get" th:action="@{/manager/project}">
-                                <input type="hidden" name="page" id="page" >
-     							
-                               	
-     							<div id="listTop" class="w3-left w3-btn">
-								
-								
-                                <label class="mr-sm-2" id="listTop1">
-                                <input class="form-control mb-2 mr-sm-2" type="text" id="listTop1" name="searchWord" th:value="${searchWord}">
-                                <button class="btn btn-primary mb-2" type="button" onclick="pagingFormSubmit(1)">
-				                     <i class="fas fa-search fa-sm"></i>
-				                   </button>
-                                </label>
-                                
-                             	</div>
-                                </form>
-                                </div>
-                                </div>
-                        
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
-                                <div class="row"><div class="col-sm-12 col-md-6">
-                                <div class="dataTables_length" id="dataTable_length">
-                              
-                                </div>
-                                </div>
+				<!-- DataTales Example -->
+				<div class="card shadow mb-4">
+					<div class="card-header py-3">
+						<h6 class="m-0 font-weight-bold text-primary">프로젝트 리스트</h6>
 
-                                </div>
-                                </div>
-                                 </div>
-                                <div class="row">
-                                <div class="col-sm-12">
-                                <form action="">
-                                <table class="table table-bordered dataTable" id="dataTable" cellspacing="0" role="grid" aria-describedby="dataTable_info" style="width: 100%;">
-                                    <thead>
-                                        <tr role="row">
-                                        <th class="sorting sorting_asc" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-sort="ascending" style="width: 50px;">프로젝트 도메인</th>
-                                        <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 50px;">프로젝트 명</th>
-                                        <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 100px;">완성도</th>
+					</div>
 
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr class="odd" th:each="l:${list}">
-                                    <td class="sorting_1" ><a th:text="${l.prj_domain}"
-													class="newTask" th:prj_domain="${l.prj_domain}" data-toggle="modal"
-													data-target="exampleModal" onclick="openModal(this.getAttribute('prj_domain'))"
-													style="cursor: pointer;"></a>
-                                    			</td>
-                                            <td th:text="${l.prj_name}"></td>
-                                            <td>완성도 바 표시</td>
+					<div class="w3-clear nextprev">
+						<div class="form-inline">
+							<form class="form-inline" id="pagingForm" method="get"
+								action="./manager/project">
+								<input type="hidden" name="page" id="page">
 
-                                        </tr>
-                                        </tbody>
-                                      
-                                </table>
-                                </form>
-                                </div>
-                                </div>
-                                
-                                <div class="navigator">
-								<a class="btn btn-primary" th:href="|javascript:pagingFormSubmit(${navi.currentPage - 1})|">Previous</a> 
 
-								<span th:each="counter : ${#numbers.sequence(navi.startPageGroup, navi.endPageGroup)}"> 
-								<th:block th:if="${counter == navi.currentPage}"><b></th:block>
-								<a class="btn btn-light" th:text="${counter}" th:href="|javascript:pagingFormSubmit(${counter})|"></a>&nbsp;
-								<th:block th:if="${counter == navi.currentPage}"></b></th:block>
-								</span>
-	
-								<a class="btn btn-primary" th:href="|javascript:pagingFormSubmit(${navi.currentPage + 1})|">Next</a> 
-								<br><br>
-								
+								<div id="listTop" class="w3-left w3-btn">
+
+
+									<label class="mr-sm-2" id="listTop1"> <input
+										class="form-control mb-2 mr-sm-2" type="text" id="listTop1"
+										name="searchWord" th:value="${searchWord}">
+										<button class="btn btn-primary mb-2" type="button"
+											onclick="pagingFormSubmit(1)">
+											<i class="fas fa-search fa-sm"></i>
+										</button>
+									</label>
+
 								</div>
-                             
-               
-			<!-- footer 시작 -->
-			<th:block th:replace="fragmentsManager/footer :: footerFragment"></th:block>
-			<!-- footer 끝 -->
-		</div>
-	
-</div>
-</div>
-</div>
-</div>
+							</form>
+						</div>
+					</div>
 
-	<!-- 태스크 추가 modal -->
-	
-		<div class="modal fade modal-signin" id="exampleModal" tabindex="-1"
-			aria-labelledby="exampleModalLabel" aria-hidden="true">
-			<div class="modal-dialog modal-lg" role="document">
-				<div class="modal-content">
-				
-				
-				
-		
-					<div class="modal-header" style="padding: 1rem;">
-					<h3 class="modal-title fw-bold mb-0" id="exampleModalLabel">프로젝트 명:  <span id="modalPjtName"></span></h3>
-					<p id="modalPjtName"></p>
-					</div> 
-					<div class="modal-header  pb-4 border-bottom-0" style="padding: 1rem;">
-					<h4 class="modal-title fw-bold mb-0" id="exampleModalLabel" >관리가 필요한 태스크</h4>
-					</div> 
-					<div id="printTasklist"></div>
-													
-						                         
-		       
-			   <div class="modal-footer">
-                     <button type="button" id="closeNewTask" class="btn btn-secondary"
-                        data-bs-dismiss="modal">확인</button>
-                  </div>
+					<div class="card-body">
+						<div class="table-responsive">
+							<div id="dataTable_wrapper"
+								class="dataTables_wrapper dt-bootstrap4">
+								<div class="row">
+									<div class="col-sm-12 col-md-6">
+										<div class="dataTables_length" id="dataTable_length"></div>
+									</div>
+
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-12">
+								<form action="">
+									<table class="table table-bordered dataTable" id="dataTable"
+										cellspacing="0" role="grid" aria-describedby="dataTable_info"
+										style="width: 100%;">
+										<thead>
+											<tr role="row">
+												<th class="sorting sorting_asc" tabindex="0"
+													aria-controls="dataTable" rowspan="1" colspan="1"
+													aria-sort="ascending" style="width: 50px;">프로젝트 도메인</th>
+												<th class="sorting" tabindex="0" aria-controls="dataTable"
+													rowspan="1" colspan="1" style="width: 50px;">프로젝트 명</th>
+												<th class="sorting" tabindex="0" aria-controls="dataTable"
+													rowspan="1" colspan="1" style="width: 100px;">완성도</th>
+
+											</tr>
+										</thead>
+										<tbody>
+											<tr class="odd" th:each="l:${list}">
+												<td class="sorting_1"><a th:text="${l.prj_domain}"
+													class="newTask" th:prj_domain="${l.prj_domain}"
+													data-toggle="modal" data-target="exampleModal"
+													onclick="openModal(this.getAttribute('prj_domain'))"
+													style="cursor: pointer;"></a></td>
+												<td th:text="${l.prj_name}"></td>
+												<td>
+													<h4 class="small font-weight-bold">
+														진행중<span class="float-right">50%</span>
+													</h4>
+													<div class="progress mb-4">
+														<div class="progress-bar bg-info" role="progressbar"
+															style="width: 50%" aria-valuenow="50" aria-valuemin="0"
+															aria-valuemax="100"></div>
+													</div>
+												</td>
+
+											</tr>
+										</tbody>
+
+									</table>
+								</form>
+							</div>
+						</div>
+
+						<div class="navigator">
+							<a class="btn btn-primary"
+								th:href="|javascript:pagingFormSubmit(${navi.currentPage - 1})|">Previous</a>
+
+							<span
+								th:each="counter : ${#numbers.sequence(navi.startPageGroup, navi.endPageGroup)}">
+								<th:block th:if="${counter == navi.currentPage}">
+									<b>
+								</th:block> <a class="btn btn-light" th:text="${counter}"
+								th:href="|javascript:pagingFormSubmit(${counter})|"></a>&nbsp; <th:block
+									th:if="${counter == navi.currentPage}">
+									</b>
+								</th:block>
+							</span> <a class="btn btn-primary"
+								th:href="|javascript:pagingFormSubmit(${navi.currentPage + 1})|">Next</a>
+							<br>
+							<br>
+
+						</div>
+
+
+						<!-- footer 시작 -->
+						<th:block th:replace="fragmentsManager/footer :: footerFragment"></th:block>
+						<!-- footer 끝 -->
+					</div>
+
 				</div>
 			</div>
 		</div>
+	</div>
+
+	<!-- 태스크 추가 modal -->
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js?ver=1"></script>
+
+	<div class="modal fade modal-signin" id="exampleModal" tabindex="-1"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+
+
+				<!-- 				차트 연습
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<canvas id="myChartOne" ></canvas>
+				
+			</div>
+		</div>
+	</div>
+		 -->
+				<div class="modal-header" style="padding: 1rem;">
+					<h3 class="modal-title fw-bold mb-0" id="exampleModalLabel">
+						프로젝트 명: <span id="modalPjtName"></span>
+					</h3>
+					<p id="modalPjtName"></p>
+				</div>
+				<div class="modal-header  pb-4 border-bottom-0"
+					style="padding: 1rem;">
+					<h4 class="modal-title fw-bold mb-0" id="exampleModalLabel">관리가
+						필요한 태스크</h4>
+				</div>
+				<div id="printTasklist"></div>
+
+
+
+				<div class="modal-footer">
+					<button type="button" id="closeNewTask" class="btn btn-secondary"
+						data-bs-dismiss="modal">확인</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
 
 
 
-<script>
+	<script th:inline="javascript">
+		
+ 
+		let taskListArray = /*[[${taskList}]]*/;
+		console.log(taskListArray);
+		
+
+		
+
+
+ 
 function pagingFormSubmit(currentPage) {
 	var form = document.getElementById('pagingForm');
 	var page = document.getElementById('page');
@@ -161,9 +212,13 @@ function pagingFormSubmit(currentPage) {
 }
 
 //새로운 태스크 모달창 제어
+
 	function openModal(domain) {
 	 let prj_domain = domain;
 	 
+	 
+	
+	
 	 $.ajax({
 			url : "ProjectInfo",
 			type : "POST",
@@ -179,48 +234,58 @@ function pagingFormSubmit(currentPage) {
 				$('#modalPjtDate').text(resultMap.projects.prj_date);
 				$('#modalPjtEnabled').text(resultMap.projects.prj_enabled);
 				
+	
+				
 				let result="";
 				
 				result += '<table class="table table-bordered dataTable" id="dataTable" cellspacing="0" role="grid" aria-describedby="dataTable_info" style="width: 100%;">'
 							+ '<thead>'
 							+	'<tr role="row">'
-							+		'<th class="sorting sorting_asc" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-sort="ascending" style="width: 50px;">태스크 명</th>'
-							+		'<th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 30px;">담당자</th>'
-							+		'<th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 50px;">우선순위</th>'
-							+		'<th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 50px;">진행상태</th>'
-							+		'<th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 30px;">시작일</th>'
-							+		'<th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 30px;">종료일</th>'
-							+		'<th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 30px;">D-DAY</th>'
-							+		'<th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 50px;">협조요청</th>'
+							+		'<th class="sorting sorting_asc" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-sort="ascending" style="width: 110px;">태스크명</th>'
+							+		'<th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 50px;">담당자</th>'
+							+		'<th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 80px;">우선순위</th>'
+							+		'<th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 80px;">진행상태</th>'
+							+		'<th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 90px;">시작일</th>'
+							+		'<th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 90px;">종료일</th>'
+							+		'<th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 10px;">협조</th>'
 							+	'</tr>'
 							+ '</thead>'
-							+'<tbody> ';						
+							+'<tbody> '	;					
 	
-
-				$.each(resultMap.tasklist, function(index, item){
-						result +='<tr class="odd" >'
+							
+			
+		 
+			
+		taskListArray.forEach((value, index, array)=>{
+					result +=	'<tr class="odd" >'
 							+	'<td class="sorting_1">'
-							+		resultMap.tasklist.task_name
+							+		value.task_name
 							+	'</td>'
 							+	'<td>'
+							+		value.task_sender
 							+	'</td>'
 							+	'<td>'
+							+		value.task_rank
 							+	'</td>'
 							+	'<td>'
+							+		value.task_state
 							+	'</td>'
 							+	'<td>'
+							+		value.task_startdate
 							+	'</td>'
 							+	'<td>'
+							+		value.task_enddate
 							+	'</td>'
 							+	'<td>'
 							+		'<input type="button" value="요청" class="btn btn-info">'
 							+	'</td>'
 							+ '</tr>';
+							})
 							
-				});
+				 
 							
 							+'</tbody>'
-							+'</table>'
+							+'</table>';
 
 				
 				$("#printTasklist").append(result);
@@ -241,8 +306,24 @@ $("#closeNewTask").click(function(e) {
 	$("#exampleModal").modal("hide");
 })
 
-</script>
+let myChartOne = document.getElementById('myChartOne').getContext('2d');
 
+let barChart = new Chart(myChartOne,{
+	type : 'bar', //pir,line,doughnut,polarArea
+	data : {
+		labels :['진행전','진행중','완료'],
+		datasets : [{
+			labels :'업무 진행도',
+		data : [
+			10,
+			50,
+			30,
+		]
+		}]	
+	}
+})
+
+</script>
 </body>
 </html>
-	
+

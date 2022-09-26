@@ -49,7 +49,7 @@
 
 						<div id="dataTable_filter" class="dataTables_filter">
 							<form class="form-inline" id="pagingForm" method="get"
-								th:action="@{/member/drive}">
+								action="./manager/drive">
 								<input type="hidden" name="page" id="page">
 
 								<div id="listTop">
@@ -102,13 +102,9 @@
 											<tr role="row">
 												<th class="sorting sorting_asc" tabindex="0"
 													aria-controls="dataTable" rowspan="1" colspan="1"
-													aria-sort="ascending" style="width: 133px;">번호</th>
+													aria-sort="ascending" style="width: 50px;">번호</th>
 												<th class="sorting" tabindex="0" aria-controls="dataTable"
-													rowspan="1" colspan="1" style="width: 50px;">파일명</th>
-												<th class="sorting" tabindex="0" aria-controls="dataTable"
-													rowspan="1" colspan="1" style="width: 50px;">파일유형</th>
-												<th class="sorting" tabindex="0" aria-controls="dataTable"
-													rowspan="1" colspan="1" style="width: 50px;">작성자</th>
+													rowspan="1" colspan="1" style="width: 100px;" >파일명</th>
 												<th class="sorting" tabindex="0" aria-controls="dataTable"
 													rowspan="1" colspan="1" style="width: 50px;">업로드날짜</th>
 											</tr>
@@ -116,9 +112,8 @@
 										<tbody>
 											<tr class="odd"  th:each="l:${list}">
 												<td class="sorting_1" th:text=${l.driveFile_seq}><a></a></td>
-												<td class="sorting_1" th:text=${l.driveFile_saveFile}><a></a></td>
-												<td class="sorting_1" th:text=${l.driveFile_type}><a></a></td>
-												<td class="sorting_1" th:text=${l.driveFile_writer}><a></a></td>
+												<td class="sorting_1" >
+												<a href="../../manager/download(driveFile_seq=${l.driveFile_seq})" th:text=${l.driveFile_ogFile}></a></td>
 												<td class="sorting_1" th:text=${l.driveFile_date}><a></a></td>
 
 
@@ -170,17 +165,21 @@
 
 				</div>
 				<div class="modal-body p-5 pt-0">
-				
-						<div id="idVal"></div>
-
-					</form>
+		<form id="writeform" action="./manager/drive" method="post" 
+			enctype="multipart/form-data">
+					
+					<input type="file" name="upload" size="10">
+					<input type="submit" value="업로드">
+			
+	</form>
+					
 				</div>
-				<div class="modal-footer">
+			<!-- 	<div class="modal-footer">
 					<button type="button" id="closeNewTask" class="btn btn-secondary"
 						data-bs-dismiss="modal">닫기</button>
 					<button type="button" class="btn btn-primary"
 						onclick="submitForm()">업로드</button>
-				</div>
+				</div> -->
 			</div>
 		</div>
 	</div>
