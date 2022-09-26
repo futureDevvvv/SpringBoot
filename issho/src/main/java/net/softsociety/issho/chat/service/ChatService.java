@@ -17,7 +17,7 @@ public interface ChatService {
 
 	List<ChatMsg> chatMsgs(String roomid);
 
-	void insertMsg(ChatMsg msg);
+	int insertMsg(ChatMsg msg);
 
 	List<ChatMsg> recentMsgs();
 

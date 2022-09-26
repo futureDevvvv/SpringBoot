@@ -59,7 +59,8 @@ public class ChatRoomController {
 
 		model.addAttribute("list", list);
 		model.addAttribute("roomId", roomid);
-
+		model.addAttribute("id", id);
+		
 		log.debug("chatroom roomId", roomid);
 
 		return "chat/chat_room";
@@ -105,18 +106,22 @@ public class ChatRoomController {
 		model.addAttribute("chatInfo", chatroom);
 		model.addAttribute("id", id);
 
+		log.debug("chatMems : {}", chatMems);
+		
 		log.debug("chatroom roomId : {}", roomid);
 		log.debug("chatInfo : {}", chatroom);
 
 		return "chat/chat_room";
 	}
 
+	/**
+	 * DB에 새로운 메시지 저장
+	 * @param user
+	 * @param msg 메시지 객체
+	 */
 	@ResponseBody
 	@RequestMapping(value = "/insertMsg", method = { RequestMethod.POST })
-	public void insertMsg(@AuthenticationPrincipal UserDetails user, ChatMsg msg) {
-
-		String id = user.getUsername();
-		msg.setChatmsg_recipient(id);
+	public void insertMsg(ChatMsg msg) {
 
 		log.debug("msg : {}", msg);
 

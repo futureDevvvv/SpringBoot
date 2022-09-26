@@ -51,9 +51,11 @@ public class ChatServiceImpl implements ChatService{
 	}
 
 	@Override
-	public void insertMsg(ChatMsg msg) {
+	public int insertMsg(ChatMsg msg) {
 		
-		chatDao.insertMsg(msg);
+		int result = chatDao.insertMsg(msg);
+		
+		return result;
 		
 	}
 

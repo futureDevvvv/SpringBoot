@@ -39,6 +39,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/vendor/**").addResourceLocations("classpath:/static/vendor/");
 		/* '/font/**'로 호출하는 자원은 '/static/img/' 폴더 아래에서 찾는다. */ 
         registry.addResourceHandler("/img/**").addResourceLocations("classpath:/static/img/");
+        registry.addResourceHandler("/gantt-master/**").addResourceLocations("classpath:/static/gantt-master/");
 	}
 
 	

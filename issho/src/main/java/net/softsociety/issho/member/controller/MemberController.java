@@ -173,6 +173,22 @@ public class MemberController {
 
 		log.debug("member.getMemb_name() : {} ", member.getMemb_name());
 
+		return "member/addressBook";
+	}
+
+	
+	@PostMapping("/memSearch")
+	@ResponseBody
+	public String memSearch(String memb_mail) {
+		
+		log.debug("memSearch 진입");
+		
+		log.debug("memSearch mail : {}", memb_mail);
+		
+		Members member = memDao.getUserById(memb_mail);
+		
+		log.debug("membSearch Memb 객체 : {}", member);
+		
 		return member.getMemb_name();
 
 	}
@@ -181,6 +197,8 @@ public class MemberController {
 	@ResponseBody
 	public List<Members> memSearchByIdName(String searchWord) {
 
+		log.debug("memSearchByIdName 진입");
+		
 		log.debug("searchWord : {}", searchWord);
 
 		List<Members> list = memDao.memSearchByIdName(searchWord);

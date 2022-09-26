@@ -4,11 +4,17 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import lombok.RequiredArgsConstructor;
+import net.softsociety.issho.chat.domain.ChatMsg;
+import net.softsociety.issho.chat.service.ChatService;
 
 /**
  * @brief 채팅방 입장, 메시지 전송, 채팅방 삭제 로직. chatRoomRepository 클래스의 chatRoomMap 변수를 채우기
@@ -18,10 +24,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 
 public class ChatRoom {
+	
+	@Autowired
+	ChatService chatService;
 
 	// 채팅방 아이디
 	String id;
 	// 채팅방 참가자 세션을 모아둘 set.
+	// set 안에서 sessions, 지금 들어온 session
 	Set<WebSocketSession> sessions = new HashSet<>();
 
 	public ChatRoom(String room_id) {
@@ -45,8 +55,14 @@ public class ChatRoom {
 			join(session);
 			System.out.println("join 실행됨 : " + session);
 		} else {
-			send(chatMessage, objectMapper);
-			System.out.println("send 실행됨 : " + chatMessage);
+			send(session, chatMessage, objectMapper);
+			System.out.println("handlemessage send session : " + session);
+			System.out.println("handlemessage send chatMessage : " + chatMessage);
+			System.out.println("handlemessage send chatMessage sender : " + chatMessage.sender);
+			System.out.println("handlemessage send chatMessage message: " + chatMessage.message);
+			System.out.println("handlemessage send objectMapper : " + objectMapper);
+			
+			
 		}
 	}
 
@@ -59,15 +75,27 @@ public class ChatRoom {
 		System.out.println(sessions);
 	}
 
-	private <T> void send(T messageObject, ObjectMapper objectMapper) throws JsonProcessingException {
+	// sessions 변수에 있는 모든 사용자에게 메시지를 보냄.
+	private <T> void send(WebSocketSession session, T messageObject, ObjectMapper objectMapper)
+			throws JsonProcessingException {
 		TextMessage message = new TextMessage(objectMapper.writeValueAsBytes(messageObject));
 
-		System.out.println("send 실행됨");
+		//현재 로그인한...
+		
+		System.out.println("send 함수 실행됨");
+		System.out.println("send 함수 session : " + session);
+		System.out.println("send 함수 messageObject : " + messageObject);
 
 		// parallelStream : 프로세서의 다중 코어를 활용하기 위한 자바 8 문법.
-		sessions.parallelStream().forEach(session -> {
+		sessions.parallelStream().forEach(eachSession -> {
 			try {
-				session.sendMessage(message);
+				eachSession.sendMessage(message);
+				
+				if(eachSession == session) {
+					System.out.println("sender session : " + message);
+				}
+				
+				System.out.println("각 세션 : " + message);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

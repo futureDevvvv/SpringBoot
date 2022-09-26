@@ -28,7 +28,7 @@ public interface ChatDAO {
 	List<ChatMsg> chatMsgs(String chatroom_seq);
 	
 	//메시지 인서트
-	void insertMsg(ChatMsg msg);
+	int insertMsg(ChatMsg msg);
 
 	//최신 메시지 리스트
 	List<ChatMsg> recentMsgs();

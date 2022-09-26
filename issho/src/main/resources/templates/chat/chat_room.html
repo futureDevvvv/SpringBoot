@@ -2,12 +2,16 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
 <th:block th:replace="fragments/config :: head"></th:block>
-
 <meta charset="UTF-8">
 <style>
 #chatName {
 	height: 70px;
 	padding: 10px;
+}
+
+#dropdownMenuButton {
+	margin-right: 30px;
+	margin-top: 5px;
 }
 
 .leftBubble:after {
@@ -19,6 +23,13 @@
 	border-width: 5px;
 	border-style: solid;
 	border-color: transparent transparent transparent #4e73df;
+}
+
+#memModal {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
 }
 </style>
 <title>Insert title here</title>
@@ -32,9 +43,10 @@ $(document).ready(function() {
 
 	let roomId = [[${roomId}]];
 	let sock = new SockJS("../../ws/multiRoom");
+	let membId = [[${id}]];
 
 	console.log(sock);
-	console.log(roomId);
+	console.log(roomId);																																																																																																																																
 	
 	//onopen 함수는 페이지가 로드되면 자동실행됨
 	sock.onopen = function() {
@@ -45,52 +57,74 @@ $(document).ready(function() {
 		}));
 	}
 	
-	//onmessage 함수는 메시지가 오면 자동실행됨
+	//onmessage 함수는 메시지가 오면 자동실행됨												
 	sock.onmessage = function(e) {
+		
 		console.log("onmsg 실행");
-
+		
 		console.log("onmsg roomId :" + roomId);
 		
+		//가지고 온 객체를 json 파싱해줌
 		var content = JSON.parse(e.data);
+		
+		//sender : 보낸 사람, message : 메시지, type : 타입
+		let sender = content.sender;
 		var message = content.message;
 		var type = content.type;
+		
 		//var chatLog = document.getElementById("chatLog");
-		if (type == "SEND")
-			appendMessage(message);
-		
-		
-		//ajax 호출하여 DB에 넣기
-		$.ajax({
-			url : "multiRoom/insertMsg",
-			type : "POST",
-			data : {
-				chatroom_seq : roomId,
-				chatmsg_content : message
-			},
-			dataType : 'json',
-			success : function(result) {
-				console.log('DB 삽입 완료');
+		if (type == "SEND"){
+			
+			//내가 보낸 메시지일 때
+			if(sender == membId){
+				//메시지 동적으로 뿌려주기
+				appendMyMessage(sender, message);
+				
+				//ajax 호출하여 db에 저장
+				$.ajax({
+					url : "multiRoom/insertMsg",
+					type : "POST",
+					data : {
+						chatroom_seq : roomId,
+						chatmsg_content : message,
+						chatmsg_recipient : sender
+					},
+					dataType : 'json',
+					success : function(result) {
+						console.log('DB 삽입 완료');
+					}
+				});
+				
+			} else {
+				//타인이 보낸 메시지일 때
+				//메시지 동적으로 뿌려주기
+				appendOtherMessage(sender, message);
 			}
-		});
+		}
 	}
 	
 	//send 함수
 	function send() {
+
 		console.log("send 실행");
 		var textarea = document.getElementById("textarea");
 		var myMessage = textarea.value;
-		console.log(myMessage);
+		
+		console.log("myMessage : " + myMessage);
 		
 		sock.send(JSON.stringify({
 			chatRoomId : roomId,
 			type : "SEND",
-			message : myMessage
+			message : myMessage,
+			sender : membId
 		}));
 	}
 	
 
-	//메시지 append
-	function appendMessage(msg) {
+	//내가 보낸 메시지 동적 처리
+	function appendMyMessage(sender, msg) {
+		
+		console.log("myMsg 함수 sender : " + sender);
 
 			if (msg == '') {
 				return false;
@@ -99,7 +133,7 @@ $(document).ready(function() {
 				//var t = getTimeStamp();
 				$("#chatLog")
 						.append(
-								"<div class='col-12 row' style = 'height : auto; margin-top : 5px;'><div class='col-2' style = 'float:left; padding-right:0px; padding-left : 0px;'><div style='font-size:9px; clear:both;'>${user_name}</div></div><div class = 'col-10' style = 'overflow : y ; margin-top : 7px; float:right;'><div class = 'col-12 myChat' style = 'background-color:#4e73df; color : white; padding : 10px 5px; float:left; border-radius:10px;'><span style = 'font-size : 12px;'>"
+								"<div class='col-12 row' style = 'height : auto; margin-top : 5px;'><div class='col-2' style = 'float:left; padding-right:0px; padding-left : 0px;'><div style='font-size:9px; clear:both;'>"+sender + "</div></div><div class = 'col-10' style = 'overflow : y ; margin-top : 7px; float:right;'><div class = 'col-12 myChat' style = 'background-color:#4e73df; color : white; padding : 10px 5px; float:left; border-radius:10px;'><span style = 'font-size : 12px;'>"
 										+ msg
 										+ "</span></div><div col-12 style = 'font-size:9px; text-align:right; float:right;'><span style ='float:right; font-size:9px; text-align:right;' >")
 										//+ t + "</span></div></div></div>")
@@ -110,6 +144,41 @@ $(document).ready(function() {
 
 			}
 		}
+	
+	//남이 보낸 메시지 동적 처리
+	function appendOtherMessage(sender, msg) {
+
+		console.log("otherMsg 함수 sender : " + sender);
+		
+		if (msg == '') {
+			return false;
+		} else {
+
+			//var t = getTimeStamp();
+			$("#chatLog")
+					.append(
+							"<div class='col-12 row' style = 'height : auto; margin-top : 5px;'><div class='col-2' style = 'float:left; padding-left:0px; padding-right : 0px;'><div style='font-size:9px; clear:both;'></div></div><div class = 'col-10' style = 'overflow : y ; margin-top : 7px; float:left;'>"+sender+"<div class = 'col-12 myChat' style = 'background-color:#ffffff; color : black; padding : 10px 5px; float:left; border-radius:10px;'><span style = 'font-size : 12px;'>"
+									+ msg
+									+ "</span></div><div col-12 style = 'font-size:9px; text-align:right; float:left;'><span style ='float:right; font-size:9px; text-align:right;' >")
+									//+ t + "</span></div></div></div>")
+
+			var chatAreaHeight = $("#chatArea").height();
+			var maxScroll = $("#chatLog").height() - chatAreaHeight;
+			$("#chatArea").scrollTop(maxScroll);
+
+		}
+	}
+	
+	//멤버 목록 모달
+	function openMemModal(){
+		
+		console.log('openMemModal');
+		
+		$("#memModal").modal("show");
+	}
+	
+	
+	
 </script>
 </head>
 <body>
@@ -117,26 +186,16 @@ $(document).ready(function() {
 	<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
 		<div class="container-fluid">
 			<a class="navbar-brand" href="#">[[${chatInfo.chatroom_name}]]</a>
-			<button class="navbar-toggler" type="button"
-				data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
-				aria-controls="navbarNavDropdown" aria-expanded="false"
-				aria-label="Toggle navigation">
-				<span class="navbar-toggler-icon"></span>
-			</button>
-			<div class="collapse navbar-collapse" id="navbarNavDropdown">
-				<ul class="navbar-nav">
-					<li class="nav-item dropdown"><a
-						class="nav-link dropdown-toggle" href="#"
-						id="navbarDropdownMenuLink" role="button"
-						data-bs-toggle="dropdown" aria-expanded="false"> Dropdown link
-					</a>
-						<ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-							<li><a class="dropdown-item" href="#">Action</a></li>
-							<li><a class="dropdown-item" href="#">Another action</a></li>
-							<li><a class="dropdown-item" href="#">Something else
-									here</a></li>
-						</ul></li>
-				</ul>
+
+			<div class="dropdown no-arrow mb-4">
+				<button class="btn btn-secondary dropdown-toggle" type="button"
+					id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+					aria-expanded="false">+</button>
+				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+					<a class="dropdown-item" href="#" onclick="openMemModal()">멤버
+						목록</a> <a class="dropdown-item" href="#">멤버 초대</a> <a
+						class="dropdown-item" href="#">퇴장</a>
+				</div>
 			</div>
 		</div>
 	</nav>
@@ -149,7 +208,7 @@ $(document).ready(function() {
 				<div class="other" th:if="${msg.chatmsg_recipient} != ${id}">
 					<h6>[[${msg.chatmsg_recipient}]]</h6>
 					<div class="leftBubble myChat"
-						style="background-color: #d1d1d1; padding: 10px; margin-right: 400px; border-radius: 10px; display: inline-block;">[[${msg.chatmsg_content}]]</div>
+						style="background-color: #ffffff; padding: 10px; margin-right: 400px; border-radius: 10px; display: inline-block;">[[${msg.chatmsg_content}]]</div>
 				</div>
 
 				<div class="main" th:if="${msg.chatmsg_recipient} == ${id}">
@@ -169,5 +228,20 @@ $(document).ready(function() {
 		<button type="button" id="chatArea" class="btn btn-info btn-lg"
 			onclick="send()">전송</button>
 	</div>
+
+
+	<!-- 멤버 목록 모달 
+	<div class="modal-dialog modal-sm" id="memModal">
+		<table>
+			<tr th:each="memList : ${chatMems}">
+				<td th:text="${memList.ogfile}"></td>
+				<td th:text="${memList.memb_name}"></td>
+				<td th:text="${memList.memb_mail}"></td>
+			</tr>
+		</table>
+		<button type="button" class="btn-close" data-bs-dismiss="modal"
+			aria-label="Close"></button>
+	</div>
+	-->
 </body>
 </html>
