@@ -8,20 +8,23 @@
 
 	<select id="listMembers" parameterType="Map"
 		resultType="Members">
-		select
-		memb_mail
-		,memb_name
-		,memb_ogFile
-		,memb_savedFile
-		,memb_work
-		,memb_phone
-		,rolename
-		from members
-		<where>
+		SELECT
+		m.memb_mail as memb_mail
+		,m.memb_name as memb_name
+		,m.memb_ogfile as memb_ogfile
+		,m.memb_savedfile as memb_savedfile
+		,m.memb_work as memb_work
+		,m.memb_phone as memb_phone
+		,p.prj_domain as prj_domain
+		,p.pjmb_right as pjmb_right
+		FROM
+		members m, projectmember p
+		where
+			m.memb_mail = p.memb_mail 
+			AND p.prj_domain = #{prj_domain}
 			<if test="searchWord != null">
-				memb_name like '%' || #{searchWord} || '%'
+				AND memb_name like '%' || #{searchWord} || '%'
 			</if>
-		</where>
 		order by
 		1 desc
 	</select>
@@ -38,13 +41,23 @@
 		</where>
 	</select>
 
-	<select id="getMemberInfo" resultType="Members"
-		parameterType="String">
-		select *
-		from members
-		where
-		memb_mail=#{memb_mail}
+	<select id="getMemberInfo" parameterType="String"
+		resultType="Members">
+		SELECT
+		m.memb_mail as memb_mail
+		,m.memb_name as memb_name
+		,m.memb_ogfile as memb_ogfile
+		,m.memb_savedfile as memb_savedfile
+		,m.memb_work as memb_work
+		,m.memb_phone as memb_phone
+		,p.prj_domain as prj_domain
+		,p.pjmb_right as pjmb_right
+		FROM
+		members m, projectmember p
+		WHERE m.memb_mail = p.memb_mail 
+		AND p.prj_domain = #{prj_domain} 
 	</select>
+
 
 	<insert id="insertAttendant" parameterType="InvitationMember">
 		INSERT INTO
@@ -123,4 +136,13 @@
 		)
 	</insert>
 
+	<!-- 게시물 읽기 -->
+	<select id="readDriveFile" resultType="DriveFile" parameterType="int">
+	select 
+		*
+	from 
+		driveFile
+	where
+		driveFile_seq = #{driveFile_seq}
+	</select>
 </mapper>

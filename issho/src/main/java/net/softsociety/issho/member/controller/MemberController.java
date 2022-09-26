@@ -1,6 +1,5 @@
 package net.softsociety.issho.member.controller;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,12 +42,12 @@ public class MemberController {
 	@Autowired
 	ServletContext servletContext;
 
+	@Autowired
 	MemberDAO memDao;
-	
+
 	@Autowired
 	private WebApplicationContext webApplicationContext;
 
-	
 	// 여기서부터 김지윤 작성
 	@Autowired
 	ManagerService manService;
@@ -84,17 +83,17 @@ public class MemberController {
 	public String join(Members members, @RequestParam MultipartFile upload) {
 
 		log.debug("전달받은 객체 : {}", members);
-		
+
 		String realpath = servletContext.getRealPath("/resources");
-		
+
 		log.debug(realpath);
 
 		// resources의 상위 디렉토리까지의 경로가 저장됨.
-		//String webRoot = webApplicationContext.getServletContext().getRealPath("/");
-		//String imgRoot = webRoot + "resources/savedImg";
+		// String webRoot = webApplicationContext.getServletContext().getRealPath("/");
+		// String imgRoot = webRoot + "resources/savedImg";
 
-		//log.debug("webRoot : {}", webRoot);
-		//log.debug("imgRoot : {}", imgRoot);
+		// log.debug("webRoot : {}", webRoot);
+		// log.debug("imgRoot : {}", imgRoot);
 
 		if (upload != null && !upload.isEmpty()) {
 			String savedfile = FileService.saveFile(upload, realpath + "/upload");
@@ -112,20 +111,19 @@ public class MemberController {
 		 * Auto-generated catch block e.printStackTrace(); } }
 		 */
 
-		if(upload != null && !upload.isEmpty()) {
-		
+		if (upload != null && !upload.isEmpty()) {
+
 			/*
 			 * String absolutePath = new
 			 * ClassPathResource(uploadPath).getFile().getAbsolutePath();
 			 * log.debug("absolutePath : {}", absolutePath);
 			 */
-				log.debug("uploadPath : {}", uploadPath);
-				String savedfile = FileService.saveFile(upload, uploadPath);
-				members.setMemb_ogfile(upload.getOriginalFilename());
-				members.setMemb_savedfile(savedfile);
-		
-		}		
-	
+			log.debug("uploadPath : {}", uploadPath);
+			String savedfile = FileService.saveFile(upload, uploadPath);
+			members.setMemb_ogfile(upload.getOriginalFilename());
+			members.setMemb_savedfile(savedfile);
+
+		}
 
 		log.debug("업로드 처리후 : {}", members);
 
@@ -163,33 +161,32 @@ public class MemberController {
 		return "member/member_login";
 	}
 
-
-
-
-	
-	@PostMapping("/memSearch")
+	@RequestMapping(value = "/memSearch",produces = "application/text; charset=utf8")
 	@ResponseBody
 	public String memSearch(String memb_mail) {
-		
+
 		log.debug("memSearch mail : {}", memb_mail);
-		
+
 		Members member = memDao.getUserById(memb_mail);
-		
+
+		log.debug("member : {}", member);
+
+		log.debug("member.getMemb_name() : {} ", member.getMemb_name());
+
 		return member.getMemb_name();
-		
+
 	}
 
 	@PostMapping("/memSearchByIdName")
 	@ResponseBody
 	public List<Members> memSearchByIdName(String searchWord) {
-		
-		log.debug("searchWord : {}", searchWord);
-		
-		List<Members> list = memDao.memSearchByIdName(searchWord);
-		
-		return list;
-		
-	}
 
+		log.debug("searchWord : {}", searchWord);
+
+		List<Members> list = memDao.memSearchByIdName(searchWord);
+
+		return list;
+
+	}
 
 }

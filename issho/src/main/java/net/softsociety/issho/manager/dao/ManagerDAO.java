@@ -18,7 +18,7 @@ public interface ManagerDAO {
 
 	public int count(HashMap<String, String> map);
 
-	public Members getMemberInfo(String email);
+	public Members getMemberInfo(String domain);
 
 	public void insertAttendant(InvitationMember invitation);
 
@@ -33,5 +33,7 @@ public interface ManagerDAO {
 	public InvitationMember getOneObject(InvitationMember invitation);
 
 	public int insertDrive(DriveFile driveFile);
+
+	public DriveFile readDriveFile(int driveFile_seq);
 
 }

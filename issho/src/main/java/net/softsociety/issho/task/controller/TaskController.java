@@ -90,7 +90,7 @@ public class TaskController {
 	public String newProject(@AuthenticationPrincipal UserDetails user, Task task, String memList2,
 			@RequestParam List<MultipartFile> uploads) {
 	
-		task.setPrj_domain("scit42");
+		task.setPrj_domain("scit112");
 	
 		// 담당자 받을 배열s
 		String[] staffList = null;
