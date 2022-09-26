@@ -80,7 +80,7 @@
 						<div class="row">
 							<div class="col-sm-12">
 								<!-- 삭제시 전송할 폼 -->
-								<form th:action="@{/manager/deleteMember}" method="get"
+								<form action="./manager/deleteMember" method="get"
 									id="deleteForm">
 									<input type="hidden" name="email" id="email">
 								</form>
@@ -112,7 +112,7 @@
 													class="newTask" th:id=${l.memb_mail} data-toggle="modal"
 													data-target="exampleModal" onclick="openModal(this.getAttribute('id'))"
 													style="cursor: pointer;"></a></td>
-												<td th:text=${l.rolename}></td>
+												<td th:text=${l.pjmb_right}></td>
 												<td th:text=${l.memb_mail} id="memb_mail" name="memb_mail"></td>
 												<td th:text=${l.memb_work}></td>
 												<td th:text=${l.memb_phone}></td>

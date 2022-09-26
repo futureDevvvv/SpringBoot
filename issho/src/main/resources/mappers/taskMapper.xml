@@ -16,12 +16,11 @@
 		,task.task_rank AS
 		task_rank
 		,task.task_state AS task_state
-		,task.task_inputdate AS
-		task_inputdate
-		,task.task_startdate AS task_startdate
-		,task.task_enddate AS task_enddate
-		,task.exp_startdate AS exp_startdate
-		,task.exp_enddate AS exp_enddate
+		,to_char(task.task_inputdate, 'YYYY-MM-DD') AS task_inputdate
+		,to_char(task.task_startdate, 'YYYY-MM-DD') AS task_startdate
+		,to_char(task.task_enddate, 'YYYY-MM-DD')  AS task_enddate
+		,to_char(task.exp_startdate, 'YYYY-MM-DD') AS exp_startdate
+		,to_char(task.exp_enddate, 'YYYY-MM-DD') AS exp_enddate
 		,task.ptask_num AS ptask_num
 		,
 		memb.memb_name AS memb_name

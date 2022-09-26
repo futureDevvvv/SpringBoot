@@ -25,4 +25,9 @@ public class Members{
 	private boolean enabled;	//1 : 사용가능, 0 : 불가능ㄴ
 	private String rolename;
 	
+	//지윤 멤버리스트
+	private String prj_domain;
+	private String pjmb_right;
+	
+	
 }

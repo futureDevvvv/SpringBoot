@@ -237,7 +237,7 @@ ul#memList li.mem-item:hover {
 			<div class="modal fade" id="exampleModal" tabindex="-1"
 				aria-labelledby="exampleModalLabel" aria-hidden="true">
 
-				<form th:action="@{/task/addNewTask}" method="POST" id="newTaskForm"
+				<form action="./task/addNewTask" method="POST" id="newTaskForm"
 					enctype="multipart/form-data">
 					<div class="modal-dialog modal-lg">
 						<div class="modal-content">
@@ -468,7 +468,7 @@ ul#memList li.mem-item:hover {
 			let val = $("#staffInput").val();
 			
 			$.ajax({
-				url : '../member/memSearchByIdName',
+				url : '../../member/memSearchByIdName',
 				type : 'POST',
 				data : {
 					searchWord : val
@@ -531,12 +531,15 @@ ul#memList li.mem-item:hover {
 
 				$
 						.ajax({
-							url : "../member/memSearch",
+							url : "../../member/memSearch",
 							type : "POST",
 							data : {
 								memb_mail : id
 							},
 							success : function(result) {
+								
+								console.log(result);
+								
 								$("#memList")
 										.append(
 												"<li class='mem-item' id= "+ id +  ">"

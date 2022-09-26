@@ -10,7 +10,6 @@
 
 
 <style>
-
 </style>
 </head>
 <body>
@@ -37,7 +36,7 @@
 						<h6 class="m-0 font-weight-bold text-primary">멤버별 업무 리스트</h6>
 					</div>
 
-									
+
 
 					<div class="w3-clear nextprev">
 						<div class="w3-left w3-btn">
@@ -60,14 +59,14 @@
 								class="form-inline" id="excelDownloadForm">
 								<input type="button" value="excel"
 									class="btn btn-success form-control mb-2 mr-sm-2"
-									style="margin-left: 840px;" onclick="checkedBox()"> 
+									style="margin-left: 840px;" onclick="checkedBox()">
 							</form>
-									<a id="savePdfBtn" class="btn btn-danger form-control mb-2 mr-sm-2" >PDF</a>
-									
-							<script th:src="@{/js/html2canvas.js?ver=113111}"></script>
-							<script th:src="@{/js/jquery-3.6.0.min.js?ver=123}"></script>
-							<script th:src="@{/js/jspdf.min.js?ver=131}"></script>	
-									
+							<a id="savePdfBtn"
+								class="btn btn-danger form-control mb-2 mr-sm-2">PDF</a>
+
+							<script th:src="@{/js/html2canvas.js?ver=113}"></script>
+							<script th:src="@{/js/jspdf.min.js?ver=131}"></script>
+
 							</label>
 
 
@@ -91,51 +90,57 @@
 					<div class="row">
 						<div class="col-sm-12">
 							<!-- 체크박스 선택시 전송할 폼 -->
-							<form th:action="@{/manager/excelDownload}" method="POST"
-								id="chkForm">
+							<script
+								src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js?ver=1"></script>
+							<form action="./manager/excelDownload" method="POST" id="chkForm">
 								<input type="hidden" name="email" id="email" value="">
 							</form>
 							<div id="pdfDiv">
-							<form form th:action="@{manager/multiChecked}" method="get">
-								<table class="table table-bordered dataTable" id="dataTable"
-									width="100%" cellspacing="0" role="grid"
-									aria-describedby="dataTable_info" style="width: 100%;">
-									<thead>
-										<tr role="row">
-											<th class="sorting sorting_asc" tabindex="0"
-												aria-controls="dataTable" rowspan="1" colspan="1"
-												aria-sort="ascending" style="width: 30px; text-align: center;">선택</th>
-											<th class="sorting" tabindex="0" aria-controls="dataTable"
-												rowspan="1" colspan="1" style="width: 100px;">이메일</th>
-											<th class="sorting" tabindex="0" aria-controls="dataTable"
-												rowspan="1" colspan="1" style="width: 80px;">이름</th>
-											<th class="sorting" tabindex="0" aria-controls="dataTable"
-												rowspan="1" colspan="1" style="width: 50px;">권한</th>
-											<th class="sorting" tabindex="0" aria-controls="dataTable"
-												rowspan="1" colspan="1" style="width: 80px;">작업량(개인별)</th>
-											<th class="sorting" tabindex="0" aria-controls="dataTable"
-												rowspan="1" colspan="1" style="width: 80px;">작업량(업무별)</th>
-											<th class="sorting" tabindex="0" aria-controls="dataTable"
-												rowspan="1" colspan="1" style="width: 80px;">업무능률</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr class="odd" th:each="l:${list}">
-											<td class="sorting_1" id="selectWorks" style="text-align: center; "><input
-												type="checkbox" name="checkedValue"
-												th:value="${l.memb_mail}" style="vertical-align: middle;"></td>
-											<td th:text=${l.memb_mail} id="email" th:id="newTask"
-												data-toggle="modal" th:infoEmail="${l.memb_mail}"></td>
-											<td th:text=${l.memb_name}></td>
-											<td th:text=${l.rolename}></td>
-											<td>개인별작업량표시</td>
-											<td>업무별작업량표시</td>
-											<td>업무능률표시</td>
-										</tr>
-									</tbody>
+								<form form th:action="@{manager/multiChecked}" method="get">
+									<table class="table table-bordered dataTable" id="dataTable"
+										width="100%" cellspacing="0" role="grid"
+										aria-describedby="dataTable_info" style="width: 100%;">
+										<thead>
+											<tr role="row">
+												<th class="sorting sorting_asc" tabindex="0"
+													aria-controls="dataTable" rowspan="1" colspan="1"
+													aria-sort="ascending"
+													style="width: 30px; text-align: center;">선택</th>
+												<th class="sorting" tabindex="0" aria-controls="dataTable"
+													rowspan="1" colspan="1" style="width: 100px;">이메일</th>
+												<th class="sorting" tabindex="0" aria-controls="dataTable"
+													rowspan="1" colspan="1" style="width: 80px;">이름</th>
+												<th class="sorting" tabindex="0" aria-controls="dataTable"
+													rowspan="1" colspan="1" style="width: 50px;">권한</th>
+												<th class="sorting" tabindex="0" aria-controls="dataTable"
+													rowspan="1" colspan="1" style="width: 80px;">작업량(개인별)</th>
+												<th class="sorting" tabindex="0" aria-controls="dataTable"
+													rowspan="1" colspan="1" style="width: 80px;">작업량(업무별)</th>
+												<th class="sorting" tabindex="0" aria-controls="dataTable"
+													rowspan="1" colspan="1" style="width: 80px;">업무능률</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr class="odd" th:each="l:${list}">
+												<td class="sorting_1" id="selectWorks"
+													style="text-align: center;"><input type="checkbox"
+													name="checkedValue" th:value="${l.memb_mail}"
+													style="vertical-align: middle;"></td>
+												<td><a th:text=${l.memb_mail} th:id="newTask"
+													data-target="exampleModal" data-toggle="modal"
+													th:infoEmail="${l.memb_mail}"
+													onclick="openModal(this.getAttribute('infoEmail'))"
+													style="cursor: pointer;"></a></td>
+												<td th:text=${l.memb_name}></td>
+												<td th:text=${l.rolename}></td>
+												<td></td>
+												<td>업무별작업량표시</td>
+												<td>업무능률표시</td>
+											</tr>
+										</tbody>
 
-								</table>
-							</form>
+									</table>
+								</form>
 							</div>
 						</div>
 					</div>
@@ -181,7 +186,19 @@
 						정보</h5>
 
 				</div>
-				<div class="modal-body p-5 pt-0"></div>
+				<div class="modal-body p-5 pt-0">
+					<span class="name mt-3" id="modalMembName"></span> <br> <span
+						class="idd" id="modalMembMail"></span> <span class="idd"
+						id="modalMembPhone"></span>
+					<div
+						class="d-flex flex-row justify-content-center align-items-center gap-2">
+						<span class="idd1" id="modalMembRolename"></span>
+					</div>
+					<div
+						class="d-flex flex-row justify-content-center align-items-center mt-3">
+						<span class="number" id="modalMembWork"> </span>
+					</div>
+				</div>
 				<div class="modal-footer">
 					<button type="button" id="closeNewTask" class="btn btn-secondary"
 						data-bs-dismiss="modal">확인</button>
@@ -189,7 +206,9 @@
 				</div>
 			</div>
 		</div>
+
 	</div>
+
 
 
 	<script>
@@ -206,16 +225,45 @@
 			form.submit();
 		}
 
+		
+		
 		//새로운 태스크 모달창 제어
-		$("#newTask").click(function(e) {
-			e.preventDefault();
-			$("#exampleModal").modal("show");
-		});
+  		function openModal(id) {
+			 let email = id;
+			 
+			 $.ajax({
+					url : "workInfo",
+					type : "POST",
+					data : {
+						memEmail : email,
+					},
+					dataType : 'json',
+					success : function(resultMap) {
+					/* 		console.log(resultMap);
+							console.log("resultMap.profileImg : " + resultMap.profileImg);
+							//http://localhost:9990/issho/savedImg/20220916.JPG
+							let insertImg = document.getElementById("insertImg");
+							
+							insertImg.innerHTML = '<img src="'+ resultMap.profileImg + '" class="rounded"  height="140" width="130" />';
+							*/
+							//$('#modalMembImg').text(resultMap.profileImg);
+							$('#modalMembMail').text(resultMap.members.memb_mail);
+							$('#modalMembName').text(resultMap.members.memb_name);
+							$('#modalMembPhone').text(resultMap.members.memb_phone);
+							$('#modalMembRolename').text(resultMap.members.pjmb_right);
+							$('#modalMembWork').text(resultMap.members.memb_work); 
+							
+						 	$("#exampleModal").modal("show");
+					},
+					error: function(e){
+						alert(JSON.stringify(e));
+					}
+				});
+			 
+		
+		} 
 
-		$("#closeNewTask").click(function(e) {
-			e.preventDefault();
-			$("#exampleModal").modal("hide");
-		})
+	
 
 		//체크 박스
 		function checkedBox() {
@@ -235,7 +283,7 @@
 				}
 			}
 			$("#email").val(emailVal);
-			alert(emailVal);
+			/* alert(emailVal); */
 			$("#chkForm").submit();
 			$("#email").val("");
 
@@ -287,6 +335,30 @@
 		    });
 		});
 		
+		$("#closeNewTask").click(function(e) {
+			e.preventDefault();
+			$("#exampleModal").modal("hide");
+		})
+
+		
+		
+		//차트
+		let myChartOne = document.getElementById('myChartOne').getContext('2d');
+
+		let barChart = new Chart(myChartOne,{
+			type : 'doughnut', //pir,line,doughnut,polarArea
+			data : {
+				labels :['진행전','진행중','완료'],
+				datasets : [{
+					labels :'업무 진행도',
+				data : [
+					10,
+					50,
+					30,
+				]
+				}]	
+			}
+		})
 	</script>
 
 
