@@ -17,8 +17,10 @@
 	<select id="recentMsgs" resultType="ChatMsg">
 		select chatroom_seq,
 		chatmsg_seq, chatmsg_content, chatmsg_sendDate from chatmsg
-		where (chatroom_seq, chatmsg_sendDate)
-		in (select chatroom_seq, max(chatmsg_sendDate) from chatmsg group by
+		where
+		(chatroom_seq, chatmsg_sendDate)
+		in (select chatroom_seq,
+		max(chatmsg_sendDate) from chatmsg group by
 		chatroom_seq)
 	</select>
 
@@ -35,8 +37,11 @@
 
 	<select id="chatMemList" parameterType="String"
 		resultType="Members">
-		SELECT * FROM chatmember
-		WHERE chatroom_seq=#{chatroom_seq}
+		SELECT m.memb_mail AS memb_mail, m.memb_name AS memb_name,
+		m.memb_ogfile AS memb_ogfile
+		FROM members m, chatmember c
+		WHERE m.memb_mail = c.chat_member
+		AND c.chatroom_seq=#{chatroom_seq}
 	</select>
 
 	<select id="chatMsgs" parameterType="String"
@@ -50,8 +55,9 @@
 		VALUES(#{chatroom_seq}, chatmsg_seq.NEXTVAL, #{chatmsg_recipient},
 		sysdate, #{chatmsg_content})
 	</insert>
-	
-	<select id="chatroomInfo" parameterType="String" resultType="Chatrooms">
+
+	<select id="chatroomInfo" parameterType="String"
+		resultType="Chatrooms">
 		SELECT * FROM chatroom
 		WHERE chatroom_seq = #{chatroom_seq}
 	</select>

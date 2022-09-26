@@ -165,5 +165,11 @@ public class DashboardController {
 
 		taskservice.changeState(map);
 	}
+	
+	@GetMapping("gantt")
+	public String gantt() {
+		
+		return "taskView/task_gantt";
+	}
 
 }

@@ -9,9 +9,9 @@
 	href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+
 <script
 	src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-
 <!-- gijgo datepicker library -->
 <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js"
 	type="text/javascript"></script>
@@ -468,7 +468,7 @@ ul#memList li.mem-item:hover {
 			let val = $("#staffInput").val();
 			
 			$.ajax({
-				url : '../member/memSearchByIdName',
+				url : '../../member/memSearchByIdName',
 				type : 'POST',
 				data : {
 					searchWord : val
@@ -529,14 +529,16 @@ ul#memList li.mem-item:hover {
 
 				$("#memList2").val(li);
 
-				$
-						.ajax({
-							url : "../member/memSearch",
+				$.ajax({
+							url : "../../member/memSearch",
 							type : "POST",
 							data : {
 								memb_mail : id
 							},
 							success : function(result) {
+								
+								console.log(result);
+								
 								$("#memList")
 										.append(
 												"<li class='mem-item' id= "+ id +  ">"

@@ -43,6 +43,7 @@ public class MemberController {
 	@Autowired
 	ServletContext servletContext;
 
+	@Autowired
 	MemberDAO memDao;
 	
 	@Autowired
@@ -198,9 +199,13 @@ public class MemberController {
 	@ResponseBody
 	public String memSearch(String memb_mail) {
 		
+		log.debug("memSearch 진입");
+		
 		log.debug("memSearch mail : {}", memb_mail);
 		
 		Members member = memDao.getUserById(memb_mail);
+		
+		log.debug("membSearch Memb 객체 : {}", member);
 		
 		return member.getMemb_name();
 		
@@ -209,6 +214,8 @@ public class MemberController {
 	@PostMapping("/memSearchByIdName")
 	@ResponseBody
 	public List<Members> memSearchByIdName(String searchWord) {
+		
+		log.debug("memSearchByIdName 진입");
 		
 		log.debug("searchWord : {}", searchWord);
 		
