@@ -187,8 +187,22 @@
      	,t.task_enddate
 	
 	
-	</select>
+
 	
 	
 	
+
+	<update id="changeDate" parameterType="GanttTask">
+		UPDATE task
+		SET <if test="task_startdate != null and task_enddate != null">
+			task_startdate = #{task_startdate},
+			task_enddate = #{task_enddate}
+		</if>
+		<if test="exp_startdate != null and exp_enddate != null">
+			exp_startdate = #{exp_startdate},
+			exp_enddate = #{exp_enddate}
+		</if>
+		WHERE task_seq = #{task_seq}
+	</update>
+
 </mapper>

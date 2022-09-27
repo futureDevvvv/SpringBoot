@@ -15,6 +15,7 @@ import net.softsociety.issho.manager.util.PageNavigator;
 import net.softsociety.issho.member.domain.Members;
 import net.softsociety.issho.project.domain.ProjectMember;
 import net.softsociety.issho.task.dao.TaskDAO;
+import net.softsociety.issho.task.domain.GanttTask;
 import net.softsociety.issho.task.domain.Task;
 import net.softsociety.issho.task.domain.Taskfile;
 import net.softsociety.issho.task.domain.Taskstaff;
@@ -84,6 +85,7 @@ public class TaskServiceImpl implements TaskService {
 		
 		return list;
 	}
+
 	//관리자페이지 태스크 리스트
 	@Override
 	public ArrayList<Task> SelectAlltaskMG(String prj_domain, PageNavigator navi, String searchWord) {
@@ -98,4 +100,14 @@ public class TaskServiceImpl implements TaskService {
 	}
 	
 	
+
+
+	//일정 변경 (간트)
+	@Override
+	public void changeDate(GanttTask task) {
+
+		taskDAO.changeDate(task);
+	}
+
+
 }

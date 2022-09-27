@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.extern.slf4j.Slf4j;
 import net.softsociety.issho.member.service.MemberService;
+import net.softsociety.issho.task.domain.GanttTask;
 import net.softsociety.issho.task.domain.Task;
 import net.softsociety.issho.task.domain.Taskstaff;
 import net.softsociety.issho.task.service.TaskService;
@@ -189,6 +190,15 @@ public class DashboardController {
 		model.addAttribute("list", list);
 
 		return "taskView/task_gantt";
+	}
+	
+	@PostMapping("/changeGantt")
+	@ResponseBody
+	public void changeGantt(GanttTask task) {
+		
+		log.debug("ganttTask 객체 : {}", task);
+		
+		taskservice.changeDate(task);
 	}
 
 }

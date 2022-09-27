@@ -10,6 +10,7 @@ import net.softsociety.issho.notice.domain.CommentDetail;
 import net.softsociety.issho.notice.domain.Notice;
 import net.softsociety.issho.notice.domain.NoticeDetail;
 import net.softsociety.issho.project.domain.ProjectMember;
+import net.softsociety.issho.task.domain.GanttTask;
 import net.softsociety.issho.task.domain.Task;
 import net.softsociety.issho.task.domain.Taskfile;
 import net.softsociety.issho.task.domain.Taskstaff;
@@ -37,6 +38,9 @@ public interface TaskService {
 	public List<Taskstaff> projectMembers(String prj_domain);
 
 	public ArrayList<Task> SelectAlltaskMG(String prj_domain, PageNavigator navi, String searchWord);
+
+	public void changeDate(GanttTask task);
+
 
 
 
