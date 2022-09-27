@@ -1,5 +1,7 @@
 package net.softsociety.issho;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -80,7 +82,11 @@ public class HomeController {
 	 * @return
 	 */
 	@GetMapping("/{prj_domain}/main")
-	public String enterPj(@PathVariable String prj_domain, Model model) {
+	public String enterPj(@PathVariable String prj_domain, 
+			Model model,
+			HttpSession session) {
+		
+		session.setAttribute("prj_domain", prj_domain);
 
 		Projects project = pjservice.searchOne(prj_domain);
 

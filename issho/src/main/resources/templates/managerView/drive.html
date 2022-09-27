@@ -92,7 +92,11 @@
 						<div class="row">
 							<div class="col-sm-12">
 
-
+								<!--드라이브 파일 다운로드 -->
+								<form action="./manager/download" method="get"
+									id="downloadForm">
+									<input type="hidden" name="driveFileNum" id="driveFileNum">
+								</form>
 
 								<form action="">
 									<table class="table table-bordered dataTable" id="dataTable"
@@ -113,7 +117,8 @@
 											<tr class="odd"  th:each="l:${list}">
 												<td class="sorting_1" th:text=${l.driveFile_seq}><a></a></td>
 												<td class="sorting_1" >
-												<a href="../../manager/download(driveFile_seq=${l.driveFile_seq})" th:text=${l.driveFile_ogFile}></a></td>
+												<a th:num="${l.driveFile_seq}" onclick="driveDownload(this.getAttribute('num'))"
+												style="cursor: pointer;" th:text=${l.driveFile_ogFile}></a></td>
 												<td class="sorting_1" th:text=${l.driveFile_date}><a></a></td>
 
 
@@ -186,9 +191,18 @@
 
 
 	<script>
+	
+//드라이브 파일다운	
+function driveDownload(num) {
+	let driveFileNum = document.getElementById('driveFileNum');
+	driveFileNum.value = num;
+	let form = document.getElementById('downloadForm');
+	form.submit();
+	
+	
 
 
-
+}
 
 function pagingFormSubmit(currentPage) {
 	var form = document.getElementById('pagingForm');

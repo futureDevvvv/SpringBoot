@@ -145,7 +145,7 @@ public class ManagerController {
 
 	
 	@ResponseBody
-	@PostMapping("ProjectInfo")
+	@PostMapping("/ProjectInfo")
 	public Map<String, Object> ProjectInfo(String domain, Model model) {
 
 		log.debug("프로젝트 도메인 : " + domain);
@@ -242,6 +242,50 @@ public class ManagerController {
 
 		return "managerView/managerMember";
 	}
+	
+	/**
+	 * 구성원관리 해당멤버 클릭시 멤버 정보 폼으로 이동
+	 * 
+	 * @param email
+	 * @param model
+	 * @return
+	 */
+	@ResponseBody
+	@PostMapping("ShowMemberInfo")
+	public Map<String, Object> memberInfo(String domain,String memEmail, Model model) {
+
+		
+		Members members = memDao.getUserById(memEmail);
+		
+		log.debug("멤버정보 이메일 : " + memEmail); 
+
+		/* members.setMemb_mail(memEmail); */
+		
+		log.debug("멤버정보 이메일 2 : " + memEmail); 
+
+		
+		log.debug("멤버 정보: " + members);
+		
+		
+		Members members2 = service.listManager("scit112",memEmail);
+		log.debug("멤버상세 리스트 결과: {}", members2);
+		
+		String profileImg = uploadPath + "/" + members.getMemb_savedfile();
+		
+		log.debug("profileImg :"+profileImg);
+		
+		model.addAttribute("members", members);
+		model.addAttribute("profileImg", profileImg);
+
+		Map<String, Object> result = new HashMap<>();
+		result.put("members", members);
+		result.put("members2", members2);
+		result.put("profileImg", profileImg);
+		
+
+		return result;
+
+	}
 
 	/**
 	 * 멤버 탈퇴(삭제)
@@ -290,7 +334,7 @@ public class ManagerController {
 	}
 	
 	@ResponseBody
-	@PostMapping("workInfo")
+	@PostMapping("/workInfo")
 	public Map<String, Object> workInfo(String domain,String memEmail, Model model) {
 
 		
@@ -322,7 +366,7 @@ public class ManagerController {
 	 * 
 	 * @return
 	 */
-	@GetMapping("mailSender")
+	@GetMapping("/mailSender")
 	public String mailSender() {
 		return "managerView/mailSender";
 	}
@@ -335,7 +379,7 @@ public class ManagerController {
 	 * @return
 	 * @throws Exception
 	 */
-	@PostMapping("mailSender2")
+	@PostMapping("/mailSender2")
 	public String mailSender(InvitationMember invitation) throws Exception {
 
 		mailSenderService.mailSend(invitation.getMembInv_recipient(), invitation.getPrj_domain());
@@ -377,44 +421,7 @@ public class ManagerController {
 		return result;
 	}
 
-	/**
-	 * 구성원관리 해당멤버 클릭시 멤버 정보 폼으로 이동
-	 * 
-	 * @param email
-	 * @param model
-	 * @return
-	 */
-	@ResponseBody
-	@PostMapping("ShowMemberInfo")
-	public Map<String, Object> memberInfo(String domain,String memEmail, Model model) {
-
-		
-		Members members = memDao.getUserById(memEmail);
-		
-		log.debug("멤버정보 이메일 : " + memEmail); 
-
-		/* members.setMemb_mail(memEmail); */
-		
-		log.debug("멤버정보 이메일 2 : " + memEmail); 
-
-		
-		log.debug("멤버 정보: " + members);
-		
-		String profileImg = uploadPath + "/" + members.getMemb_savedfile();
-		
-		log.debug("profileImg :"+profileImg);
-		
-		model.addAttribute("members", members);
-		model.addAttribute("profileImg", profileImg);
-
-		Map<String, Object> result = new HashMap<>();
-		result.put("members", members);
-		result.put("profileImg", profileImg);
-		
-
-		return result;
-
-	}
+	
 
 	/**
 	 * 관리자 업무페이지에서 엑셀 다운로드
@@ -545,7 +552,7 @@ public class ManagerController {
 	 * @param searchWord
 	 * @return
 	 */
-	@GetMapping("addressBook")
+	@GetMapping("/addressBook")
 	public String addressBook(Model model, @RequestParam(name = "page", defaultValue = "1") int page,
 			String searchWord,String domain) {
 		
@@ -567,7 +574,7 @@ public class ManagerController {
 	
 
 	
-	@GetMapping("chart")
+	@GetMapping("/chart")
 	public String chart() {
 		return "managerView/chart";
 	}
@@ -577,13 +584,13 @@ public class ManagerController {
 	/*
 	 * 첨부파일 다운로드
 	 */
-	@RequestMapping(value = "/download", method = RequestMethod.GET)
-	public String fileDownload(int driveFile_seq, Model model, 
+	@RequestMapping(value = "download", method = RequestMethod.GET)
+	public String fileDownload(int driveFileNum, Model model, 
 								HttpServletResponse response) {
 		
-		log.debug("드라이브" + driveFile_seq);
+		log.debug("드라이브: " + driveFileNum);
 		
-		 DriveFile driveFile = service.readDriveFile(driveFile_seq);
+		 DriveFile driveFile = service.readDriveFile(driveFileNum);
 		
 		//원래의 파일명
 		String originalfile = new String(driveFile.getDriveFile_ogFile());

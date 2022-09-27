@@ -161,8 +161,7 @@ public class MemberController {
 		return "member/member_login";
 	}
 
-	@RequestMapping(value = "/memSearch",produces = "application/text; charset=utf8")
-	@ResponseBody
+	/*
 	public String memSearch(String memb_mail) {
 
 		log.debug("memSearch mail : {}", memb_mail);
@@ -175,9 +174,9 @@ public class MemberController {
 
 		return "member/addressBook";
 	}
-
+	*/
 	
-	@PostMapping("/memSearch")
+	@RequestMapping(value = "/memSearch",produces = "application/text; charset=utf8")
 	@ResponseBody
 	public String memSearch(String memb_mail) {
 		
