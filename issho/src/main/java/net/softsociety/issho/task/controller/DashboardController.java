@@ -109,8 +109,9 @@ public class DashboardController {
 	 * 칸반보드(내가 담당 중 업무)
 	 * 
 	 * * @param request : 현재 도메인 얻기 위함
-	 * @param model   : 태스크 리스트, 프로젝트 멤버 리스트, 유저 정보, 도메인
-	 * @param user    : 현재 유저 세션
+	 * 
+	 * @param model : 태스크 리스트, 프로젝트 멤버 리스트, 유저 정보, 도메인
+	 * @param user  : 현재 유저 세션
 	 * @return 칸반보드 리스트 html
 	 * 
 	 * @author 윤영혜
@@ -143,14 +144,13 @@ public class DashboardController {
 		return "taskView/task_MyChargedKanban";
 	}
 
-	
 	/**
 	 * 칸반보드 상태 변경 ajax
 	 * 
 	 * @param task_state
 	 * @param task_seq
 	 */
-	
+
 	@PostMapping("changeState")
 	@ResponseBody
 	public void changeState(String task_state, String task_seq) {
@@ -165,10 +165,29 @@ public class DashboardController {
 
 		taskservice.changeState(map);
 	}
-	
+
 	@GetMapping("gantt")
-	public String gantt() {
+	public String gantt(HttpServletRequest request, Model model, @AuthenticationPrincipal UserDetails user) {
+
+		String calledValue = request.getServletPath();
+		String[] splitedUrl = calledValue.split("/");
+		String prj_domain = splitedUrl[1];
+
+		List<Task> list = taskservice.SelectAlltask(prj_domain);
+
+		List<Taskstaff> pjmb = taskservice.projectMembers(prj_domain);
 		
+		log.debug("pjmb : {}", pjmb);
+
+		model.addAttribute("list", list);
+		model.addAttribute("user", user);
+		model.addAttribute("domain", prj_domain);
+		model.addAttribute("members", pjmb);
+
+		log.debug("list : {}", list);
+
+		model.addAttribute("list", list);
+
 		return "taskView/task_gantt";
 	}
 
