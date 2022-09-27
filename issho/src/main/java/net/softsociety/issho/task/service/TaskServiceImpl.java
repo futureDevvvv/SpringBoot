@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import net.softsociety.issho.project.domain.ProjectMember;
 import net.softsociety.issho.task.dao.TaskDAO;
+import net.softsociety.issho.task.domain.GanttTask;
 import net.softsociety.issho.task.domain.Task;
 import net.softsociety.issho.task.domain.Taskfile;
 import net.softsociety.issho.task.domain.Taskstaff;
@@ -79,6 +80,13 @@ public class TaskServiceImpl implements TaskService {
 		List<Taskstaff> list = taskDAO.projectMembers(prj_domain);
 		
 		return list;
+	}
+
+	//일정 변경 (간트)
+	@Override
+	public void changeDate(GanttTask task) {
+
+		taskDAO.changeDate(task);
 	}
 
 }
