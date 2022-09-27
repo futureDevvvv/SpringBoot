@@ -36,4 +36,7 @@ public class Task {
 	private String tfile_ogfile;
 	private String tfile_savefile;
 	
+	//김지윤 관리자 프로젝트 태스크 참가자
+	private String tastMembList;
+	
 }

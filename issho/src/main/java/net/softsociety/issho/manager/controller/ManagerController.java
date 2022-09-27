@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -97,8 +98,11 @@ public class ManagerController {
 	 * @return
 	 */
 	@GetMapping("/project")
-	public String project(Model model, @RequestParam(name = "page", defaultValue = "1") int page, String searchWord) {
-
+	public String project(HttpServletRequest request, Model model, @RequestParam(name = "page", defaultValue = "1") int page, String searchWord) {
+		String calledValue = request.getServletPath();
+	     String[] splitedUrl = calledValue.split("/");
+	     String prj_domain = splitedUrl[1];
+		
 		// 페이지 정보 생성
 		PageNavigator navi = service.getPageNavigator(pagePerGroup, countPerPage, page, searchWord);
 
@@ -107,7 +111,7 @@ public class ManagerController {
 		ArrayList<Projects> list = pjService.listProjects(navi, searchWord);
 		log.debug("list 결과: {}", list);
 		
-		ArrayList<Task> taskList = taskService.SelectAlltask("scit112");
+		ArrayList<Task> taskList = taskService.SelectAlltaskMG(prj_domain, navi, searchWord);
 		
 		for(int i = 0; i < taskList.size(); i++) {
 			if(taskList.get(i).getTask_rank().equals("0")) {
@@ -132,7 +136,7 @@ public class ManagerController {
 		}
 		
 		log.debug("taskList 결과: {}", taskList);
-		model.addAttribute("taskList",taskList);
+		model.addAttribute("taskLists",taskList);
 		
 		
 		// 리스트를 모델에 저장하고 HTML에서 출력
@@ -146,9 +150,11 @@ public class ManagerController {
 	
 	@ResponseBody
 	@PostMapping("/ProjectInfo")
-	public Map<String, Object> ProjectInfo(String domain, Model model) {
-
-		log.debug("프로젝트 도메인 : " + domain);
+	public Map<String, Object> ProjectInfo( String domain, Model model) {
+		
+		
+		
+		log.debug("프로젝트 상세 도메인 : " + domain);
 
 		Projects projects = new Projects();
 
@@ -158,11 +164,11 @@ public class ManagerController {
 		
 		ArrayList<Task> taskList = taskService.SelectAlltask(domain);
 		
-		log.debug("태스크 정보 : {}", taskList);
+		log.debug("태스크 상세 정보 : {}", taskList);
 		
 	
 		
-		model.addAttribute("taskList",taskList);
+		model.addAttribute("taskListInfo",taskList);
 		model.addAttribute("projects",projects);
 		log.debug("프로젝트 정보: " + projects);
 		log.debug("태스크 정보 수정 후 : {}", taskList);
@@ -188,16 +194,20 @@ public class ManagerController {
 	 * @return
 	 */
 	@GetMapping("/invitation")
-	public String invitation(Model model, @RequestParam(name = "page", defaultValue = "1") int page,
+	public String invitation(HttpServletRequest request, Model model, @RequestParam(name = "page", defaultValue = "1") int page,
 			String searchWord
 			,String domain) {
-
+		
+		String calledValue = request.getServletPath();
+	     String[] splitedUrl = calledValue.split("/");
+	     String prj_domain = splitedUrl[1];
+		
 		// 페이지 정보 생성
 		PageNavigator navi = service.getPageNavigator(pagePerGroup, countPerPage, page, searchWord);
 
 		// 현재 페이지 글 정보
 		// DB에서 게시판의 모든 글을 조회.ArrayList 타입으로 리턴받음.
-		ArrayList<Members> list = service.listManager("scit112",navi, searchWord);
+		ArrayList<Members> list = service.listManager(prj_domain,navi, searchWord);
 		log.debug("list 결과: {}", list);
 
 		// 리스트를 모델에 저장하고 HTML에서 출력
@@ -218,19 +228,23 @@ public class ManagerController {
 	 * @return
 	 */
 	@GetMapping("/member")
-	public String member(@AuthenticationPrincipal UserDetails user,
+	public String member(HttpServletRequest request,@AuthenticationPrincipal UserDetails user,
 			Model model, @RequestParam(name = "page", defaultValue = "1") int page, String searchWord,
 			String domain) {
 		
+		String calledValue = request.getServletPath();
+	     String[] splitedUrl = calledValue.split("/");
+	     String prj_domain = splitedUrl[1];
+		
 		String id = user.getUsername();
 		Members member = memDao.getUserById(id);
-		ArrayList<Members> pjMemList = memberService.searchPjMem("scit112");
+		ArrayList<Members> pjMemList = memberService.searchPjMem(prj_domain);
 		// 페이지 정보 생성
 		PageNavigator navi = service.getPageNavigator(pagePerGroup, countPerPage, page, searchWord);
 
 		// 현재 페이지 글 정보
 		// DB에서 게시판의 모든 글을 조회.ArrayList 타입으로 리턴받음.
-		ArrayList<Members> list = service.listManager("scit112", navi, searchWord);
+		ArrayList<Members> list = service.listManager(prj_domain, navi, searchWord);
 		log.debug("list 결과: {}", list);
 		
 		// 리스트를 모델에 저장하고 HTML에서 출력
@@ -252,8 +266,12 @@ public class ManagerController {
 	 */
 	@ResponseBody
 	@PostMapping("ShowMemberInfo")
-	public Map<String, Object> memberInfo(String domain,String memEmail, Model model) {
-
+	public Map<String, Object> memberInfo(HttpServletRequest request,String domain,String memEmail, Model model) {
+		
+		
+		String calledValue = request.getServletPath();
+	     String[] splitedUrl = calledValue.split("/");
+	     String prj_domain = splitedUrl[1];
 		
 		Members members = memDao.getUserById(memEmail);
 		
@@ -267,7 +285,7 @@ public class ManagerController {
 		log.debug("멤버 정보: " + members);
 		
 		
-		Members members2 = service.listManager("scit112",memEmail);
+		Members members2 = service.listManager(prj_domain,memEmail);
 		log.debug("멤버상세 리스트 결과: {}", members2);
 		
 		String profileImg = uploadPath + "/" + members.getMemb_savedfile();
@@ -315,14 +333,18 @@ public class ManagerController {
 	 * @return
 	 */
 	@GetMapping("/works")
-	public String works(String domain,Model model, @RequestParam(name = "page", defaultValue = "1") int page, String searchWord) {
-
+	public String works(HttpServletRequest request,String domain,Model model, @RequestParam(name = "page", defaultValue = "1") int page, String searchWord) {
+		
+		String calledValue = request.getServletPath();
+	     String[] splitedUrl = calledValue.split("/");
+	     String prj_domain = splitedUrl[1];
+		
 		// 페이지 정보 생성
 		PageNavigator navi = service.getPageNavigator(pagePerGroup, countPerPage, page, searchWord);
 
 		// 현재 페이지 글 정보
 		// DB에서 게시판의 모든 글을 조회.ArrayList 타입으로 리턴받음.
-		ArrayList<Members> list = service.listManager("scit112",navi, searchWord);
+		ArrayList<Members> list = service.listManager(prj_domain,navi, searchWord);
 		log.debug("list 결과: {}", list);
 
 		// 리스트를 모델에 저장하고 HTML에서 출력
@@ -430,9 +452,13 @@ public class ManagerController {
 	 * @throws IOException
 	 */
 	@PostMapping("excelDownload")
-	public void excelDownload(HttpServletResponse response, Members members, @RequestParam(value="email") String email)
+	public void excelDownload(HttpServletRequest request, HttpServletResponse response, Members members,
+			@RequestParam(value="email") String email)
 			throws IOException {
-
+		
+		String calledValue = request.getServletPath();
+	     String[] splitedUrl = calledValue.split("/");
+	     String prj_domain = splitedUrl[1];
 		// @RequestParam(value="chkbox[]") List<String> chkbox
 
 		
@@ -478,12 +504,13 @@ public class ManagerController {
 			cell.setCellValue("업무별작업량");
 			cell = row.createCell(4);
 			cell.setCellValue("업무능률수치");
+			
 		}
 
 		// 컨텐츠 타입과 파일명 지정
 		response.setContentType("ms-vnd/excel");
 //        response.setHeader("Content-Disposition", "attachment;filename=example.xls");
-		response.setHeader("Content-Disposition", "attachment;filename=업무 리스트.xlsx");
+		response.setHeader("Content-Disposition", "attachment;filename="+prj_domain+"_woksList.xlsx");
 
 		// Excel File Output
 		wb.write(response.getOutputStream());
@@ -553,15 +580,19 @@ public class ManagerController {
 	 * @return
 	 */
 	@GetMapping("/addressBook")
-	public String addressBook(Model model, @RequestParam(name = "page", defaultValue = "1") int page,
+	public String addressBook(HttpServletRequest request, Model model, @RequestParam(name = "page", defaultValue = "1") int page,
 			String searchWord,String domain) {
+		
+		String calledValue = request.getServletPath();
+	     String[] splitedUrl = calledValue.split("/");
+	     String prj_domain = splitedUrl[1];
 		
 		// 페이지 정보 생성
 		PageNavigator navi = service.getPageNavigator(pagePerGroup, countPerPage, page, searchWord);
 
 		// 현재 페이지 글 정보
 		// DB에서 게시판의 모든 글을 조회.ArrayList 타입으로 리턴받음.
-		ArrayList<Members> list = service.listManager("scit112",navi, searchWord);
+		ArrayList<Members> list = service.listManager(prj_domain,navi, searchWord);
 		log.debug("list 결과: {}", list);
 
 		// 리스트를 모델에 저장하고 HTML에서 출력

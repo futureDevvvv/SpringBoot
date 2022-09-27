@@ -38,7 +38,7 @@
 					<div class="w3-clear nextprev">
 						<div class="form-inline">
 							<form class="form-inline" id="pagingForm" method="get"
-								action="./manager/project">
+								th:action="@{../manager/project}">
 								<input type="hidden" name="page" id="page">
 
 
@@ -74,44 +74,38 @@
 						<div class="row">
 							<div class="col-sm-12">
 								<form action="">
-									<table class="table table-bordered dataTable" id="dataTable"
-										cellspacing="0" role="grid" aria-describedby="dataTable_info"
-										style="width: 100%;">
-										<thead>
-											<tr role="row">
-												<th class="sorting sorting_asc" tabindex="0"
-													aria-controls="dataTable" rowspan="1" colspan="1"
-													aria-sort="ascending" style="width: 50px;">프로젝트 도메인</th>
-												<th class="sorting" tabindex="0" aria-controls="dataTable"
-													rowspan="1" colspan="1" style="width: 50px;">프로젝트 명</th>
-												<th class="sorting" tabindex="0" aria-controls="dataTable"
-													rowspan="1" colspan="1" style="width: 100px;">완성도</th>
-
-											</tr>
-										</thead>
-										<tbody>
-											<tr class="odd" th:each="l:${list}">
-												<td class="sorting_1"><a th:text="${l.prj_domain}"
-													class="newTask" th:prj_domain="${l.prj_domain}"
-													data-toggle="modal" data-target="exampleModal"
-													onclick="openModal(this.getAttribute('prj_domain'))"
-													style="cursor: pointer;"></a></td>
-												<td th:text="${l.prj_name}"></td>
-												<td>
-													<h4 class="small font-weight-bold">
-														진행중<span class="float-right">50%</span>
-													</h4>
-													<div class="progress mb-4">
-														<div class="progress-bar bg-info" role="progressbar"
-															style="width: 50%" aria-valuenow="50" aria-valuemin="0"
-															aria-valuemax="100"></div>
-													</div>
-												</td>
-
-											</tr>
-										</tbody>
-
-									</table>
+							<table class="table table-bordered dataTable" id="dataTable" cellspacing="0" role="grid" aria-describedby="dataTable_info" style="width: 100%;">
+							<thead>
+							<tr role="row">
+									<th class="sorting sorting_asc" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-sort="ascending" style="width: 110px;">태스크명</th>
+									<th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 80px;">담당자</th>
+									<th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 80px;">우선순위</th>
+									<th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 80px;">진행상태</th>
+									<th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 90px;">시작일</th>
+									<th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 90px;">종료일</th>
+									<th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" style="width: 10px;">협조</th>
+								</tr>
+							 </thead>
+							<tbody> 						
+							<tr class="odd" th:each="l:${taskLists}">
+							<td th:text=${l.task_name}>
+							</td>
+							<td th:text=${l.tastMembList}>
+							</td>
+							<td th:text=${l.task_rank}>
+							</td>
+							<td th:text=${l.task_state}>
+							</td>
+							<td th:text=${l.task_startdate}>
+							</td>
+							<td th:text=${l.task_enddate}>
+							</td>
+							<td>
+							<input type="button" value="요청" class="btn btn-info">
+							</td>
+							</tr>
+							</tbody>
+							</table>
 								</form>
 							</div>
 						</div>
@@ -157,16 +151,8 @@
 			<div class="modal-content">
 
 
-				<!-- 				차트 연습
-	<div class="container">
-		<div class="row">
-			<div class="col-md-12">
-				<canvas id="myChartOne" ></canvas>
-				
-			</div>
-		</div>
-	</div>
-		 -->
+		
+		
 				<div class="modal-header" style="padding: 1rem;">
 					<h3 class="modal-title fw-bold mb-0" id="exampleModalLabel">
 						프로젝트 명: <span id="modalPjtName"></span>
@@ -196,7 +182,7 @@
 	<script th:inline="javascript">
 		
  
-		let taskListArray = /*[[${taskList}]]*/;
+		let taskListArray = /*[[${taskLists}]]*/;
 		console.log(taskListArray);
 		
 
