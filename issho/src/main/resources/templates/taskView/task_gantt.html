@@ -213,82 +213,228 @@ body {
 	</div>
 
 	<script type="text/javascript" th:src="@{/js/task/date.js}"></script>
-
+	<script type="text/javascript" th:src="@{/js/task/jquery-1.4.2.js}"></script>
+	<script type="text/javascript" th:src="@{/js/task/jquery-ui-1.8.4.js}"></script>
 	<script type="text/javascript" th:src="@{/js/task/jquery.ganttView.js}"></script>
 
 	<script th:inline="javascript">
-		let list = /*[[${list}]]*/
-		console.log(list);
+	let list = /*[[${list}]]*/
+	console.log(list);
+	
+	var ganttData = [];
+	var ob = null;
 		
-			var ganttData = [];
-			var ob = null;
+	list.forEach(list => {
+		
+		console.log(new Date(list.exp_startdate));
+		
+	let exp_start_date = null;
+	let exp_end_date = null;
+	let start_date = null;
+	let end_date = null;
+	
+	let start_yy = null;
+	let start_mm = null;
+	let start_dd = null;
+	
+	let end_yy = null;
+	let end_mm = null;
+	let end_dd = null;
 			
-			list.forEach(list => {
-				
+	let exp_start = list.exp_startdate;
+		
+		if(typeof(exp_start) == 'string' && exp_start != ""){
+		let exp_start_yy = exp_start.substr(2,2);
+		let exp_start_mm = exp_start.substr(5,2);
+		let exp_start_dd = exp_start.substr(8);
+		
+		exp_start_date = new Date(exp_start_yy, exp_start_mm, exp_start_dd);
+		
+		exp_start_date_string = exp_start_date.toString();
+		
+		}
+		
+		let exp_end = list.exp_enddate;
+		
+		if(typeof(exp_end) == 'string' && exp_end != ""){
+		let exp_end_yy = exp_end.substr(0,4);
+		let exp_end_mm = exp_end.substr(5,2);
+		let exp_end_dd = exp_end.substr(8);
+		
+		exp_end_date = new Date(exp_end_yy, exp_end_mm, exp_end_dd);
+		
+		exp_end_date_string = exp_end_date.toString();
+		
+		}
+		
+		let start = list.task_startdate;
+		
+		if(typeof(start) == 'string' && start != ""){
+		let start_yy = parseInt(start.substr(2,2));
+		let start_mm = parseInt(start.substr(5,2));
+		let start_dd = parseInt(start.substr(8));
+		
+		start_date = new Date(start_yy, start_mm, start_dd);
+		
+		start_date_string = start_date.toString();
+		
+		}
+		
+		let end = list.task_enddate;
+		
+		if(typeof(end) == 'string' && end != ""){
+		let end_yy = end.substr(2,2);
+		let end_mm = end.substr(5,2);
+		let end_dd = end.substr(8);
+		
+		console.log(end_yy);
+		console.log(end_mm);
+		console.log(end_dd);
+		
+		end_date = new Date(end_yy, end_mm, end_dd);
+		
+		end_date_string = end_date.toString();
+		}
+		
+	if(exp_start_date == null || exp_end_date == null){
+			
 			ob = {
-				id : list.task_seq,
-				name : list.task_name,
-				series : [ {
-					name : "Planned",
-					start : new Date(2022, 10, 01),
-					end : new Date(2022, 10, 03)
-				}, {
-					name : "Actual",
-					start : new Date(2022, 09, 02),
-					end : new Date(2022, 09, 05),
-					color : "#f0f0f0"
-				}]
+			id : list.task_seq,
+			name : list.task_name,
+			series : [{
+				name : "실제작업일",
+				start :  new Date(list.task_startdate),
+				end :  new Date(list.task_enddate),
+				color : "#f0f0f0"
+			}]
+		
+		  };
 			
-			  };
+		ganttData.push(ob)
+	
+	} else if(start_date == null || end_date == null) {
+			
+			ob = {
+			id : list.task_seq,
+			name : list.task_name,
+			series : [ {
+				name : "예상작업일",
+				start : new Date(list.exp_startdate),
+				end : new Date(list.exp_enddate)
+			}]
+		
+		  };
+			
+		console.log(ob),
+		ganttData.push(ob) 
+		
+	} else {
+			ob = {
+			id : list.task_seq,
+			name : list.task_name,
+			series : [ {
+				name : "예상작업일",
+				start : new Date(list.exp_startdate),
+				end : new Date(list.exp_enddate)
+			}, {
+				name : "실제작업일",
+				start :  new Date(list.task_startdate),
+				end :  new Date(list.task_enddate),
+				color : "#f0f0f0"
+			}]
+		
+		  };
+			
+		console.log(ob),
+		ganttData.push(ob)
+		}
+	}); 	
+	
+	console.log(ganttData);
+	
+	$(function() {
+		
+		console.log('gantt 진입함!!');
+		
+		$("#ganttChart").ganttView(
 				
-			console.log(ob),
-			ganttData.push(ob)
-		
-			}); 
-			
-			
-		
-			console.log(ganttData);
-		
-		
-
-		$(function() {
-			$("#ganttChart").ganttView(
-					{
-						data : ganttData,
-						slideWidth : 1000,
-						behavior : {
-							onClick : function(data) {
-								var msg = "You clicked on an event: { start: "
-										+ data.start.toString("M/d/yyyy")
-										+ ", end: "
-										+ data.end.toString("M/d/yyyy") + " }";
-								$("#eventMessage").text(msg);
-							},
-							onResize : function(data) {
-								var msg = "You resized an event: { start: "
-										+ data.start.toString("M/d/yyyy")
-										+ ", end: "
-										+ data.end.toString("M/d/yyyy") + " }";
-								$("#eventMessage").text(msg);
-							},
-							onDrag : function(data) {
-								var msg = "You dragged an event: { start: "
-										+ data.start.toString("M/d/yyyy")
-										+ ", end: "
-										+ data.end.toString("M/d/yyyy") + " }";
-								$("#eventMessage").text(msg);
+				{
+					data : ganttData,
+					slideWidth : 1000,
+					behavior : {
+						onClick : function(data) {
+							
+							console.log(data);
+							
+							
+						},
+						onResize : function(data) {
+							console.log(data);
+							
+							let temp = data.name;
+							
+							if(temp == '예상작업일'){
+								
+								console.log('여기로 진입함.')
+								
+								$.ajax({
+									url : "changeGantt",
+									type : "POST",
+									data : {
+										task_seq : data.id,
+										exp_startdate : data.start.toString("yyyy/M/d"),
+										exp_enddate : data.end.toString("yyyy/M/d")
+									}
+								});
+							} else {
+								$.ajax({
+									url : "changeGantt",
+									type : "POST",
+									data : {
+										task_seq : data.id,
+										task_startdate : data.start.toString("yyyy/M/d"),
+										task_enddate : data.end.toString("yyyy/M/d")
+									}
+								});
+							}
+						},
+						onDrag : function(data) {
+							
+							console.log(data);
+							
+							let temp = data.name;
+							
+							console.log(typeof(data.start.toString()));
+							console.log(data.start.toString());
+							console.log(data.start.toString("yyyy/M/d"));
+							
+							if(temp == '예상작업일'){
+								$.ajax({
+									url : "changeGantt",
+									type : "POST",
+									data : {
+										task_seq : data.id,
+										exp_startdate : data.start.toString("yyyy/M/d"),
+										exp_enddate : data.end.toString("yyyy/M/d")
+									}
+								});
+							} else {
+								$.ajax({
+									url : "changeGantt",
+									type : "POST",
+									data : {
+										task_seq : data.id,
+										task_startdate : data.start.toString("yyyy/M/d"),
+										task_enddate : data.end.toString("yyyy/M/d")
+									}
+								});
 							}
 						}
-					});
+					}
+				});
 
-			// $("#ganttChart").ganttView("setSlideWidth", 600);
-		});
-	
-
-	</script>
-
-
-
+		// $("#ganttChart").ganttView("setSlideWidth", 600);
+	});
+</script>
 </body>
 </html>

@@ -7,6 +7,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import net.softsociety.issho.project.domain.ProjectMember;
+import net.softsociety.issho.task.domain.GanttTask;
 import net.softsociety.issho.task.domain.Task;
 import net.softsociety.issho.task.domain.Taskfile;
 import net.softsociety.issho.task.domain.Taskstaff;
@@ -29,6 +30,8 @@ public interface TaskDAO {
 	public ArrayList<Task> myAllocate(Map<String, String> map);
 
 	public ArrayList<Task> myCharged(Map<String, String> map);
+
+	public void changeDate(GanttTask task);
 	
 
 }
