@@ -107,17 +107,17 @@
 													aria-sort="ascending"
 													style="width: 30px; text-align: center;">선택</th>
 												<th class="sorting" tabindex="0" aria-controls="dataTable"
-													rowspan="1" colspan="1" style="width: 100px;">이메일</th>
+													rowspan="1" colspan="1" style="width: 40px;">이메일</th>
 												<th class="sorting" tabindex="0" aria-controls="dataTable"
-													rowspan="1" colspan="1" style="width: 80px;">이름</th>
+													rowspan="1" colspan="1" style="width: 40px;">이름</th>
 												<th class="sorting" tabindex="0" aria-controls="dataTable"
-													rowspan="1" colspan="1" style="width: 50px;">권한</th>
+													rowspan="1" colspan="1" style="width: 30px;">권한</th>
 												<th class="sorting" tabindex="0" aria-controls="dataTable"
-													rowspan="1" colspan="1" style="width: 80px;">작업량(개인별)</th>
+													rowspan="1" colspan="1" style="width: 120px;">작업량(개인별)</th>
 												<th class="sorting" tabindex="0" aria-controls="dataTable"
-													rowspan="1" colspan="1" style="width: 80px;">작업량(업무별)</th>
+													rowspan="1" colspan="1" style="width: 120px;">작업량(업무별)</th>
 												<th class="sorting" tabindex="0" aria-controls="dataTable"
-													rowspan="1" colspan="1" style="width: 80px;">업무능률</th>
+													rowspan="1" colspan="1" style="width: 120px;">업무능률</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -132,8 +132,8 @@
 													onclick="openModal(this.getAttribute('infoEmail'))"
 													style="cursor: pointer;"></a></td>
 												<td th:text=${l.memb_name}></td>
-												<td th:text=${l.rolename}></td>
-												<td></td>
+												<td th:text=${l.pjmb_right}></td>
+												<td>개인별작업량표시</td>
 												<td>업무별작업량표시</td>
 												<td>업무능률표시</td>
 											</tr>
@@ -366,7 +366,18 @@
 					10,
 					50,
 					30,
-				]
+				],
+			     backgroundColor: [
+			         'rgba(255, 99, 132, 0.2)',
+			         'rgba(54, 162, 235, 0.2)',
+			         'rgba(255, 206, 86, 0.2)',
+			       ],
+			      borderColor: [
+			         'rgba(255, 99, 132, 1)',
+			         'rgba(54, 162, 235, 1)',
+			         'rgba(255, 206, 86, 1)',
+			       ],
+			       borderWidth: 1
 				}]	
 			},
 			options: {
