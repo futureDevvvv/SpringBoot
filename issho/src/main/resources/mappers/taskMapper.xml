@@ -162,4 +162,33 @@
 		AND t.prj_domain = #{prj_domain}
 		AND s.memb_mail = #{memb_mail}
 	</select>
+	
+	<select id="SelectAlltaskMG" parameterType="map" resultType="Task">
+		SELECT 
+			t.task_seq
+			,t.task_name
+			,t.task_state
+			,t.task_rank
+			,t.task_startdate
+			,t.task_enddate
+			,LISTAGG(m.memb_name, ',') WITHIN GROUP (ORDER BY m.memb_name) AS tastMembList
+     FROM 
+     	task t, taskstaff s, members m
+     WHERE 
+     	t.task_seq = s.task_seq
+     	AND m.memb_mail = s.memb_mail
+     	AND t.prj_domain = #{prj_domain}
+     group by 
+     	t.task_seq
+     	,t.task_name
+     	,t.task_state
+     	,t.task_rank
+     	,t.task_startdate
+     	,t.task_enddate
+	
+	
+	</select>
+	
+	
+	
 </mapper>

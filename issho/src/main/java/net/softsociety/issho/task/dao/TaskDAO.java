@@ -1,11 +1,14 @@
 package net.softsociety.issho.task.dao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.session.RowBounds;
 
+import net.softsociety.issho.manager.util.PageNavigator;
 import net.softsociety.issho.project.domain.ProjectMember;
 import net.softsociety.issho.task.domain.Task;
 import net.softsociety.issho.task.domain.Taskfile;
@@ -29,6 +32,8 @@ public interface TaskDAO {
 	public ArrayList<Task> myAllocate(Map<String, String> map);
 
 	public ArrayList<Task> myCharged(Map<String, String> map);
+
+	public ArrayList<Task> SelectAlltaskMG(HashMap<String, String> map, RowBounds rb);
 	
 
 }

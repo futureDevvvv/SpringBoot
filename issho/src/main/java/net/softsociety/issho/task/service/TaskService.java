@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import net.softsociety.issho.manager.util.PageNavigator;
 import net.softsociety.issho.notice.domain.Comment;
 import net.softsociety.issho.notice.domain.CommentDetail;
 import net.softsociety.issho.notice.domain.Notice;
@@ -12,7 +13,6 @@ import net.softsociety.issho.project.domain.ProjectMember;
 import net.softsociety.issho.task.domain.Task;
 import net.softsociety.issho.task.domain.Taskfile;
 import net.softsociety.issho.task.domain.Taskstaff;
-import net.softsociety.issho.util.PageNavigator;
 
 public interface TaskService {
 	
@@ -35,6 +35,8 @@ public interface TaskService {
 	public void changeState(Map<String, String> map);
 
 	public List<Taskstaff> projectMembers(String prj_domain);
+
+	public ArrayList<Task> SelectAlltaskMG(String prj_domain, PageNavigator navi, String searchWord);
 
 
 

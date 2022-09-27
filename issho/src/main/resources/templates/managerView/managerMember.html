@@ -42,7 +42,7 @@
 
 						<div id="dataTable_filter" class="dataTables_filter">
 							<form class="form-inline" id="pagingForm" method="get"
-								action="./manager/member">
+								th:action="@{../manager/member}">
 								<input type="hidden" name="page" id="page">
 
 								<div id="listTop">
@@ -80,7 +80,7 @@
 						<div class="row">
 							<div class="col-sm-12">
 								<!-- 삭제시 전송할 폼 -->
-								<form action="./manager/deleteMember" method="get"
+								<form th:action="@{../manager/deleteMember}" method="get"
 									id="deleteForm">
 									<input type="hidden" name="email" id="email">
 								</form>
