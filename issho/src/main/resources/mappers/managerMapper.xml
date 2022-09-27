@@ -30,6 +30,27 @@
 	</select>
 
 
+		<select id="listMembers2" parameterType="Map"
+		resultType="Members">
+		SELECT
+		m.memb_mail as memb_mail
+		,m.memb_name as memb_name
+		,m.memb_ogfile as memb_ogfile
+		,m.memb_savedfile as memb_savedfile
+		,m.memb_work as memb_work
+		,m.memb_phone as memb_phone
+		,p.prj_domain as prj_domain
+		,p.pjmb_right as pjmb_right
+		FROM
+		members m, projectmember p
+		where
+			m.memb_mail = p.memb_mail 
+			AND p.prj_domain = #{domain}
+			AND p.memb_mail = #{email}
+		order by
+		1 desc
+	</select>
+
 	<select id="count" parameterType="Map" resultType="int">
 		select
 		count(*)

@@ -11,6 +11,7 @@
 
 </head>
 <body>
+
 	<!-- Sidebar -->
 	<div th:fragment="sidebar">
 		<ul
@@ -20,7 +21,7 @@
 			<!-- Sidebar - Brand -->
 			<a
 				class="sidebar-brand d-flex align-items-center justify-content-center"
-				href="index.html">
+				th:href="|@{/}${session.prj_domain}/main|">
 				<div class="sidebar-brand-icon rotate-n-15">
 					<i class="fas fa-laugh-wink"></i>
 				</div>
@@ -31,14 +32,14 @@
 			<hr class="sidebar-divider my-0">
 			<!-- ISSHO HOME Item - Dashboard -->
 			<li class="nav-item active"><a class="nav-link"
-				th:href="@{/}"> <i class="fas fa-fw fa-tachometer-alt"></i> <span>ISSHO
+				th:href="|@{/}${session.prj_domain}/main|"> <i class="fas fa-fw fa-tachometer-alt"></i> <span>ISSHO
 						HOME</span></a></li>
 
 			<!-- Divider -->
 			<hr class="sidebar-divider">
 
 			<!-- Heading -->
-			<div class="sidebar-heading">협업 관리</div>
+			<div class="sidebar-heading">협업 관리	</div>
 			<!-- 프로젝트 Item - Pages Collapse Menu -->
 			<li class="nav-item"><a class="nav-link collapsed" href="#"
 				data-toggle="collapse" data-target="#collapseTwo"
@@ -48,8 +49,8 @@
 				<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo"
 					data-parent="#accordionSidebar">
 					<div class="bg-white py-2 collapse-inner rounded">
-						<a class="collapse-item" href="./task/taskList">업무</a> <a
-							class="collapse-item" href="./task/kanban">대시보드</a>
+						<a class="collapse-item" th:href="|@{/}${session.prj_domain}/task/taskList|">업무</a> <a
+							class="collapse-item" th:href="|@{/}${session.prj_domain}/task/kanban|">대시보드</a>
 					</div>
 				</div></li>
 
@@ -57,22 +58,22 @@
 
 
 
-			<li class="nav-item"><a class="nav-link" href="./manager/addressBook">
+			<li class="nav-item"><a class="nav-link" th:href="|@{/}${session.prj_domain}/manager/addressBook|">
 					<i class="fas fa-fw fa-chart-area"></i> <span>맴버주소록</span>
 			</a></li>
 
 			<!-- 일정관리 Item -->
-			<li class="nav-item"><a class="nav-link" href="./plans/plan">
+			<li class="nav-item"><a class="nav-link" th:href="|@{/}${session.prj_domain}/plans/plan|">
 					<i class="fas fa-fw fa-chart-area"></i> <span>일정관리</span>
 			</a></li>
 
 			<!-- 드라이브 Item -->
-			<li class="nav-item"><a class="nav-link" href="./manager/drive">
+			<li class="nav-item"><a class="nav-link" th:href="|@{/}${session.prj_domain}/manager/drive|">
 					<i class="fas fa-fw fa-chart-area"></i> <span>드라이브</span>
 			</a></li>
 			
 			<!-- 공지사항 Item -->
-			<li class="nav-item"><a class="nav-link" href="./notice/noticeList">
+			<li class="nav-item"><a class="nav-link" th:href="|@{/}${session.prj_domain}/notice/noticeList|">
 					<i class="fas fa-fw fa-chart-area"></i> <span>공지사항</span>
 			</a></li>
 			
@@ -83,7 +84,7 @@
 			<!-- Heading -->
 			<div class="sidebar-heading">프로젝트 관리</div>
 			<!-- 멤버 관리 Item -->
-			<li class="nav-item"><a class="nav-link" href="./manager/member">
+			<li class="nav-item"><a class="nav-link" th:href="|@{/}${session.prj_domain}/manager/member|">
 					<i class="fas fa-fw fa-chart-area"></i> <span>관리자 메뉴</span>
 			</a></li>
 

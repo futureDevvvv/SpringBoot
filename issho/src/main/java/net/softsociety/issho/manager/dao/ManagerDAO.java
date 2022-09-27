@@ -36,4 +36,6 @@ public interface ManagerDAO {
 
 	public DriveFile readDriveFile(int driveFile_seq);
 
+	public Members listMembers2(HashMap<String, String> map);
+
 }

@@ -36,6 +36,8 @@ public interface ManagerService {
 
 	public DriveFile readDriveFile(int driveFile_seq);
 
+	public Members listManager(String damain,String email);
+
 	
 
 

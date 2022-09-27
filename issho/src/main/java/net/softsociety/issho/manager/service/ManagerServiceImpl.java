@@ -86,7 +86,16 @@ public class ManagerServiceImpl implements ManagerService {
 	@Override
 	public DriveFile readDriveFile(int driveFile_seq) {
 		DriveFile driveFile = membersDAO.readDriveFile(driveFile_seq);
-		return null;
+		return driveFile;
+	}
+
+	@Override
+	public Members listManager(String domain,String email) {
+		HashMap<String, String> map = new HashMap<>();
+		map.put("domain", domain);
+		map.put("email", email);
+		Members members = membersDAO.listMembers2(map);
+		return members;
 	}
 
 	
