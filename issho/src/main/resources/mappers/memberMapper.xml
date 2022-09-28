@@ -82,5 +82,8 @@
 		WHERE memb_mail LIKE '%' || #{searchWord} || '%'
 		OR memb_name LIKE '%' || #{searchWord} || '%'
 	</select>
+	
+	
+	
 
 </mapper>

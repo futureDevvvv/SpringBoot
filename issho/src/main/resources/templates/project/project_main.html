@@ -18,26 +18,55 @@
 			<!-- header 시작 -->
 			<th:block th:replace="fragments/header :: navFragment"></th:block>
 
-			<button type="button" class="btn btn-primary" onclick="showPop();">메신저
-				열기</button>
+			<div class="container">
+				<div class="row row-cols-2">
+					<div class="col">
+						<div class="card shadow mb-4">
+							<div class="card-header py-3">
+								<h6 class="m-0 font-weight-bold text-primary">최신 공지사항</h6>
+								<div class="card-body">The styling for this basic card
+									example is created by using default Bootstrap utility classes.
+									By using utility classes, the style of the card component can
+									be easily modified with no need for any custom CSS!</div>
 
-			<button type="button" class="btn btn-primary"
-				onclick="location.href='project/newPj'">새로운 프로젝트 생성</button>
+							</div>
+						</div>
+					</div>
+					<div class="col">
+						<div class="card shadow mb-4">
+							<div class="card-header py-3">
+								<h6 class="m-0 font-weight-bold text-primary">Basic Card
+									Example</h6>
+								<div class="card-body">The styling for this basic card
+									example is created by using default Bootstrap utility classes.
+									By using utility classes, the style of the card component can
+									be easily modified with no need for any custom CSS!</div>
 
-			<div>
-				<div class="col-xl-3 col-md-6 mb-4">
-					<div class="card border-left-primary shadow h-100 py-2">
-						<div class="card-body">
-							<div class="row no-gutters align-items-center">
-								<div class="col mr-2">
-									<div
-										class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-										수정했어요</div>
-									<div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
-								</div>
-								<div class="col-auto">
-									<i class="fas fa-calendar fa-2x text-gray-300"></i>
-								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col">
+						<div class="card shadow mb-4">
+							<div class="card-header py-3">
+								<h6 class="m-0 font-weight-bold text-primary">임박한 일정</h6>
+								<div class="card-body">The styling for this basic card
+									example is created by using default Bootstrap utility classes.
+									By using utility classes, the style of the card component can
+									be easily modified with no need for any custom CSS!</div>
+
+							</div>
+						</div>
+					</div>
+					<div class="col">
+						<div class="card shadow mb-4">
+							<div class="card-header py-3">
+								<h6 class="m-0 font-weight-bold text-primary">Basic Card
+									Example</h6>
+								<div class="card-body">The styling for this basic card
+									example is created by using default Bootstrap utility classes.
+									By using utility classes, the style of the card component can
+									be easily modified with no need for any custom CSS!</div>
+
 							</div>
 						</div>
 					</div>
@@ -49,13 +78,5 @@
 			<!-- footer 끝 -->
 		</div>
 	</div>
-
-	<script>
-		function showPop() {
-			window.open("multiRoom/chatHome?domain=[[${project.prj_domain}]]", "메신저",
-					"width=500, height=700, top=10, left=10");
-		}
-	</script>
-
 </body>
 </html>

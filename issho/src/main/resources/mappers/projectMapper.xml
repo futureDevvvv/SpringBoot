@@ -7,6 +7,12 @@
 		FROM projects
 		WHERE prj_domain = #{prj_domain}
 	</select>
+	
+	<select id="getPrjMem" parameterType="ProjectMember" resultType="ProjectMember">
+		SELECT * FROM projectmember
+		WHERE prj_domain = #{prj_domain}
+		AND memb_mail = #{memb_mail}
+	</select>
 
 	<insert id="newProject" parameterType="Projects">
 		INSERT INTO projects(prj_domain, prj_name)

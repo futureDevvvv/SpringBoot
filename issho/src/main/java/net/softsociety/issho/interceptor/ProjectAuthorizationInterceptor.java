@@ -1,5 +1,7 @@
 package net.softsociety.issho.interceptor;
 
+import java.io.PrintWriter;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -9,14 +11,19 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import lombok.extern.slf4j.Slf4j;
+import net.softsociety.issho.manager.dao.ManagerDAO;
 import net.softsociety.issho.manager.domain.InvitationMember;
 import net.softsociety.issho.member.service.MemberService;
+import net.softsociety.issho.project.domain.ProjectMember;
 
 @Slf4j
 public class ProjectAuthorizationInterceptor implements HandlerInterceptor {
 
 	@Autowired
 	MemberService memservice;
+	
+	@Autowired
+	ManagerDAO managerDao;
 
 	// プロジェクト関連経路へのアクセス時にプロジェクトメンバーの有無を確認してアクセス可否を決定
 	@Override
@@ -50,6 +57,22 @@ public class ProjectAuthorizationInterceptor implements HandlerInterceptor {
 		if (getMem == null) {
 			response.sendRedirect(request.getContextPath() + "/wrongPath");
 			return false;
+		} else {
+			
+			ProjectMember prjMem = new ProjectMember(prj_domain, membInv_recipient);
+			
+			ProjectMember getPrjMem = managerDao.getPrjMem(prjMem);
+			
+			if(getPrjMem == null) {
+				
+				prjMem.setPjmb_right("member");
+				
+				managerDao.insertPrjMem(prjMem);
+				
+				PrintWriter out = response.getWriter();
+				out.print("<script>alert('환영합니다'); location.href='" + request.getContextPath() +"';</script>");
+				out.flush();
+			}
 		}
 
 		// ログインとプロジェクトメンバーの有無確認要件を満たす場合、要請経路を進行
