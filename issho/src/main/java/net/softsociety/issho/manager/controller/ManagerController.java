@@ -6,6 +6,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletOutputStream;
@@ -107,7 +108,7 @@ public class ManagerController {
 	     String prj_domain = splitedUrl[1];
 		
 		// 페이지 정보 생성
-		PageNavigator navi = service.getPageNavigator(pagePerGroup, countPerPage, page, searchWord);
+		net.softsociety.issho.util.PageNavigator navi = service.getPageNavigator(pagePerGroup, countPerPage, page, searchWord);
 
 		// 현재 페이지 글 정보
 		// DB에서 게시판의 모든 글을 조회.ArrayList 타입으로 리턴받음.
@@ -165,7 +166,7 @@ public class ManagerController {
 		
 		projects = pjService.getProjectsInfo(domain);
 		
-		ArrayList<Task> taskList = taskService.SelectAlltask(domain);
+		List<Task> taskList = taskService.SelectAlltask(domain);
 		
 		log.debug("태스크 상세 정보 : {}", taskList);
 		
@@ -206,7 +207,7 @@ public class ManagerController {
 	     String prj_domain = splitedUrl[1];
 		
 		// 페이지 정보 생성
-		PageNavigator navi = service.getPageNavigator(pagePerGroup, countPerPage, page, searchWord);
+		net.softsociety.issho.util.PageNavigator navi = service.getPageNavigator(pagePerGroup, countPerPage, page, searchWord);
 
 		// 현재 페이지 글 정보
 		// DB에서 게시판의 모든 글을 조회.ArrayList 타입으로 리턴받음.
@@ -243,7 +244,7 @@ public class ManagerController {
 		Members member = memDao.getUserById(id);
 		ArrayList<Members> pjMemList = memberService.searchPjMem(prj_domain);
 		// 페이지 정보 생성
-		PageNavigator navi = service.getPageNavigator(pagePerGroup, countPerPage, page, searchWord);
+		net.softsociety.issho.util.PageNavigator navi = service.getPageNavigator(pagePerGroup, countPerPage, page, searchWord);
 
 		// 현재 페이지 글 정보
 		// DB에서 게시판의 모든 글을 조회.ArrayList 타입으로 리턴받음.
@@ -374,7 +375,7 @@ public class ManagerController {
 	     String prj_domain = splitedUrl[1];
 		
 		// 페이지 정보 생성
-		PageNavigator navi = service.getPageNavigator(pagePerGroup, countPerPage, page, searchWord);
+		net.softsociety.issho.util.PageNavigator navi = service.getPageNavigator(pagePerGroup, countPerPage, page, searchWord);
 
 		// 현재 페이지 글 정보
 		// DB에서 게시판의 모든 글을 조회.ArrayList 타입으로 리턴받음.
@@ -577,7 +578,7 @@ public class ManagerController {
 			,@RequestParam(name="page",defaultValue = "1") int page
 			,String searchWord) {
 		//페이지 정보 생성
-				PageNavigator navi = service.getPageNavigator(
+				net.softsociety.issho.util.PageNavigator navi = service.getPageNavigator(
 						pagePerGroup,countPerPage,page,searchWord);
 				
 				//현재 페이지 글 정보
@@ -635,7 +636,7 @@ public class ManagerController {
 	     String prj_domain = splitedUrl[1];
 		
 		// 페이지 정보 생성
-		PageNavigator navi = service.getPageNavigator(pagePerGroup, countPerPage, page, searchWord);
+		net.softsociety.issho.util.PageNavigator navi = service.getPageNavigator(pagePerGroup, countPerPage, page, searchWord);
 
 		// 현재 페이지 글 정보
 		// DB에서 게시판의 모든 글을 조회.ArrayList 타입으로 리턴받음.

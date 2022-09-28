@@ -2,6 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="net.softsociety.issho.task.dao.TaskDAO">
+
 	<!-- * 테스크 전체 검색 -->
 	<select id="SelectAlltask" parameterType="String"
 		resultType="Task">
@@ -22,14 +23,217 @@
 		,to_char(task.exp_startdate, 'YYYY-MM-DD') AS exp_startdate
 		,to_char(task.exp_enddate, 'YYYY-MM-DD') AS exp_enddate
 		,task.ptask_num AS ptask_num
-		,
-		memb.memb_name AS memb_name
+		,memb.memb_name AS memb_name
 		from
 		task task, members memb
 		where
 		task.task_sender = memb.memb_mail
 		AND task.prj_domain = #{prj_domain}
 	</select>
+
+	<!-- 신승훈 * 태스크 네비게이터 -->
+	<select id="countTask"  parameterType="map" resultType="int">
+		SELECT 
+			count(*)	
+		FROM 
+			task t, bookmark bm
+		WHERE
+            bm.task_seq(+) = t.task_seq
+			AND t.prj_domain = #{prj_domain}
+			<if test="bookmark != null">
+				AND t.task_seq IN (SELECT
+                                       task_seq
+                                   FROM
+                                       bookmark
+                                   WHERE
+                                       memb_mail=#{bookmark})
+			</if>
+			<if test="searchWord != null">
+				AND (t.task_name LIKE '%' || #{searchWord} || '%' OR t.task_content LIKE '%' || #{searchWord} || '%' OR t.task_sender LIKE '%' || #{searchWord} || '%')
+			</if>
+	</select>
+	
+	<!-- 신승훈 * 태스크 상세보기 -->
+	<select id="selectTaskByTaskSeq" parameterType="Integer" resultType="Task">
+		select
+			task_seq
+			,prj_domain
+			,task_name
+			,task_content
+			,task_sender
+			,task_rank
+			,task_state
+			,task_inputdate
+			,task_startdate
+			,task_enddate
+			,exp_startdate
+			,exp_enddate
+			,ptask_num
+		from
+			task
+		where
+			task_seq = #{task_seq}			
+	</select>
+	
+	<!-- 신승훈 * 테스크 스태프 리스트 조회 -->
+	<select id="selectStaff" parameterType="Integer" resultType="TaskStaff">
+		select
+			task_seq
+			,memb_mail
+			,tsuper_perform
+		from
+			taskstaff
+		where
+			task_seq = #{task_seq}			
+	</select>
+	
+	<!-- 신승훈 * 테스크 조건 조회 -->
+	<select id="selectTaskAll"  parameterType="map" resultType="Task">
+		SELECT 
+			t.task_seq AS task_seq
+			,t.prj_domain AS prj_domain
+			,t.task_name AS task_name
+			,t.task_content AS task_content
+			,t.task_sender AS task_sender
+			,t.task_rank AS task_rank
+			,t.task_state AS task_state
+			,t.task_inputdate AS task_inputdate
+			,t.task_startdate AS task_startdate
+			,t.task_enddate AS task_enddate
+			,t.exp_startdate AS exp_startdate
+			,t.exp_enddate AS exp_enddate
+			,t.ptask_num AS ptask_num
+			,bm.memb_mail AS bookmark_memb_mail
+		FROM 
+			task t, bookmark bm
+		WHERE 
+			t.prj_domain = #{prj_domain}
+			AND bm.task_seq(+) = t.task_seq
+			<if test="bookmark != null">
+				AND t.task_seq IN (SELECT
+                                       task_seq
+                                   FROM
+                                       bookmark
+                                   WHERE
+                                       memb_mail=#{bookmark})
+			</if>
+			<if test="searchWord != null">
+				AND (t.task_name LIKE '%' || #{searchWord} || '%' OR t.task_content LIKE '%' || #{searchWord} || '%' OR t.task_sender LIKE '%' || #{searchWord} || '%')
+			</if>
+		
+			<if test="task_staff != null or task_sender != null or task_rank != null or task_state != null">
+				ORDER BY
+			</if>
+			<if test="task_sender != null">
+					(CASE WHEN t.task_sender = #{task_sender} THEN 1 ELSE 2 END)
+			</if>	
+			<if test="task_staff != null">
+				<if test="task_sender != null">
+					, (CASE WHEN t.task_seq IN (SELECT
+                                                    task_seq
+                                                FROM
+                                                    taskstaff
+                                                WHERE
+                                                    memb_mail = #{task_staff})  THEN 1 ELSE 2 END)
+				</if>
+				<if test="task_sender == null">
+					(CASE WHEN t.task_seq IN (SELECT
+                                                    task_seq
+                                                FROM
+                                                    taskstaff
+                                                WHERE
+                                                    memb_mail = #{task_staff})  THEN 1 ELSE 2 END)
+				</if>
+			</if>
+			<if test="task_rank != null">
+				<if test="task_staff != null or task_sender != null">
+					, t.task_rank DESC
+				</if>
+				<if test="task_staff == null and task_sender == null">
+					t.task_rank DESC
+				</if>
+			</if>
+			
+			<if test="task_state != null">
+				<if test="task_staff != null or task_sender != null or task_rank != null">
+					, t.task_state DESC
+				</if>
+				<if test="task_staff == null and task_sender == null and task_rank == null">
+					t.task_state DESC
+				</if>
+			</if>
+	</select>
+	
+	<!-- 신승훈 * 즐겨찾기 추가 -->
+	<insert id="insertBookmark" parameterType="Bookmark">
+	insert 
+	into 
+		Bookmark ( 
+			Bookmark_seq
+			, task_seq
+			, memb_mail
+		)			
+	values (
+			Bookmark_seq.nextval
+			, #{task_seq}
+			, #{memb_mail}
+		)
+	</insert>
+	
+	<!-- 신승훈 * 즐겨찾기 추가 -->
+	<delete id="deleteBookmark" parameterType="Bookmark">
+		delete 
+		from 
+			Bookmark 
+		where 
+			task_seq = #{task_seq}
+			AND
+			memb_mail = #{memb_mail}
+	</delete>
+	
+	<!-- 신승훈 * 즐겨찾기 유무 확인 -->
+	<select id="selectBookmark" parameterType="Bookmark" resultType="Bookmark">
+		select
+			Bookmark_seq
+		from
+			Bookmark
+		where
+			task_seq = #{task_seq}
+			AND
+			memb_mail = #{memb_mail}	
+	</select>
+	
+	<!-- 신승훈 * 수행도 변경 -->
+	<update id="updatePerform" parameterType="TaskStaff">
+		update taskstaff
+		set
+			tsuper_perform = #{tsuper_perform}
+		where
+			task_seq = #{task_seq}
+			AND
+			memb_mail = #{memb_mail}
+	</update>
+	
+
+	<!-- 신승훈 * 진행상태 변경 -->
+	<update id="stateChange" parameterType="Task">
+		update Task
+		set
+			task_state = #{task_state}
+		where
+			task_seq = #{task_seq}
+	</update>
+	
+	<!-- 신승훈 * 상세보기 첨부파일 확인 -->
+	<select id="selectTaskFile" parameterType="String" resultType="TaskFile">
+		select
+			*
+		from
+			TaskFile
+		where
+			task_seq = #{task_seq}
+	</select>
+	
 
 	<!-- 태스크 추가 -->
 	<insert id="addNewTask" parameterType="Task">
@@ -185,13 +389,16 @@
      	,t.task_rank
      	,t.task_startdate
      	,t.task_enddate
-	
 	</select>
 	
 
 	
 	
+
 	
+	
+	
+
 
 	<update id="changeDate" parameterType="GanttTask">
 		UPDATE task

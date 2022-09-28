@@ -13,6 +13,7 @@ import net.softsociety.issho.manager.dao.ManagerDAO;
 import net.softsociety.issho.manager.domain.InvitationMember;
 import net.softsociety.issho.member.dao.MemberDAO;
 import net.softsociety.issho.member.domain.Members;
+import net.softsociety.issho.project.domain.ProjectMember;
 import net.softsociety.issho.util.PageNavigator;
 
 @Transactional
@@ -89,6 +90,22 @@ public class MemberServiceImpl implements MemberService {
 			String searchWord) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	//프로젝트 멤버 객체 얻어오기
+	@Override
+	public ProjectMember getPrjMem(ProjectMember prjMem) {
+
+		ProjectMember prjmem = membersDAO.getPrjMem(prjMem);
+		
+		return prjmem;
+	}
+
+	@Override
+	public void insertPrjMem(ProjectMember prjMem) {
+
+		membersDAO.insertPrjMem(prjMem);
+		
 	}
 
 }

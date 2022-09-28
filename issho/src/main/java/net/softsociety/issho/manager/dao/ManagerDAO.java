@@ -12,7 +12,7 @@ import net.softsociety.issho.manager.domain.MemberTemp;
 import net.softsociety.issho.manager.domain.TaskCnt;
 import net.softsociety.issho.manager.domain.TaskCntDone;
 import net.softsociety.issho.member.domain.Members;
-
+import net.softsociety.issho.project.domain.ProjectMember;
 
 @Mapper
 public interface ManagerDAO {
@@ -27,7 +27,6 @@ public interface ManagerDAO {
 
 	public int invitationIdSearchOne(InvitationMember invitationMember);
 
-
 	public ArrayList<DriveFile> listDriveFile(
 			HashMap<String, String> map, RowBounds rb);
 
@@ -41,6 +40,7 @@ public interface ManagerDAO {
 
 	public Members listMembers2(HashMap<String, String> map);
 
+
 	public ArrayList<MemberTemp> listWork(HashMap<String, String> map, RowBounds rb);
 
 	public ArrayList<MemberTemp> listWork(String prj_domain);
@@ -52,5 +52,10 @@ public interface ManagerDAO {
 	public TaskCnt taskCnt(String memEmail);
 
 	public TaskCntDone taskCntDone(String memEmail);
+
+	public ProjectMember getPrjMem(ProjectMember prjMem);
+
+	public void insertPrjMem(ProjectMember prjMem);
+
 
 }

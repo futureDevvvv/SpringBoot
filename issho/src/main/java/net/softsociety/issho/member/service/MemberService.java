@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import net.softsociety.issho.manager.domain.InvitationMember;
 import java.util.Map;
 import net.softsociety.issho.member.domain.Members;
+import net.softsociety.issho.project.domain.ProjectMember;
 import net.softsociety.issho.util.PageNavigator;
 
 public interface MemberService {
@@ -23,5 +24,11 @@ public interface MemberService {
 
 	public PageNavigator getNoticePageNavi(int pagePerGroup, int countPerPage, int page, String type,
 			String searchWord);
+
+	//프로젝트 멤버 객체 얻어오기
+	public ProjectMember getPrjMem(ProjectMember prjMem);
+
+	//프로젝트 멤버 인서트
+	public void insertPrjMem(ProjectMember prjMem);
 
 }

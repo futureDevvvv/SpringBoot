@@ -3,6 +3,7 @@ package net.softsociety.issho.util;
 import java.util.ArrayList;
 import java.util.List;
 
+//신승훈 * target 리스트에서 source 리스트에 있는것을 삭제후 리턴
 public class ArrayOverlapDelete {
 	public static List<String> arrayDelete(List<String> target, List<String> source) {
 	    List<String> tmpArr = new ArrayList<>();
