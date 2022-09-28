@@ -4,8 +4,13 @@
 <head th:replace="fragmentsManager/config :: configFragment">
 <meta charset="UTF-8">
 <title>구성원 페이지</title>
-<script th:src="@{/js/jquery-3.6.0.min.js}"></script>
-<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<script th:src="@{/js/html2canvas.js?ver=113111}"></script>
+<script th:src="@{/js/jquery-3.6.0.min.js?ver=123}"></script>
+<script th:src="@{/js/jspdf.min.js?ver=131}"></script>
+
+
+<style>
+</style>
 </head>
 <body>
 
@@ -31,12 +36,12 @@
 						<h6 class="m-0 font-weight-bold text-primary">멤버별 업무 리스트</h6>
 					</div>
 
-									
+
 
 					<div class="w3-clear nextprev">
 						<div class="w3-left w3-btn">
 							<form class="form-inline" id="pagingForm" method="get"
-								th:action="@{/manager/works}">
+								th:action="@{../manager/works}">
 								<input type="hidden" name="page" id="page">
 
 								<div id="listTop" class="w3-left w3-btn">
@@ -54,12 +59,14 @@
 								class="form-inline" id="excelDownloadForm">
 								<input type="button" value="excel"
 									class="btn btn-success form-control mb-2 mr-sm-2"
-									style="margin-left: 840px;" onclick="checkedBox()"> 
+									style="margin-left: 840px;" onclick="checkedBox()">
 							</form>
-									<a th:href = "@{/manager/pdf}" class="btn btn-danger form-control mb-2 mr-sm-2" >PDF</a>
-									
-								
-									
+							<a id="savePdfBtn"
+								class="btn btn-danger form-control mb-2 mr-sm-2">PDF</a>
+
+							<script th:src="@{/js/html2canvas.js?ver=113}"></script>
+							<script th:src="@{/js/jspdf.min.js?ver=131}"></script>
+
 							</label>
 
 
@@ -83,51 +90,58 @@
 					<div class="row">
 						<div class="col-sm-12">
 							<!-- 체크박스 선택시 전송할 폼 -->
-							<form th:action="@{/manager/excelDownload}" method="POST"
-								id="chkForm">
+							<script
+								src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js?ver=1"></script>
+							<form th:action="@{../manager/excelDownload}" method="POST" id="chkForm">
 								<input type="hidden" name="email" id="email" value="">
 							</form>
-							
-							<form form th:action="@{manager/multiChecked}" method="get">
-								<table class="table table-bordered dataTable" id="dataTable"
-									width="100%" cellspacing="0" role="grid"
-									aria-describedby="dataTable_info" style="width: 100%;">
-									<thead>
-										<tr role="row">
-											<th class="sorting sorting_asc" tabindex="0"
-												aria-controls="dataTable" rowspan="1" colspan="1"
-												aria-sort="ascending" style="width: 133px;">선택</th>
-											<th class="sorting" tabindex="0" aria-controls="dataTable"
-												rowspan="1" colspan="1" style="width: 50px;">이메일</th>
-											<th class="sorting" tabindex="0" aria-controls="dataTable"
-												rowspan="1" colspan="1" style="width: 50px;">이름</th>
-											<th class="sorting" tabindex="0" aria-controls="dataTable"
-												rowspan="1" colspan="1" style="width: 50px;">권한</th>
-											<th class="sorting" tabindex="0" aria-controls="dataTable"
-												rowspan="1" colspan="1" style="width: 50px;">작업량(개인별)</th>
-											<th class="sorting" tabindex="0" aria-controls="dataTable"
-												rowspan="1" colspan="1" style="width: 50px;">작업량(업무별)</th>
-											<th class="sorting" tabindex="0" aria-controls="dataTable"
-												rowspan="1" colspan="1" style="width: 50px;">업무능률</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr class="odd" th:each="l:${list}">
-											<td class="sorting_1" id="selectWorks"><input
-												type="checkbox" name="checkedValue"
-												th:value="${l.memb_mail}"></td>
-											<td th:text=${l.memb_mail} id="email" th:id="newTask"
-												data-toggle="modal" th:infoEmail="${l.memb_mail}"></td>
-											<td th:text=${l.memb_name}></td>
-											<td th:text=${l.rolename}></td>
-											<td>개인별작업량표시</td>
-											<td>업무별작업량표시</td>
-											<td>업무능률표시</td>
-										</tr>
-									</tbody>
+							<div id="pdfDiv">
+								<form form th:action="@{../manager/multiChecked}" method="get">
+									<table class="table table-bordered dataTable" id="dataTable"
+										width="100%" cellspacing="0" role="grid"
+										aria-describedby="dataTable_info" style="width: 100%;">
+										<thead>
+											<tr role="row">
+												<th class="sorting sorting_asc" tabindex="0"
+													aria-controls="dataTable" rowspan="1" colspan="1"
+													aria-sort="ascending"
+													style="width: 30px; text-align: center;">선택</th>
+												<th class="sorting" tabindex="0" aria-controls="dataTable"
+													rowspan="1" colspan="1" style="width: 40px;">이메일</th>
+												<th class="sorting" tabindex="0" aria-controls="dataTable"
+													rowspan="1" colspan="1" style="width: 40px;">이름</th>
+												<th class="sorting" tabindex="0" aria-controls="dataTable"
+													rowspan="1" colspan="1" style="width: 30px;">권한</th>
+												<th class="sorting" tabindex="0" aria-controls="dataTable"
+													rowspan="1" colspan="1" style="width: 120px;">작업량(개인별)</th>
+												<th class="sorting" tabindex="0" aria-controls="dataTable"
+													rowspan="1" colspan="1" style="width: 120px;">작업량(업무별)</th>
+												<th class="sorting" tabindex="0" aria-controls="dataTable"
+													rowspan="1" colspan="1" style="width: 120px;">업무능률</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr class="odd" th:each="l:${list}">
+												<td class="sorting_1" id="selectWorks"
+													style="text-align: center;"><input type="checkbox"
+													name="checkedValue" th:value="${l.memb_mail}"
+													style="vertical-align: middle;"></td>
+												<td><a th:text=${l.memb_mail} th:id="newTask"
+													data-target="exampleModal" data-toggle="modal"
+													th:infoEmail="${l.memb_mail}"
+													onclick="openModal(this.getAttribute('infoEmail'))"
+													style="cursor: pointer;"></a></td>
+												<td th:text=${l.memb_name}></td>
+												<td th:text=${l.pjmb_right}></td>
+												<td>개인별작업량표시</td>
+												<td>업무별작업량표시</td>
+												<td>업무능률표시</td>
+											</tr>
+										</tbody>
 
-								</table>
-							</form>
+									</table>
+								</form>
+							</div>
 						</div>
 					</div>
 
@@ -172,7 +186,41 @@
 						정보</h5>
 
 				</div>
-				<div class="modal-body p-5 pt-0"></div>
+				<div class="modal-body p-5 pt-0">
+					이름:
+					<span class="name mt-3" id="modalMembName"></span> <br> 
+					이메일:
+					<span class="idd" id="modalMembMail"></span> <br>
+					<div class="d-flex flex-row justify-content-center align-items-center gap-2">
+						<span class="idd1" id="modalMembRolename"></span>
+					</div>
+						<br><span>담당업무</span> 
+					<div class="d-flex flex-row mt-3">
+						<span id="modalMembWork"> </span>
+					
+					</div>
+						<!-- 차트 -->
+							<div class="container">
+							<div class="row">
+								<div class="col-md-12">
+									<canvas id="myChartOne" width="200" height="200" ></canvas>
+								</div>
+							</div>
+						</div>
+						
+					<div>
+						<br>
+						<span>할당된 업무량: </span>
+						<span>3개</span><br>
+						
+						<span>달성한 업무량: </span>
+						<span>3개</span><br><br>
+					</div>
+						
+						
+					
+					
+				</div>
 				<div class="modal-footer">
 					<button type="button" id="closeNewTask" class="btn btn-secondary"
 						data-bs-dismiss="modal">확인</button>
@@ -180,7 +228,9 @@
 				</div>
 			</div>
 		</div>
+
 	</div>
+
 
 
 	<script>
@@ -197,16 +247,45 @@
 			form.submit();
 		}
 
+		
+		
 		//새로운 태스크 모달창 제어
-		$("#newTask").click(function(e) {
-			e.preventDefault();
-			$("#exampleModal").modal("show");
-		});
+  		function openModal(id) {
+			 let email = id;
+			 
+			 $.ajax({
+					url : "workInfo",
+					type : "POST",
+					data : {
+						memEmail : email,
+					},
+					dataType : 'json',
+					success : function(resultMap) {
+					/* 		console.log(resultMap);
+							console.log("resultMap.profileImg : " + resultMap.profileImg);
+							//http://localhost:9990/issho/savedImg/20220916.JPG
+							let insertImg = document.getElementById("insertImg");
+							
+							insertImg.innerHTML = '<img src="'+ resultMap.profileImg + '" class="rounded"  height="140" width="130" />';
+							*/
+							//$('#modalMembImg').text(resultMap.profileImg);
+							$('#modalMembMail').text(resultMap.members.memb_mail);
+							$('#modalMembName').text(resultMap.members.memb_name);
+							$('#modalMembPhone').text(resultMap.members.memb_phone);
+							$('#modalMembRolename').text(resultMap.members.pjmb_right);
+							$('#modalMembWork').text(resultMap.members.memb_work); 
+							
+						 	$("#exampleModal").modal("show");
+					},
+					error: function(e){
+						alert(JSON.stringify(e));
+					}
+				});
+			 
+		
+		} 
 
-		$("#closeNewTask").click(function(e) {
-			e.preventDefault();
-			$("#exampleModal").modal("hide");
-		})
+	
 
 		//체크 박스
 		function checkedBox() {
@@ -226,8 +305,9 @@
 				}
 			}
 			$("#email").val(emailVal);
-			alert(emailVal);
+			/* alert(emailVal); */
 			$("#chkForm").submit();
+			$("#email").val("");
 
 			//console.log(checkedBoxArray);
 
@@ -245,10 +325,81 @@
 			 }); */
 
 		}
+		//pdf
+		$('#savePdfBtn').click(function() {
+		    html2canvas($('#pdfDiv')[0]).then(function(canvas) {
+		        // 캔버스를 이미지로 변환
+		        let imgData = canvas.toDataURL('image/png');
+
+		        let margin = 10; // 출력 페이지 여백설정
+		        let imgWidth = 210 - (10 * 2); // 이미지 가로 길이(mm) A4 기준
+		        let pageHeight = imgWidth * 1.414;  // 출력 페이지 세로 길이 계산 A4 기준
+		        let imgHeight = canvas.height * imgWidth / canvas.width;
+		        let heightLeft = imgHeight;
+
+		        let doc = new jsPDF('p', 'mm');
+		        let position = margin;
+
+		        // 첫 페이지 출력
+		        doc.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight);
+		        heightLeft -= pageHeight;
+
+		        // 한 페이지 이상일 경우 루프 돌면서 출력
+		        while (heightLeft >= 20) {
+		            position = heightLeft - imgHeight;
+		            doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+		            doc.addPage();
+		            heightLeft -= pageHeight;
+		        }
+
+		        // 파일 저장
+		        doc.save('멤버별 업무리스트.pdf');
+		    });
+		});
 		
-	
+		$("#closeNewTask").click(function(e) {
+			e.preventDefault();
+			$("#exampleModal").modal("hide");
+		})
+
+		
+		
+		//차트
+		let myChartOne = document.getElementById('myChartOne').getContext('2d');
+
+		let barChart = new Chart(myChartOne,{
+			type : 'doughnut', //pir,line,doughnut,polarArea
+			data : {
+				labels :['진행전','진행중','완료','보류'],
+				datasets : [{
+					labels :'업무 진행도',
+				data : [
+					10,
+					50,
+					30,
+					10
+				],
+			     backgroundColor: [
+			         'rgba(255, 99, 132, 0.2)',
+			         'rgba(255, 206, 86, 0.2)',
+			         'rgba(54, 162, 235, 0.2)',
+			         'rgba(255, 190, 260, 0.2)',
+			       ],
+			      borderColor: [
+			         'rgba(255, 99, 132, 1)',
+			         'rgba(255, 206, 86, 1)',
+			         'rgba(54, 162, 235, 1)',
+			         'rgba(255, 190, 260, 1)',
+			       ],
+			       borderWidth: 1
+				}]	
+			},
+			options: {
+				responsive: false
+			}
+		})
 	</script>
-	<script th:src="@{/js/jquery-3.6.0.min.js}"></script>
+
 
 </body>
 </html>

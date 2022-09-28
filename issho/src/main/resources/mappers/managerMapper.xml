@@ -6,58 +6,164 @@
 
 <mapper namespace="net.softsociety.issho.manager.dao.ManagerDAO">
 
-<select id="listMembers" parameterType="Map" resultType="Members">
-select
-	memb_mail
-	,memb_name
-	,memb_ogFile
-	,memb_savedFile
-	,memb_work
-	,memb_phone
-	,rolename
-from members
-<where>
-<if test="searchWord != null">
-	memb_name like '%' || #{searchWord} || '%'	
-</if>
-</where>
-order by 
-	1 desc
-</select>
-
-
-<select id="count" parameterType="Map" resultType="int">
-select 
-	count(*)
-from members
-<where>
-<if test="searchWord != null">
-	memb_name like '%' || #{searchWord} || '%'	
-</if>
-</where>
-</select>
-
-<select id="getMemberInfo" resultType="Members" parameterType="String">
-select * 
-from members
-where
-	memb_mail=#{memb_mail}
-</select>
-
-<insert id="insertAttendant" parameterType="InvitationMember">
-INSERT INTO invitation
-(membInv_seq,prj_domain,membInv_recipient)
-VALUES
-(membInv_seq.nextval,#{prj_domain},#{membInv_recipient})
-</insert>
-
-
-<!-- 초대 멤버 검색 -->
-	<select id="invitationIdSearchOne" parameterType="InvitationMember" resultType="int">
-		SELECT COUNT(*)
-		FROM invitation
-		WHERE membInv_recipient = #{membInv_recipient}
-		and prj_domain = #{prj_domain}
+	<select id="listMembers" parameterType="Map"
+		resultType="Members">
+		SELECT
+		m.memb_mail as memb_mail
+		,m.memb_name as memb_name
+		,m.memb_ogfile as memb_ogfile
+		,m.memb_savedfile as memb_savedfile
+		,m.memb_work as memb_work
+		,m.memb_phone as memb_phone
+		,p.prj_domain as prj_domain
+		,p.pjmb_right as pjmb_right
+		FROM
+		members m, projectmember p
+		where
+			m.memb_mail = p.memb_mail 
+			AND p.prj_domain = #{prj_domain}
+			<if test="searchWord != null">
+				AND memb_name like '%' || #{searchWord} || '%'
+			</if>
+		order by
+		1 desc
 	</select>
 
+
+		<select id="listMembers2" parameterType="Map"
+		resultType="Members">
+		SELECT
+		m.memb_mail as memb_mail
+		,m.memb_name as memb_name
+		,m.memb_ogfile as memb_ogfile
+		,m.memb_savedfile as memb_savedfile
+		,m.memb_work as memb_work
+		,m.memb_phone as memb_phone
+		,p.prj_domain as prj_domain
+		,p.pjmb_right as pjmb_right
+		FROM
+		members m, projectmember p
+		where
+			m.memb_mail = p.memb_mail 
+			AND p.prj_domain = #{domain}
+			AND p.memb_mail = #{email}
+		order by
+		1 desc
+	</select>
+
+	<select id="count" parameterType="Map" resultType="int">
+		select
+		count(*)
+		from members
+		<where>
+			<if test="searchWord != null">
+				memb_name like '%' || #{searchWord} || '%'
+			</if>
+		</where>
+	</select>
+
+	<select id="getMemberInfo" parameterType="String"
+		resultType="Members">
+		SELECT
+		m.memb_mail as memb_mail
+		,m.memb_name as memb_name
+		,m.memb_ogfile as memb_ogfile
+		,m.memb_savedfile as memb_savedfile
+		,m.memb_work as memb_work
+		,m.memb_phone as memb_phone
+		,p.prj_domain as prj_domain
+		,p.pjmb_right as pjmb_right
+		FROM
+		members m, projectmember p
+		WHERE m.memb_mail = p.memb_mail 
+		AND p.prj_domain = #{prj_domain} 
+	</select>
+
+
+	<insert id="insertAttendant" parameterType="InvitationMember">
+		INSERT INTO
+		invitation
+		(membInv_seq,prj_domain,membInv_recipient)
+		VALUES
+		(membInv_seq.nextval,#{prj_domain},#{membInv_recipient})
+	</insert>
+
+
+	<!-- 초대 멤버 검색 -->
+	<select id="invitationIdSearchOne"
+		parameterType="InvitationMember" resultType="int">
+		SELECT COUNT(*)
+		FROM
+		invitation
+		WHERE membInv_recipient = #{membInv_recipient}
+		and prj_domain
+		= #{prj_domain}
+	</select>
+
+	<select id="getOneObject" parameterType="InvitationMember"
+		resultType="InvitationMember">
+		SELECT *
+		FROM invitation
+		WHERE membInv_recipient =
+		#{membInv_recipient}
+		and prj_domain
+		= #{prj_domain}
+	</select>
+
+	<!-- 초대 여부 업데이트 -->
+	<update id="updateAccept" parameterType="InvitationMember">
+		UPDATE invitation
+		SET
+		membinv_accept = 1
+		WHERE prj_domain = #{prj_domain}
+		AND
+		membInv_recipient = #{membInv_recipient}
+	</update>
+
+	<select id="listDriveFile" parameterType="Map"
+		resultType="DriveFile">
+		select
+		driveFile_seq
+		,driveFile_ogFile
+		,driveFile_saveFile
+		,driveFile_date
+		from driveFile
+		<where>
+			<if test="searchWord != null">
+				driveFile_saveFile like '%' || #{searchWord} || '%'
+			</if>
+		</where>
+		order by
+		1 desc
+	</select>
+
+	<insert id="insertDrive" parameterType="DriveFile">
+		insert into
+		driveFile
+		(
+		driveFile_seq
+		<if test="driveFile_ogFile != null and driveFile_saveFile != null">
+			,driveFile_ogFile
+			,driveFile_saveFile
+		</if>
+		)
+		values
+		(
+		driveFile_seq.nextval
+		<if test="driveFile_ogFile != null and driveFile_saveFile != null">
+			,#{driveFile_ogFile}
+			,#{driveFile_saveFile}
+		</if>
+		)
+	</insert>
+
+	<!-- 게시물 읽기 -->
+	<select id="readDriveFile" resultType="DriveFile" parameterType="int">
+	select 
+		*
+	from 
+		driveFile
+	where
+		driveFile_seq = #{driveFile_seq}
+	</select>
 </mapper>

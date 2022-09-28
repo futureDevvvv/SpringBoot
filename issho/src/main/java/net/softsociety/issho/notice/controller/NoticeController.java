@@ -7,6 +7,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,7 @@ import net.softsociety.issho.util.FileService;
 import net.softsociety.issho.util.PageNavigator;
 
 @Slf4j
-@RequestMapping("notice")
+@RequestMapping("**/notice")
 @Controller
 public class NoticeController {
 	
@@ -53,15 +54,19 @@ public class NoticeController {
 	NoticeService noticeService;
 	
 	//prj_seq는 나중에 반드시 프로젝트에 공통적으로 관리하고 읽을 수 있어야 함
-	String prj_domain = "scit41";
+	//String prj_domain = "scit41";
 	
 	@GetMapping("noticeList")
-	public String noticeList(@RequestParam(name = "page", defaultValue = "1") int page,
+	public String noticeList(HttpServletRequest request, @RequestParam(name = "page", defaultValue = "1") int page,
 								String type , String searchWord, Model model, 
 								@AuthenticationPrincipal UserDetails user) {
 			log.debug("----- 진입 GET : notice/noticeList");
 			log.debug("-------------------- USER  : {}", user.getUsername());
 			log.debug("----- PARAM: {} | {} | {}", page, type, searchWord);
+			
+			String calledValue = request.getServletPath();
+			String[] splitedUrl = calledValue.split("/");
+			String prj_domain = splitedUrl[1];
 			
 			PageNavigator navi = noticeService.getNoticePageNavi(pagePerGroup, countPerPage, page, type, searchWord, prj_domain);
 			log.debug("----- PageNavigator | {}", navi);
@@ -69,8 +74,9 @@ public class NoticeController {
 			ArrayList<NoticeDetail> noticeList = noticeService.listNotice(navi, type, searchWord, prj_domain);
 			log.debug("----- 검색된 noticeList : {}", noticeList);
 			
-			//!!!! 나중에 prj_domain는 받아와서 반드시 채워주어야 함!!!!
-			model.addAttribute("prj_domain", null); 
+			// !!!! 나중에 prj_domain는 받아와서 반드시 채워주어야 함!!!!
+			// 9/28일 prj_domain 추가
+			model.addAttribute("prj_domain", prj_domain); 
 			
 			model.addAttribute("navi", navi);
 			if(!noticeList.isEmpty())
@@ -148,10 +154,15 @@ public class NoticeController {
 	
 	@PostMapping("writeNotice")
 	public String writeNotice(
-			Notice notice
+			HttpServletRequest request
+			, Notice notice
 			, @AuthenticationPrincipal UserDetails user
 			, MultipartFile upload) {
 		
+		String calledValue = request.getServletPath();
+		String[] splitedUrl = calledValue.split("/");
+		String prj_domain = splitedUrl[1];
+
 		notice.setPrj_domain(prj_domain);
 		
 		log.debug("----- 진입 POST : notice/writeNotice");

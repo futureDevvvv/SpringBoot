@@ -36,12 +36,12 @@
                                 <div>
                               
                                 <div id="dataTable_filter" class="dataTables_filter">
-                                <form class="form-inline" id="pagingForm" method="get" th:action="@{/member/addressBook}">
+                                <form class="form-inline" id="pagingForm" method="get" action="./manager/addressBook">
                                 <input type="hidden" name="page" id="page" >
                                 
                                	<div id="listTop">
                                	
-                                <p>검색된 인원 : <span th:text="${navi.totalRecordsCount}"></span>명</p>
+                               <!--  <p>검색된 인원 : <span th:text="${navi.totalRecordsCount}"></span>명</p> -->
 								
 								
                                 <label class="mr-sm-2" id="listTop1">

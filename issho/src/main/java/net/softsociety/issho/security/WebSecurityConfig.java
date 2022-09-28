@@ -18,9 +18,11 @@ public class WebSecurityConfig {
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http.csrf().disable().authorizeRequests()
-				.antMatchers("/", "/member/join", "/member/idCheck", "/img/**", "/css/**", "/js/**", "/vendor/**", "/domainCheck", "/savedImg/**")
+				.antMatchers("/", "/member/join", "/member/idCheck", "/img/**", "/css/**", "/js/**", "/vendor/**", "/domainCheck", "/wrongPath")
 				.permitAll()
+				/*
 				.antMatchers("/project/**").hasAnyAuthority("ROLE_USER", "PM")
+				*/
 				/*
 				 * .antMatchers("").hasAuthority("PM")
 				 * 

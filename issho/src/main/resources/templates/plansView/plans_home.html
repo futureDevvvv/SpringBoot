@@ -278,7 +278,7 @@
 			</div>
 			    
 			<!-- 일정추가 modal 추가 -->
-			<form th:action="@{/plans/savePlan}" method="post" id="addPlan">
+			<form th:action="|@{/}${session.prj_domain}/plans/savePlan|" method="post" id="addPlan">
 				<div class="modal fade" id="calendarModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
 				    aria-hidden="true">
 				    <div class="modal-dialog" role="document">
@@ -345,7 +345,7 @@
 		            </div>
 		            <div class="modal-body">
 		                <div class="form-group">
-			                <form th:action="@{/plans/updatePlan}" method="post" id="updatePlan">
+			                <form th:action="|@{/}${session.prj_domain}/plans/updatePlan|" method="post" id="updatePlan">
 			                	<input type="hidden" name="plan_seq" id="updatePlan_seq" value=""/>
 			                	
 			                    <label for="taskId" class="col-form-label">일정 제목</label>
@@ -384,7 +384,7 @@
 			                    </div>
 		                    </form>
 		                    
-		                    <form th:action="@{/plans/deletePlan}" method="post" id="deletePlan">
+		                    <form th:action="|@{/}${session.prj_domain}/plans/deletePlan|" method="post" id="deletePlan">
 			                	<input type="hidden" name="plan_seq" id="deletePlan_seq"/>
 		                	</form>
 		                </div>

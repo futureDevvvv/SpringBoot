@@ -5,12 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class TaskStaff {
-	
-	private int task_seq;
-	private String memb_mail;
-	private int tsuper_perform;
-
+@AllArgsConstructor
+public class TaskReplyDetail extends TaskReply{
+	String memb_name;
 }

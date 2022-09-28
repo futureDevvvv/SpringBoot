@@ -62,19 +62,5 @@ public class ProjectController {
 		return "project/project_new";
 	}
 	
-	/**
-	 * 
-	 * @param prj_domain
-	 * @return
-	 */
-	@GetMapping("/main/{prj_domain}")
-	public String enterPj(@PathVariable String prj_domain, Model model) {
-		
-		Projects project = pjservice.searchOne(prj_domain);
-		
-		model.addAttribute("project", project);
-		
-		return "project/project_main";
-	}
-	
+
 }

@@ -3,6 +3,34 @@
 
 <mapper namespace="net.softsociety.issho.task.dao.TaskDAO">
 
+	<!-- * 테스크 전체 검색 -->
+	<select id="SelectAlltask" parameterType="String"
+		resultType="Task">
+		select
+		task.task_seq AS task_seq
+		,task.prj_domain AS
+		prj_domain
+		,task.task_name AS task_name
+		,task.task_content AS
+		task_content
+		,task.task_sender AS task_sender
+		,task.task_rank AS
+		task_rank
+		,task.task_state AS task_state
+		,to_char(task.task_inputdate, 'YYYY-MM-DD') AS task_inputdate
+		,to_char(task.task_startdate, 'YYYY-MM-DD') AS task_startdate
+		,to_char(task.task_enddate, 'YYYY-MM-DD')  AS task_enddate
+		,to_char(task.exp_startdate, 'YYYY-MM-DD') AS exp_startdate
+		,to_char(task.exp_enddate, 'YYYY-MM-DD') AS exp_enddate
+		,task.ptask_num AS ptask_num
+		,memb.memb_name AS memb_name
+		from
+		task task, members memb
+		where
+		task.task_sender = memb.memb_mail
+		AND task.prj_domain = #{prj_domain}
+	</select>
+
 	<!-- 신승훈 * 태스크 네비게이터 -->
 	<select id="countTask"  parameterType="map" resultType="int">
 		SELECT 
@@ -196,6 +224,7 @@
 			task_seq = #{task_seq}
 	</update>
 	
+	<!-- 신승훈 * 상세보기 첨부파일 확인 -->
 	<select id="selectTaskFile" parameterType="String" resultType="TaskFile">
 		select
 			*
@@ -205,6 +234,174 @@
 			task_seq = #{task_seq}
 	</select>
 	
+
+	<!-- 태스크 추가 -->
+	<insert id="addNewTask" parameterType="Task">
+		<!-- 구문 실행 후 방금 넣은 데이터의 아이디를 조회하자 -->
+		<selectKey keyProperty="task_seq" resultType="int"
+			order="BEFORE">
+			SELECT task_seq.nextval FROM DUAL
+		</selectKey>
+
+		INSERT INTO task(task_seq, prj_domain, task_name, task_content,
+		task_sender, task_rank, task_state,
+		task_inputdate,
+		<if test="task_startdate != null">
+			task_startdate,
+		</if>
+		<if test="task_enddate != null">
+			task_enddate,
+		</if>
+		<if test="exp_startdate != null">
+			exp_startdate,
+		</if>
+		<if test="exp_enddate != null">
+			exp_enddate,
+		</if>
+		ptask_num
+		)
+		VALUES(#{task_seq}, #{prj_domain}, #{task_name},
+		#{task_content},
+		#{task_sender}, #{task_rank}, #{task_state},
+		sysdate,
+		<if test="task_startdate != null">
+			#{task_startdate},
+		</if>
+		<if test="task_enddate != null">
+			#{task_enddate},
+		</if>
+		<if test="exp_startdate != null">
+			#{exp_startdate},
+		</if>
+		<if test="exp_enddate != null">
+			#{exp_enddate},
+		</if>
+		#{ptask_num})
+	</insert>
+
+	<!-- 태스크 담당자 추가 -->
+	<insert id="addStaffs" parameterType="Taskstaff">
+		INSERT INTO taskstaff
+		VALUES(#{task_seq}, #{memb_mail}, #{tsuper_perform})
+	</insert>
+
+	<!-- 태스크 파일 추가 -->
+	<insert id="addFiles" parameterType="Taskfile">
+		INSERT INTO taskfile
+		VALUES(tfile_seq.nextval, #{task_seq}, #{tfile_ogfile},
+		#{tfile_savefile})
+	</insert>
+
+	<!-- 태스크 상태 변경 -->
+	<update id="changeState" parameterType="map">
+		UPDATE task
+		SET task_state = #{task_state}
+		<if test="task_state == '0'">
+			,task_startdate = null
+			,task_enddate = null
+		</if>
+		<if test="task_state == '1'">
+			,task_startdate = sysdate
+			,task_enddate = null
+		</if>
+		<if test="task_state == '2'">
+			,task_enddate = sysdate
+		</if>
+		<if test="task_state == '3'">
+			,task_enddate = null
+		</if>
+		WHERE task_seq = #{task_seq}
+	</update>
+
+	<select id="projectMembers" parameterType="String"
+		resultType="Taskstaff">
+		SELECT s.task_seq as task_seq, m.memb_ogfile as
+		memb_ogfile, m.memb_name as memb_name,
+		s.memb_mail
+		FROM task t,
+		taskstaff s, members m
+		WHERE s.memb_mail = m.memb_mail
+		AND s.task_seq =
+		t.task_seq
+		AND t.prj_domain = #{prj_domain}
+	</select>
+
+	<select id="myAllocate" parameterType="map" resultType="Task">
+		SELECT *
+		FROM task
+		WHERE prj_domain = #{prj_domain}
+		AND task_sender =
+		#{memb_mail}
+	</select>
+
+	<select id="myCharged" parameterType="map" resultType="Task">
+		SELECT
+		t.task_seq AS task_seq
+		,t.prj_domain AS
+		prj_domain
+		,t.task_name AS
+		task_name
+		,t.task_content AS
+		task_content
+		,t.task_sender AS task_sender
+		,t.task_rank AS
+		task_rank
+		,t.task_state AS
+		task_state
+		,t.task_inputdate AS
+		task_inputdate
+		,t.task_startdate AS
+		task_startdate
+		,t.task_enddate AS
+		task_enddate
+		,t.exp_startdate AS
+		exp_startdate
+		,t.exp_enddate AS
+		exp_enddate
+		,t.ptask_num AS ptask_num
+		,s.memb_mail AS memb_mail
+		FROM task
+		t, taskstaff s
+		WHERE t.task_seq = s.task_seq
+		AND t.prj_domain = #{prj_domain}
+		AND s.memb_mail = #{memb_mail}
+	</select>
 	
+	<select id="SelectAlltaskMG" parameterType="map" resultType="Task">
+		SELECT 
+			t.task_seq
+			,t.task_name
+			,t.task_state
+			,t.task_rank
+			,t.task_startdate
+			,t.task_enddate
+			,LISTAGG(m.memb_name, ',') WITHIN GROUP (ORDER BY m.memb_name) AS tastMembList
+     FROM 
+     	task t, taskstaff s, members m
+     WHERE 
+     	t.task_seq = s.task_seq
+     	AND m.memb_mail = s.memb_mail
+     	AND t.prj_domain = #{prj_domain}
+     group by 
+     	t.task_seq
+     	,t.task_name
+     	,t.task_state
+     	,t.task_rank
+     	,t.task_startdate
+     	,t.task_enddate
+	</select>
 	
+	<update id="changeDate" parameterType="GanttTask">
+		UPDATE task
+		SET <if test="task_startdate != null and task_enddate != null">
+			task_startdate = #{task_startdate},
+			task_enddate = #{task_enddate}
+		</if>
+		<if test="exp_startdate != null and exp_enddate != null">
+			exp_startdate = #{exp_startdate},
+			exp_enddate = #{exp_enddate}
+		</if>
+		WHERE task_seq = #{task_seq}
+	</update>
+
 </mapper>

@@ -32,7 +32,6 @@
 	</select>
 	
 	<select id="idSearchOne" parameterType="String" resultType="int">
-
 		SELECT COUNT(*)
 		FROM members
 		WHERE memb_mail = #{memb_mail}
@@ -75,6 +74,13 @@
 		prj_domain, p.pjmb_right as pjmb_right
 		FROM members m, projectmember p
 		WHERE p.memb_mail = m.memb_mail AND p.prj_domain = #{prj_domain}
+	</select>
+
+	<!-- 아이디와 이름으로 멤버 검색 -->
+	<select id="memSearchByIdName" parameterType="String" resultType="Members">
+		SELECT * FROM members
+		WHERE memb_mail LIKE '%' || #{searchWord} || '%'
+		OR memb_name LIKE '%' || #{searchWord} || '%'
 	</select>
 
 </mapper>

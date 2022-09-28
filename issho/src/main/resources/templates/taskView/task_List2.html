@@ -347,16 +347,17 @@
 				$('#view_task_name').val(result.showTask.task_name);
 				
 				let staffListStr = '';
-				
-				for(let staff of result.showStaff){
-					if(staffListStr === '')
-						staffListStr += members.get(staff.memb_mail).memb_name+"("+staff.memb_mail+")";
-					else
-						staffListStr += ", " + members.get(staff.memb_mail).memb_name+"("+staff.memb_mail+")";
+				if(result.showStaff != null){
+					for(let staff of result.showStaff){
+						if(staffListStr === '')
+							staffListStr += members.get(staff.memb_mail).memb_name+"("+staff.memb_mail+")";
+						else
+							staffListStr += ", " + members.get(staff.memb_mail).memb_name+"("+staff.memb_mail+")";
+					}
 				}
 				$('#view_staffInput').val(staffListStr);
 				
-				
+				console.log('result.showTask.task_rank');
 				let viewRankId = $(':radio[name=view_task_rank][value="' + result.showTask.task_rank + '"]').attr('id');
 				$(`#${viewRankId}`).attr('checked', true);
 				$('.view_task_rank_label').removeClass("active");
@@ -416,13 +417,14 @@
 				
 				let performHTML = '<span class="input-group-text" style="justify-content:center; margin-left:15px; margin-bottom:10px; width:100px;">수행도</span> <ul>';
 				let performIndex = 0;
-				for(let staff of result.showStaff){
-					if(staff.memb_mail === [[${#authentication.name}]])
-						performHTML += `<li>${members.get(staff.memb_mail).memb_name} <input type="range" class="view_tsuper_perform" id="perform_${performIndex}" taskSeq="${result.showTask.task_seq}" min="0" max="4" style="width: 250px;"></li>`;
-					else 
-						performHTML += `<li>${members.get(staff.memb_mail).memb_name} <input type="range" class="view_tsuper_perform" id="perform_${performIndex}" taskSeq="${result.showTask.task_seq}" min="0" max="4" style="width: 250px;" disabled></li>`;
-					performIndex++;
-				}
+				if(result.showStaff != null)
+					for(let staff of result.showStaff){
+						if(staff.memb_mail === [[${#authentication.name}]])
+							performHTML += `<li>${members.get(staff.memb_mail).memb_name} <input type="range" class="view_tsuper_perform" id="perform_${performIndex}" taskSeq="${result.showTask.task_seq}" min="0" max="4" style="width: 250px;"></li>`;
+						else 
+							performHTML += `<li>${members.get(staff.memb_mail).memb_name} <input type="range" class="view_tsuper_perform" id="perform_${performIndex}" taskSeq="${result.showTask.task_seq}" min="0" max="4" style="width: 250px;" disabled></li>`;
+						performIndex++;
+					}
 				performHTML += "</ul>";
 				
 				$('#view_perform_list').html(performHTML);
@@ -724,8 +726,8 @@
 									<div class="input-group-prepend">
 										<span class="input-group-text">우선순위</span>
 									</div>
-									<div class="btn-group btn-group-toggle view_task_rank_label" data-toggle="buttons">
-										<label class="btn btn-outline-info" for="view_task_rank_0"> 
+									<div class="btn-group btn-group-toggle" data-toggle="buttons">
+										<label class="btn btn-outline-info view_task_rank_label" for="view_task_rank_0"> 
 											<input type="radio" name="view_task_rank" id="view_task_rank_0"
 												class="radioSelection" value="0"> 낮음
 										</label> 

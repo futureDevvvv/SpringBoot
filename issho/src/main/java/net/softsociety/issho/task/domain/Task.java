@@ -29,7 +29,7 @@ public class Task {
 	//* 신승훈 조회, 즐겨찾기 관련 attributes
 	private String memb_name;
 	private String bookmark_memb_mail;
-	private List<TaskStaff> taskStaffList;
+	private List<Taskstaff> taskStaffList;
 		
 	//담당자 attributes
 	private String memb_mail;
@@ -39,6 +39,9 @@ public class Task {
 	private int tfile_seq;
 	private String tfile_ogfile;
 	private String tfile_savefile;
-	
+
+	//김지윤 관리자 프로젝트 태스크 참가자
+	private String tastMembList;
+
 	
 }

@@ -11,22 +11,30 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.extern.slf4j.Slf4j;
+import net.softsociety.issho.member.domain.Members;
+import net.softsociety.issho.project.domain.ProjectMember;
 import net.softsociety.issho.task.dao.TaskDAO;
+
 import net.softsociety.issho.task.domain.Bookmark;
+
+import net.softsociety.issho.task.domain.GanttTask;
 import net.softsociety.issho.task.domain.Task;
-import net.softsociety.issho.task.domain.TaskFile;
-import net.softsociety.issho.task.domain.TaskStaff;
+
 import net.softsociety.issho.util.PageNavigator;
+
+import net.softsociety.issho.task.domain.Taskfile;
+import net.softsociety.issho.task.domain.Taskstaff;
+
 
 @Slf4j
 @Transactional
 @Service
-public class TaskServiceImpl implements TaskService{
-	
+public class TaskServiceImpl implements TaskService {
+
 	@Autowired
 	private TaskDAO taskDAO;
-	
-	//* 테스크 전체 검색
+
+	// 신승훈 * 테스크 전체 검색
 	public ArrayList<Task> SelectAlltask(PageNavigator navi, String domain, String searchWord) {
 		log.debug("TaskServiceImpl [SelectAlltask] Start");
 		
@@ -41,8 +49,10 @@ public class TaskServiceImpl implements TaskService{
 		
 		log.debug("TaskServiceImpl [SelectAlltask] result : {}", result);
 		log.debug("TaskServiceImpl [SelectAlltask] End");
+		
 		return result;
 	}
+
 
 	// 신승훈 * 테스크 상세보기
 	@Override
@@ -70,10 +80,16 @@ public class TaskServiceImpl implements TaskService{
 		return result;
 	}
 	
-	// 신승훈 * 태스크 네비
+	// 신승훈 * 태스크 네비 카운트
 	@Override
 	public int countAllBoard(Map<String, String> map) {
-		return taskDAO.countTask(map);
+		log.debug("TaskServiceImpl [countAllBoard] Start");
+		
+		int result = taskDAO.countTask(map);
+		log.debug("TaskServiceImpl [countAllBoard] result : {}", result);
+		
+		log.debug("TaskServiceImpl [countAllBoard] End");
+		return result;
 	}
 	
 	// 신승훈 * 즐겨찾기 추가
@@ -104,14 +120,14 @@ public class TaskServiceImpl implements TaskService{
 	
 	// 신승훈 * 테스크 스태프 리스트 조회
 	@Override
-	public ArrayList<TaskStaff> selectStaff(int taskSeq) {
+	public ArrayList<Taskstaff> selectStaff(int taskSeq) {
 		log.debug("SelectStaff() called");
 		return taskDAO.selectStaff(taskSeq);
 	}
 	
 	// 신승훈 * 수행도 변경 
 	@Override
-	public TaskStaff updatePerform(TaskStaff taskStaff) {
+	public Taskstaff updatePerform(Taskstaff taskStaff) {
 		log.debug("TaskServiceImpl [updatePerform] Start");
 		
 		taskStaff.setTsuper_perform(taskStaff.getTsuper_perform()*25);
@@ -153,18 +169,97 @@ public class TaskServiceImpl implements TaskService{
 		log.debug("TaskServiceImpl [stateChange] End");
 		return task;
 	}
+	
+	// 신승훈 * 상세보기 첨부파일 확인
+	@Override
+	public List<Taskfile> selectTaskFile(String taskSeq) {
+		log.debug("TaskServiceImpl [selectTaskFile] Start");
+		
+		List<Taskfile> result = taskDAO.selectTaskFile(taskSeq);
+		log.debug("TaskServiceImpl [selectTaskFile] result : {}", result);
+		
+		log.debug("TaskServiceImpl [selectTaskFile] End");
+		return result;
+	}
 
 	@Override
-	public List<TaskFile> selectTaskFile(String taskSeq) {
+	public void addNewTask(Task task) {
+
+		taskDAO.addNewTask(task);
+
+	}
+
+	@Override
+	public void addStaffs(Taskstaff staff) {
+
+		taskDAO.addStaffs(staff);
+
+	}
+
+	@Override
+	public void addFiles(Taskfile taskfile) {
+		taskDAO.addFiles(taskfile);
+	}
+
+	@Override
+	public List<Task> myAllocate(Map<String, String> map) {
+		// TODO Auto-generated method stub
+
+		ArrayList<Task> list = taskDAO.myAllocate(map);
 		
-		List<TaskFile> Result = taskDAO.selectTaskFile(taskSeq);
+		return list;
+	}
+
+	@Override
+	public List<Task> myCharged(Map<String, String> map) {
+		// TODO Auto-generated method stub
+		ArrayList<Task> list = taskDAO.myCharged(map);
 		
-		return Result;
+		return list;
+	}
+
+	@Override
+	public void changeState(Map<String, String> map) {
+		// TODO Auto-generated method stub
+		taskDAO.changeState(map);
+	}
+
+	@Override
+	public List<Taskstaff> projectMembers(String prj_domain) {
+		// TODO Auto-generated method stub
+		List<Taskstaff> list = taskDAO.projectMembers(prj_domain);
+		
+		return list;
+	}
+
+	//관리자페이지 태스크 리스트
+	@Override
+	public ArrayList<Task> SelectAlltaskMG(String prj_domain, PageNavigator navi, String searchWord) {
+		
+		HashMap<String, String> map = new HashMap<>();
+		map.put("searchWord", searchWord);
+		map.put("prj_domain", prj_domain);
+		RowBounds rb = new RowBounds(navi.getStartRecord(),navi.getCountPerPage());
+		ArrayList<Task> list = taskDAO.SelectAlltaskMG(map, rb);
+		
+		return list;
+	}
+	
+	//일정 변경 (간트)
+	@Override
+	public void changeDate(GanttTask task) {
+
+		taskDAO.changeDate(task);
 	}
 
 
-	
-	
-	
-	
+	@Override
+	public List<Task> SelectAlltask(String prj_domain) {
+		
+		List<Task> list = taskDAO.SelectAllTask(prj_domain);
+		
+		return list;
+	}
+
+
 }

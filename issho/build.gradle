@@ -60,6 +60,9 @@ dependencies {
 	
 	//신승훈
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.4'
+	
+	//파일 업로드 관련
+	implementation 'commons-io:commons-io:2.6'
 
 	//Excel Download apache
 	implementation group: 'org.apache.poi', name: 'poi', version: '4.1.2'
@@ -67,10 +70,8 @@ dependencies {
 	
 	// https://mvnrepository.com/artifact/com.lowagie/itext
 	implementation group: 'com.lowagie', name: 'itext', version: '2.1.7'
-
+	
 	implementation("org.xhtmlrenderer:flying-saucer-pdf:9.1.20")
-
-
 }
 
 tasks.named('test') {

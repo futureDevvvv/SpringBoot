@@ -7,11 +7,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TaskFile {
-	
-	private int tfile_seq;
+public class GanttTask {
 	private int task_seq;
-	private String tfile_ogfile;
-	private String tfile_savefile;
-
+	private String task_startdate;
+	private String task_enddate;
+	private String exp_startdate;
+	private String exp_enddate;
 }

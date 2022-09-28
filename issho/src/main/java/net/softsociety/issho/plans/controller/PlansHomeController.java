@@ -3,6 +3,8 @@ package net.softsociety.issho.plans.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -29,7 +31,7 @@ import net.softsociety.issho.util.ArrayOverlapDelete;
 
 
 @Slf4j
-@RequestMapping("plans")
+@RequestMapping("**/plans")
 @Controller
 public class PlansHomeController {
 	
@@ -41,11 +43,13 @@ public class PlansHomeController {
 	
 	// 신승훈 * 일정 서비스 홈 화면 ( 저장된 일정 불러오기, 도메인 참석자(멤버리스트) 불러오기 )
 	@GetMapping("plan")
-	public String plan(Plans plans, Model model, @AuthenticationPrincipal UserDetails user) {
+	public String plan(HttpServletRequest request, Plans plans, Model model, @AuthenticationPrincipal UserDetails user) {
 		log.debug("Controller [plan] Start");
 		
-		// 신승훈 * prj_domain 설정, 나중에 변경해줘야함
-		String prj_domain = "scit112";
+		// 신승훈 * prj_domain 설정
+		String calledValue = request.getServletPath();
+		String[] splitedUrl = calledValue.split("/");
+		String prj_domain = splitedUrl[1];
 		
 		// 신승훈 * 일정 서비스 홈 화면 ( 저장된 일정 불러오기 )
 		ArrayList<Plans> attendantList = plansService.selectPlansByMemMail(user.getUsername());
@@ -64,11 +68,17 @@ public class PlansHomeController {
 	
 	// 신승훈 * 일정 저장
 	@PostMapping("savePlan")
-	public String savePlan(
+	public String savePlan(HttpServletRequest request,
 			@ModelAttribute Plans plans, @RequestParam(name = "attendees", required = false) List<String> attendees
 			, @AuthenticationPrincipal UserDetails user
 			) {
 		log.debug("Controller [savePlan] Start");
+		
+		String calledValue = request.getServletPath();
+		String[] splitedUrl = calledValue.split("/");
+		String prj_domain = splitedUrl[1];
+		
+		
 		if(attendees == null)
 			attendees = new ArrayList<String>();
 		log.debug("Controller [savePlan] param : {}", attendees);
@@ -83,7 +93,7 @@ public class PlansHomeController {
 		plansService.savePlan(plans, user.getUsername(), attendees);
 		
 		log.debug("Controller [savePlan] End");
-		return "redirect:/plans/plan";
+		return "redirect:./plans/plan";
 	}
 	
 	// 신승훈 * 일정 수정
@@ -130,7 +140,7 @@ public class PlansHomeController {
 		plansService.updatePlan(plans, delete_att, insert_att);
 		
 		log.debug("Controller [updatePlan] End");
-		return "redirect:/plans/plan";
+		return "redirect:./plans/plan";
 	}
 	
 	// 신승훈 * 일정삭제
@@ -142,7 +152,7 @@ public class PlansHomeController {
 		plansService.deletePlan(plans);
 		
 		log.debug("Controller [deletePlan] End");
-		return "redirect:/plans/plan";
+		return "redirect:./plans/plan";
 	}
 	
 	// 신승훈 * 일정 참석 여부 설정(ajax)
