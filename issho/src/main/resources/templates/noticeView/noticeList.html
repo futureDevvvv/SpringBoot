@@ -47,7 +47,7 @@ function test() {
 				<!-- 검색폼 -->
 					<table class="table table-bordered table-hover table-condensed" >
 						<tr>
-					<form id="pagingForm" method="get" th:action="@{/notice/noticeList}">
+					<form id="pagingForm" method="get" th:action="@{../notice/noticeList}">
 						<td style="text-align:left;" class="col-lg-2">
 							<input type="hidden" id="page" name="page" />
 							<b>조회된 갯수 : <span th:text="${navi.totalRecordsCount}"></span></b>
@@ -68,15 +68,21 @@ function test() {
 		
 						</td>
 					</form>
-							<td style="text-align:right;" class="col-lg-4">
+							<!-- <td style="text-align:right;" class="col-lg-4">
 								<form action="writeNotice" method="get">
 									<input type="submit" class="btn btn-primary" value="공지 작성">
-								</form>
-							</td>
+								</form> 
+							</td> -->
 						</tr>
 					</table>
 						
-
+								<!-- 공지사항 상세 접근 폼 -->
+								<form th:action="|@{/}${session.prj_domain}/notice/readNotice|" method="get"
+									id="noticeDetailForm">
+									<input type="hidden" name="noticeNum" id="noticeNum">
+								</form>
+								
+								
 				<table class="table-bordered table-hover table-condensed bg-white" width="100%">
 					<thead class="text-center " style="background-color: rgb(217, 217, 217)">
 						<tr style="color:black;" height="50px">
@@ -102,7 +108,8 @@ function test() {
 						<tr th:each="notice : ${noticeList}" height="40px">
 						    <td class="col-lg-1" th:text="${notice.notice_seq}">번호</td>
 						    <td>
-			    				<a th:text="${notice.notice_name}" th:href="@{/notice/readNotice(notice_seq=${notice.notice_seq})}">제목</a>
+			    				<a th:text="${notice.notice_name}" th:num="${notice.notice_seq}"
+													th:onclick="readNotice(this.getAttribute('num'))" >제목</a>
 						    </td>
 						    <td class="col-lg-1" th:text="${notice.memb_name}">작성자</td>
 						    <td class="col-lg-2" th:text="${notice.notice_date}">작성일</td>
@@ -119,29 +126,24 @@ function test() {
 				</th:block>
 			 </table>
 					</div>
-						<table class="table table-bordered table-hover table-condensed" >
-						<tr>
-							<td style="text-align:center;">
-					
-								<!-- nav 시작 -->
-								<th:block th:if="${noticeList}">
-									<a th:href="|javascript:pagingFormSubmit(${navi.currentPage - navi.pagePerGroup})|">◁◁</a>
-									<a th:href="|javascript:pagingFormSubmit(${navi.currentPage - 1})|">◀</a> 
-								
-									<span th:each="counter : ${#numbers.sequence(navi.startPageGroup, navi.endPageGroup)}"> 
-										<th:block th:if="${counter == navi.currentPage}"><b></th:block>
-											<a th:text="${counter}" th:href="|javascript:pagingFormSubmit(${counter})|"></a>&nbsp;
-										<th:block th:if="${counter == navi.currentPage}"></b></th:block>
-									</span>
-									
-									<a th:href="|javascript:pagingFormSubmit(${navi.currentPage + 1})|">▶</a> 
-									<a th:href="|javascript:pagingFormSubmit(${navi.currentPage + navi.pagePerGroup})|">▷▷</a>
+							<div class="navigator" style="text-align: center; margin-top: 5px;">
+							<a class="btn btn-primary"
+								th:href="|javascript:pagingFormSubmit(${navi.currentPage - 1})|">Previous</a>
+
+							<span
+								th:each="counter : ${#numbers.sequence(navi.startPageGroup, navi.endPageGroup)}">
+								<th:block th:if="${counter == navi.currentPage}">
+									<b>
+								</th:block> <a class="btn btn-light" th:text="${counter}"
+								th:href="|javascript:pagingFormSubmit(${counter})|"></a>&nbsp; <th:block
+									th:if="${counter == navi.currentPage}">
+									</b>
 								</th:block>
-								<!-- nav 끝 -->
-		
-							</td>
-						</tr>
-					</table>
+							</span> <a class="btn btn-primary"
+								th:href="|javascript:pagingFormSubmit(${navi.currentPage + 1})|">Next</a>
+							<br> <br>
+
+						</div>
 			<!-- [SHHONG] 표 끝 -->
 			
 			<!-- footer 시작 -->
@@ -149,6 +151,18 @@ function test() {
 			<!-- footer 끝 -->
 		</div>
 	</div>
+<script>
+function readNotice(num) {
+	let noticeNum = document.getElementById('noticeNum');
+	let form = document.getElementById('noticeDetailForm');
+	
+	
+	noticeNum.value = num;
+	
+	form.submit();
+	
+}
 
+</script>
 </body>
 </html>

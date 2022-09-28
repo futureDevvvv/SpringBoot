@@ -35,6 +35,13 @@
 				<div id="accordion" class="col-lg-8 offset-sm-1 mb-0">
 				  <div class="card mb-0" >
 				  
+				  
+				  
+				  							<!-- 공지사항 수정 접근 폼 -->
+								<form th:action="|@{/}${session.prj_domain}/notice/updateNotice|" method="get"
+									id="noticeUpdateForm">
+									<input type="hidden" name="noticeNum" id="noticeNum">
+								</form>
 					<!-- Collapse 시작 -->
 					  <div class="card-header  bg-orange" id="headingOne" style="background-color:rgb(255, 249, 227)">
 					      <h3 class="mb-0">
@@ -50,7 +57,9 @@
 <!--  나중에 데이터 정비되면 바꾸어야 됨	-->						
 							<div th:if="${#authentication.name} == ${noticeDetail.notice_writer}">
 								<div>
-									<a class="btn btn-sm bg-gradient-primary text-white" th:href="@{/notice/updateNotice(notice_seq=${noticeDetail.notice_seq})}">　수정　</a>
+									<a class="btn btn-sm bg-gradient-primary text-white" th:num="${notice.notice_seq}"
+													th:onclick="updateNotice(this.getAttribute('num'))"
+													>　수정　</a>
 	 								<a class="btn btn-sm bg-gradient-primary text-white" th:href="|javascript:deleteNotice(${noticeDetail.notice_seq})|">　삭제　</a>		
  <!--									<a class="btn btn-sm bg-gradient-primary text-white" data-toggle="modal" data-target="#deleteNoticeModal">　삭제　</a> -->
 								</div>
@@ -119,5 +128,18 @@
 		</div>
 	</div>
 
+<script>
+function updateNotice(num) {
+	let noticeNum = document.getElementById('noticeNum');
+	let form = document.getElementById('noticeUpdateForm');
+	
+	
+	noticeNum.value = num;
+	
+	alert(noticeNum.value);
+	form.submit();
+	
+}
+</script>
 </body>
 </html>

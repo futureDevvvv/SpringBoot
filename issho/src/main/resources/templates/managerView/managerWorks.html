@@ -92,7 +92,8 @@
 							<!-- 체크박스 선택시 전송할 폼 -->
 							<script
 								src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js?ver=1"></script>
-							<form th:action="@{../manager/excelDownload}" method="POST" id="chkForm">
+							<form th:action="@{../manager/excelDownload}" method="POST"
+								id="chkForm">
 								<input type="hidden" name="email" id="email" value="">
 							</form>
 							<div id="pdfDiv">
@@ -107,17 +108,15 @@
 													aria-sort="ascending"
 													style="width: 30px; text-align: center;">선택</th>
 												<th class="sorting" tabindex="0" aria-controls="dataTable"
-													rowspan="1" colspan="1" style="width: 40px;">이메일</th>
+													rowspan="1" colspan="1" style="width: 120px;">이메일</th>
 												<th class="sorting" tabindex="0" aria-controls="dataTable"
-													rowspan="1" colspan="1" style="width: 40px;">이름</th>
+													rowspan="1" colspan="1" style="width: 100px;">이름</th>
 												<th class="sorting" tabindex="0" aria-controls="dataTable"
-													rowspan="1" colspan="1" style="width: 30px;">권한</th>
+													rowspan="1" colspan="1" style="width: 100px;">권한</th>
+								<!-- 				<th class="sorting" tabindex="0" aria-controls="dataTable"
+													rowspan="1" colspan="1" style="width: 250px;">업무 수행도</th> -->
 												<th class="sorting" tabindex="0" aria-controls="dataTable"
-													rowspan="1" colspan="1" style="width: 120px;">작업량(개인별)</th>
-												<th class="sorting" tabindex="0" aria-controls="dataTable"
-													rowspan="1" colspan="1" style="width: 120px;">작업량(업무별)</th>
-												<th class="sorting" tabindex="0" aria-controls="dataTable"
-													rowspan="1" colspan="1" style="width: 120px;">업무능률</th>
+													rowspan="1" colspan="1" style="width: 200px; text-align: center;">업무 능률</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -132,10 +131,32 @@
 													onclick="openModal(this.getAttribute('infoEmail'))"
 													style="cursor: pointer;"></a></td>
 												<td th:text=${l.memb_name}></td>
+
+
 												<td th:text=${l.pjmb_right}></td>
-												<td>개인별작업량표시</td>
-												<td>업무별작업량표시</td>
-												<td>업무능률표시</td>
+												
+											<!-- 	<td>
+												<div class="progress" h:each="w:${workList}">
+												  <div class="progress-bar bg-danger" role="progressbar" style="width: 20%" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100">진행전</div>
+												  <div class="progress-bar bg-success" role="progressbar" style="width: 40%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100">진행중</div>
+												  <div class="progress-bar bg-info" role="progressbar" style="width: 20%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">완료</div>
+												  <div class="progress-bar bg-warning" role="progressbar" style="width: 20%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">보류</div>
+												</div>
+												
+												</td>  -->
+												
+												<td>
+												<div th:each="w:${workList}" style="text-align:center;">
+										        		<progress id="progress" 
+														th:if="${w.memb_mail}==${l.memb_mail}"
+														th:value="${w.performance}" min="0" max="100"
+														style="width: 500px">
+														</progress>
+														<span th:if="${w.memb_mail}==${l.memb_mail}">[[${w.performance}]]%</span>
+                                   				 </div>
+												</td>
+												
+												
 											</tr>
 										</tbody>
 
@@ -150,7 +171,7 @@
 			</div>
 
 			<div class="navigator">
-				<a class="btn btn-primary"
+				<a class="btn btn-primary" disabled
 					th:href="|javascript:pagingFormSubmit(${navi.currentPage - 1})|">Previous</a>
 
 				<span
@@ -162,7 +183,7 @@
 						th:if="${counter == navi.currentPage}">
 						</b>
 					</th:block>
-				</span> <a class="btn btn-primary"
+				</span> <a class="btn btn-primary" disabled
 					th:href="|javascript:pagingFormSubmit(${navi.currentPage + 1})|">Next</a>
 				<br> <br>
 
@@ -187,39 +208,36 @@
 
 				</div>
 				<div class="modal-body p-5 pt-0">
-					이름:
-					<span class="name mt-3" id="modalMembName"></span> <br> 
-					이메일:
-					<span class="idd" id="modalMembMail"></span> <br>
-					<div class="d-flex flex-row justify-content-center align-items-center gap-2">
+					이름: <span class="name mt-3" id="modalMembName"></span> <br>
+					이메일: <span class="idd" id="modalMembMail"></span> <br>
+					<div
+						class="d-flex flex-row justify-content-center align-items-center gap-2">
 						<span class="idd1" id="modalMembRolename"></span>
 					</div>
-						<br><span>담당업무</span> 
+					<br>
+					<span>담당업무</span>
 					<div class="d-flex flex-row mt-3">
 						<span id="modalMembWork"> </span>
-					
+
 					</div>
-						<!-- 차트 -->
-							<div class="container">
-							<div class="row">
-								<div class="col-md-12">
-									<canvas id="myChartOne" width="200" height="200" ></canvas>
-								</div>
+					<!-- 차트 -->
+					<div class="container">
+						<div class="row">
+							<div class="col-md-12">
+								<canvas id="myChartOne" width="200" height="200"></canvas>
 							</div>
 						</div>
-						
-					<div>
-						<br>
-						<span>할당된 업무량: </span>
-						<span>3개</span><br>
-						
-						<span>달성한 업무량: </span>
-						<span>3개</span><br><br>
 					</div>
-						
-						
-					
-					
+
+					<div>
+						<br> <span>할당된 업무량: </span> <span id="modalTaskCnt"></span>개<br>
+						 <span>달성한 업무량: </span> <span id="modalTaskCntDone"></span>개<br>
+						<br>
+					</div>
+
+
+
+
 				</div>
 				<div class="modal-footer">
 					<button type="button" id="closeNewTask" class="btn btn-secondary"
@@ -247,45 +265,42 @@
 			form.submit();
 		}
 
-		
-		
 		//새로운 태스크 모달창 제어
-  		function openModal(id) {
-			 let email = id;
-			 
-			 $.ajax({
-					url : "workInfo",
-					type : "POST",
-					data : {
-						memEmail : email,
-					},
-					dataType : 'json',
-					success : function(resultMap) {
+		function openModal(id) {
+			let email = id;
+
+			$.ajax({
+				url : "workInfo",
+				type : "POST",
+				data : {
+					memEmail : email,
+				},
+				dataType : 'json',
+				success : function(resultMap) {
 					/* 		console.log(resultMap);
 							console.log("resultMap.profileImg : " + resultMap.profileImg);
 							//http://localhost:9990/issho/savedImg/20220916.JPG
 							let insertImg = document.getElementById("insertImg");
 							
 							insertImg.innerHTML = '<img src="'+ resultMap.profileImg + '" class="rounded"  height="140" width="130" />';
-							*/
-							//$('#modalMembImg').text(resultMap.profileImg);
-							$('#modalMembMail').text(resultMap.members.memb_mail);
-							$('#modalMembName').text(resultMap.members.memb_name);
-							$('#modalMembPhone').text(resultMap.members.memb_phone);
-							$('#modalMembRolename').text(resultMap.members.pjmb_right);
-							$('#modalMembWork').text(resultMap.members.memb_work); 
-							
-						 	$("#exampleModal").modal("show");
-					},
-					error: function(e){
-						alert(JSON.stringify(e));
-					}
-				});
-			 
-		
-		} 
+					 */
+					//$('#modalMembImg').text(resultMap.profileImg);
+					$('#modalTaskCntDone').text(resultMap.taskCntDone.taskCntDone);
+					$('#modalTaskCnt').text(resultMap.taskCnt.taskCnt);
+					$('#modalMembMail').text(resultMap.members.memb_mail);
+					$('#modalMembName').text(resultMap.members.memb_name);
+					$('#modalMembPhone').text(resultMap.members.memb_phone);
+					$('#modalMembRolename').text(resultMap.members.pjmb_right);
+					$('#modalMembWork').text(resultMap.members.memb_work);
 
-	
+					$("#exampleModal").modal("show");
+				},
+				error : function(e) {
+					alert(JSON.stringify(e));
+				}
+			});
+
+		}
 
 		//체크 박스
 		function checkedBox() {
@@ -326,76 +341,72 @@
 
 		}
 		//pdf
-		$('#savePdfBtn').click(function() {
-		    html2canvas($('#pdfDiv')[0]).then(function(canvas) {
-		        // 캔버스를 이미지로 변환
-		        let imgData = canvas.toDataURL('image/png');
+		$('#savePdfBtn').click(
+				function() {
+					html2canvas($('#pdfDiv')[0]).then(
+							function(canvas) {
+								// 캔버스를 이미지로 변환
+								let imgData = canvas.toDataURL('image/png');
 
-		        let margin = 10; // 출력 페이지 여백설정
-		        let imgWidth = 210 - (10 * 2); // 이미지 가로 길이(mm) A4 기준
-		        let pageHeight = imgWidth * 1.414;  // 출력 페이지 세로 길이 계산 A4 기준
-		        let imgHeight = canvas.height * imgWidth / canvas.width;
-		        let heightLeft = imgHeight;
+								let margin = 10; // 출력 페이지 여백설정
+								let imgWidth = 210 - (10 * 2); // 이미지 가로 길이(mm) A4 기준
+								let pageHeight = imgWidth * 1.414; // 출력 페이지 세로 길이 계산 A4 기준
+								let imgHeight = canvas.height * imgWidth
+										/ canvas.width;
+								let heightLeft = imgHeight;
 
-		        let doc = new jsPDF('p', 'mm');
-		        let position = margin;
+								let doc = new jsPDF('p', 'mm');
+								let position = margin;
 
-		        // 첫 페이지 출력
-		        doc.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight);
-		        heightLeft -= pageHeight;
+								// 첫 페이지 출력
+								doc.addImage(imgData, 'PNG', margin, position,
+										imgWidth, imgHeight);
+								heightLeft -= pageHeight;
 
-		        // 한 페이지 이상일 경우 루프 돌면서 출력
-		        while (heightLeft >= 20) {
-		            position = heightLeft - imgHeight;
-		            doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-		            doc.addPage();
-		            heightLeft -= pageHeight;
-		        }
+								// 한 페이지 이상일 경우 루프 돌면서 출력
+								while (heightLeft >= 20) {
+									position = heightLeft - imgHeight;
+									doc.addImage(imgData, 'PNG', 0, position,
+											imgWidth, imgHeight);
+									doc.addPage();
+									heightLeft -= pageHeight;
+								}
 
-		        // 파일 저장
-		        doc.save('멤버별 업무리스트.pdf');
-		    });
-		});
-		
+								// 파일 저장
+								doc.save('멤버별 업무리스트.pdf');
+							});
+				});
+
 		$("#closeNewTask").click(function(e) {
 			e.preventDefault();
 			$("#exampleModal").modal("hide");
 		})
 
-		
-		
 		//차트
 		let myChartOne = document.getElementById('myChartOne').getContext('2d');
-
-		let barChart = new Chart(myChartOne,{
+		
+		
+		
+		
+		let barChart = new Chart(myChartOne, {
 			type : 'doughnut', //pir,line,doughnut,polarArea
 			data : {
-				labels :['진행전','진행중','완료','보류'],
-				datasets : [{
-					labels :'업무 진행도',
-				data : [
-					10,
-					50,
-					30,
-					10
-				],
-			     backgroundColor: [
-			         'rgba(255, 99, 132, 0.2)',
-			         'rgba(255, 206, 86, 0.2)',
-			         'rgba(54, 162, 235, 0.2)',
-			         'rgba(255, 190, 260, 0.2)',
-			       ],
-			      borderColor: [
-			         'rgba(255, 99, 132, 1)',
-			         'rgba(255, 206, 86, 1)',
-			         'rgba(54, 162, 235, 1)',
-			         'rgba(255, 190, 260, 1)',
-			       ],
-			       borderWidth: 1
-				}]	
+				labels : [ '진행전', '진행중', '완료', '보류' ],
+				datasets : [ {
+					labels : '업무 평균 진행도',
+					data : [ 10, 50, 30, 10 ],
+					backgroundColor : [ 'rgba(255, 99, 132, 0.2)',
+							'rgba(255, 206, 86, 0.2)',
+							'rgba(54, 162, 235, 0.2)',
+							'rgba(255, 190, 260, 0.2)', ],
+					borderColor : [ 'rgba(255, 99, 132, 1)',
+							'rgba(255, 206, 86, 1)', 'rgba(54, 162, 235, 1)',
+							'rgba(255, 190, 260, 1)', ],
+					borderWidth : 1
+				} ]
 			},
-			options: {
-				responsive: false
+			options : {
+				responsive : false
 			}
 		})
 	</script>

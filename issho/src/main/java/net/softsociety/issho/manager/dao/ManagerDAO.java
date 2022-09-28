@@ -8,6 +8,9 @@ import org.apache.ibatis.session.RowBounds;
 
 import net.softsociety.issho.manager.domain.DriveFile;
 import net.softsociety.issho.manager.domain.InvitationMember;
+import net.softsociety.issho.manager.domain.MemberTemp;
+import net.softsociety.issho.manager.domain.TaskCnt;
+import net.softsociety.issho.manager.domain.TaskCntDone;
 import net.softsociety.issho.member.domain.Members;
 
 
@@ -37,5 +40,17 @@ public interface ManagerDAO {
 	public DriveFile readDriveFile(int driveFile_seq);
 
 	public Members listMembers2(HashMap<String, String> map);
+
+	public ArrayList<MemberTemp> listWork(HashMap<String, String> map, RowBounds rb);
+
+	public ArrayList<MemberTemp> listWork(String prj_domain);
+
+	public int editMembRight(Members members);
+
+	public int editPMRight(Members members);
+
+	public TaskCnt taskCnt(String memEmail);
+
+	public TaskCntDone taskCntDone(String memEmail);
 
 }
