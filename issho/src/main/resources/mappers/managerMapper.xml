@@ -11,26 +11,28 @@
 		SELECT
 		m.memb_mail as memb_mail
 		,m.memb_name as memb_name
-		,m.memb_ogfile as memb_ogfile
+		,m.memb_ogfile
+		as memb_ogfile
 		,m.memb_savedfile as memb_savedfile
-		,m.memb_work as memb_work
+		,m.memb_work as
+		memb_work
 		,m.memb_phone as memb_phone
 		,p.prj_domain as prj_domain
 		,p.pjmb_right as pjmb_right
 		FROM
 		members m, projectmember p
 		where
-			m.memb_mail = p.memb_mail 
-			AND p.prj_domain = #{prj_domain}
-			<if test="searchWord != null">
-				AND memb_name like '%' || #{searchWord} || '%'
-			</if>
+		m.memb_mail = p.memb_mail
+		AND p.prj_domain = #{prj_domain}
+		<if test="searchWord != null">
+			AND memb_name like '%' || #{searchWord} || '%'
+		</if>
 		order by
 		1 desc
 	</select>
 
 
-		<select id="listMembers2" parameterType="Map"
+	<select id="listMembers2" parameterType="Map"
 		resultType="Members">
 		SELECT
 		m.memb_mail as memb_mail
@@ -39,14 +41,15 @@
 		,m.memb_savedfile as memb_savedfile
 		,m.memb_work as memb_work
 		,m.memb_phone as memb_phone
-		,p.prj_domain as prj_domain
+		,p.prj_domain as
+		prj_domain
 		,p.pjmb_right as pjmb_right
 		FROM
 		members m, projectmember p
 		where
-			m.memb_mail = p.memb_mail 
-			AND p.prj_domain = #{domain}
-			AND p.memb_mail = #{email}
+		m.memb_mail = p.memb_mail
+		AND p.prj_domain = #{domain}
+		AND p.memb_mail = #{email}
 		order by
 		1 desc
 	</select>
@@ -71,12 +74,13 @@
 		,m.memb_savedfile as memb_savedfile
 		,m.memb_work as memb_work
 		,m.memb_phone as memb_phone
-		,p.prj_domain as prj_domain
+		,p.prj_domain as
+		prj_domain
 		,p.pjmb_right as pjmb_right
 		FROM
 		members m, projectmember p
-		WHERE m.memb_mail = p.memb_mail 
-		AND p.prj_domain = #{prj_domain} 
+		WHERE m.memb_mail = p.memb_mail
+		AND p.prj_domain = #{prj_domain}
 	</select>
 
 
@@ -157,13 +161,26 @@
 		)
 	</insert>
 
+	<select id="getPrjMem" parameterType="ProjectMember"
+		resultType="ProjectMember">
+		SELECT * FROM projectmember
+		WHERE prj_domain = #{prj_domain}
+		AND memb_mail = #{memb_mail}
+	</select>
+	
+	<insert id="insertPrjMem" parameterType="ProjectMember">
+		INSERT INTO projectmember
+		VALUES(#{prj_domain}, #{memb_mail}, #{pjmb_right})
+	</insert>
+
 	<!-- 게시물 읽기 -->
-	<select id="readDriveFile" resultType="DriveFile" parameterType="int">
-	select 
+	<select id="readDriveFile" resultType="DriveFile"
+		parameterType="int">
+		select
 		*
-	from 
+		from
 		driveFile
-	where
+		where
 		driveFile_seq = #{driveFile_seq}
 	</select>
 </mapper>

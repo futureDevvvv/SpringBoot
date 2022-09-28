@@ -9,7 +9,7 @@ import org.apache.ibatis.session.RowBounds;
 import net.softsociety.issho.manager.domain.DriveFile;
 import net.softsociety.issho.manager.domain.InvitationMember;
 import net.softsociety.issho.member.domain.Members;
-
+import net.softsociety.issho.project.domain.ProjectMember;
 
 @Mapper
 public interface ManagerDAO {
@@ -24,7 +24,6 @@ public interface ManagerDAO {
 
 	public int invitationIdSearchOne(InvitationMember invitationMember);
 
-
 	public ArrayList<DriveFile> listDriveFile(
 			HashMap<String, String> map, RowBounds rb);
 
@@ -37,5 +36,9 @@ public interface ManagerDAO {
 	public DriveFile readDriveFile(int driveFile_seq);
 
 	public Members listMembers2(HashMap<String, String> map);
+
+	public ProjectMember getPrjMem(ProjectMember prjMem);
+
+	public void insertPrjMem(ProjectMember prjMem);
 
 }
