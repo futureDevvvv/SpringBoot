@@ -12,6 +12,13 @@ import net.softsociety.issho.manager.dao.ManagerDAO;
 import net.softsociety.issho.manager.domain.DriveFile;
 import net.softsociety.issho.manager.domain.InvitationMember;
 
+import net.softsociety.issho.manager.domain.MemberTemp;
+import net.softsociety.issho.manager.domain.TaskCnt;
+import net.softsociety.issho.manager.domain.TaskCntDone;
+import net.softsociety.issho.manager.util.PageNavigator;
+
+
+
 import net.softsociety.issho.member.domain.Members;
 import net.softsociety.issho.util.PageNavigator;
 
@@ -20,7 +27,7 @@ import net.softsociety.issho.util.PageNavigator;
 public class ManagerServiceImpl implements ManagerService {
 
 	@Autowired
-	private ManagerDAO membersDAO;
+	private ManagerDAO managerDAO;
 	
 	
 	
@@ -31,7 +38,7 @@ public class ManagerServiceImpl implements ManagerService {
 		map.put("prj_domain", prj_domain);
 		log.debug("서비스단 도메인:" + prj_domain);
 		RowBounds rb = new RowBounds(navi.getStartRecord(),navi.getCountPerPage());
-		ArrayList<Members> list = membersDAO.listMembers(map, rb);
+		ArrayList<Members> list = managerDAO.listMembers(map, rb);
 		
 		return list;
 	}
@@ -44,7 +51,7 @@ public class ManagerServiceImpl implements ManagerService {
 		//전체 글 개수	
 		HashMap<String, String> map = new HashMap<>();
 		map.put("searchWord", searchWord);
-		int total = membersDAO.count(map);
+		int total = managerDAO.count(map);
 		
 		PageNavigator navi = new PageNavigator(pagePerGroup, countPerPage, page, total);
 		return navi;
@@ -53,19 +60,19 @@ public class ManagerServiceImpl implements ManagerService {
 	@Override
 	public Members getMemberInfo(String domain) {
 		
-		Members members = membersDAO.getMemberInfo(domain);
+		Members members = managerDAO.getMemberInfo(domain);
 		
 		return members;
 	}
 
 	@Override
 	public void insertAttendant(InvitationMember invitation) {
-		membersDAO.insertAttendant(invitation);
+		managerDAO.insertAttendant(invitation);
 	}
 
 	@Override
 	public int invitationIdSearchOne(InvitationMember invitationMember) {
-		int result = membersDAO.invitationIdSearchOne(invitationMember);
+		int result = managerDAO.invitationIdSearchOne(invitationMember);
 		return result;
 	}
 
@@ -74,19 +81,19 @@ public class ManagerServiceImpl implements ManagerService {
 		HashMap<String, String> map = new HashMap<>();
 		map.put("searchWord", searchWord);
 		RowBounds rb = new RowBounds(navi.getStartRecord(),navi.getCountPerPage());
-		ArrayList<DriveFile> list = membersDAO.listDriveFile(map, rb);
+		ArrayList<DriveFile> list = managerDAO.listDriveFile(map, rb);
 		
 		return list;
 	}
 
 	@Override
 	public int insertDrive(DriveFile driveFile) {
-		return membersDAO.insertDrive(driveFile);
+		return managerDAO.insertDrive(driveFile);
 	}
 
 	@Override
 	public DriveFile readDriveFile(int driveFile_seq) {
-		DriveFile driveFile = membersDAO.readDriveFile(driveFile_seq);
+		DriveFile driveFile = managerDAO.readDriveFile(driveFile_seq);
 		return driveFile;
 	}
 
@@ -95,10 +102,46 @@ public class ManagerServiceImpl implements ManagerService {
 		HashMap<String, String> map = new HashMap<>();
 		map.put("domain", domain);
 		map.put("email", email);
-		Members members = membersDAO.listMembers2(map);
+		Members members = managerDAO.listMembers2(map);
 		return members;
 	}
 
+	@Override
+	public ArrayList<MemberTemp> listWork(String prj_domain, PageNavigator navi, String searchWord) {
+			HashMap<String, String> map = new HashMap<>();
+			map.put("searchWord", searchWord);
+			map.put("prj_domain", prj_domain);
+			log.debug("서비스단 도메인:" + prj_domain);
+			RowBounds rb = new RowBounds(navi.getStartRecord(),navi.getCountPerPage());
+			ArrayList<MemberTemp> listWork = managerDAO.listWork(prj_domain);
+		return listWork;
+	}
+
+	@Override
+	public int editMembRight(Members members) {
+		int result = managerDAO.editMembRight(members);
+		return result;
+	}
+	
+	@Override
+	public int editPMRight(Members members) {
+		int result = managerDAO.editPMRight(members);
+		return result;
+	}
+
+	@Override
+	public TaskCnt taskCnt(String memEmail) {
+		TaskCnt taskCnt= managerDAO.taskCnt(memEmail);
+		return taskCnt;
+	}
+
+	@Override
+	public TaskCntDone taskCntDone(String memEmail) {
+		TaskCntDone taskCntDone = managerDAO.taskCntDone(memEmail);
+		return taskCntDone;
+	}
+	
+	
 	
 	
 	

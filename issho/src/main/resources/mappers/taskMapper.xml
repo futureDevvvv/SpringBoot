@@ -391,6 +391,15 @@
      	,t.task_enddate
 	</select>
 	
+
+	
+	
+
+	
+	
+	
+
+
 	<update id="changeDate" parameterType="GanttTask">
 		UPDATE task
 		SET <if test="task_startdate != null and task_enddate != null">

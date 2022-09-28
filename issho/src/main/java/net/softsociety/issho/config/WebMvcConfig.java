@@ -18,7 +18,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(projectAuthorizationInterceptor()).excludePathPatterns("/", "/member/**", "/loginForm", "/img/**",
-				"/css/**", "/js/**", "/vendor/**", "/domainCheck", "/wrongPath", "/project/**", "/ws/multiRoom");
+				"/savedImg/**", "/css/**", "/js/**", "/vendor/**", "/domainCheck", "/wrongPath", "/project/**", "/ws/multiRoom");
 	}
 	
 	//인터셉터에서 서비스 레이어를 사용하기 위해 별도의 빈을 등록해준다!
