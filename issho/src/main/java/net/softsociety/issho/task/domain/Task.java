@@ -1,5 +1,7 @@
 package net.softsociety.issho.task.domain;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,9 +26,11 @@ public class Task {
 	private String exp_enddate;
 	private int ptask_num;
 	
-	//* 신승훈 멤버 이름
+	//* 신승훈 조회, 즐겨찾기 관련 attributes
 	private String memb_name;
-	
+	private String bookmark_memb_mail;
+	private List<TaskStaff> taskStaffList;
+		
 	//담당자 attributes
 	private String memb_mail;
 	private int tsuper_perform;
@@ -35,5 +39,6 @@ public class Task {
 	private int tfile_seq;
 	private String tfile_ogfile;
 	private String tfile_savefile;
+	
 	
 }

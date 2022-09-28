@@ -13,17 +13,22 @@ import net.softsociety.issho.project.domain.Projects;
 
 @Mapper
 public interface PlansDAO {
-	// * 일정 저장
-	public int savePlan(Plans plans);
-	public int insertAttendant(Attendant attendant);
-	// * 저장된 일정 불러오기
+	// 신승훈 * 일정 서비스 홈 화면 ( 저장된 일정 불러오기 ) 
 	public ArrayList<Plans> selectPlansByMemMail(String memberMail);
-	// * 일정 수정
-	public int updatePlan(Plans plans);
-	// * 현재 일정의 참석자 전부 셀렉
+	// 신승훈 * 일정 저장
+	public int savePlan(Plans plans);
+	// 신승훈 * 일정 수정 (현재 일정의 참석자 전부 셀렉)
 	public List<Attendant> selectattendants(int plan_seq);
-	// * 일정 삭제
+	// 신승훈 * 일정 수정 
+	public int updatePlan(Plans plans);
+	// 신승훈 * 일정 삭제 
 	public int deletePlan(Plans plans);
-	// * 수정시 삭제할 참석자
+	// 신승훈 * 수정시 삭제할 참석자
 	public void deleteAttendant(Attendant attendant);
+	// 신승훈 * 수정시 추가할 참석자
+	public int insertAttendant(Attendant attendant);
+	// 신승훈 * 일정 참석 여부 설정(ajax)
+	public void ifYouWillAttend(Attendant attendant);
+	
+	
 }

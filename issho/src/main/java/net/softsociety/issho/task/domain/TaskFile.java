@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Taskfile {
+public class TaskFile {
 	
 	private int tfile_seq;
 	private int task_seq;

@@ -38,14 +38,59 @@
 	</style>
 	
 	<script type="text/javascript" th:inline="javascript">
+	let eventList;
+	let username;
+	
 	document.addEventListener('DOMContentLoaded', function () {
 		/*<!CDATA[*/
-		let eventList = [[${attendantlist}]];
+		eventList = [[${attendantlist}]];
+		username = [[${#authentication.name}]];
+		
 		let arrMemberList = [[${attendees}]];
-		let username = [[${#authentication.name}]];
 		/*]]>*/
-/* 		let arrStrMemberList = createMemberList(arrMemberList); */
-	    var calendarEl = document.getElementById('calendar');
+	    
+		createCalendar();
+	    
+	 	// 참석여부 ajax
+		$("#view_att_whether").change(function(){
+			console.log("참석여부 " + $(this).is(':checked'));
+			$.ajax({
+				url: 'ifYouWillAttend',
+				type: 'post',
+				data: { att_whether: $(this).is(':checked')
+					,      plan_seq: $('#updatePlan_seq').val()},
+				success: function() {
+					console.log("success");
+					createCalendar();
+				},
+				error: function() {
+					alert('error');
+				}
+			});
+		});
+	});
+	
+	//참석여부 변경 후 일정 새로고침
+	function selectEventObjList(){
+		$.ajax({
+			url: 'planRenewal',
+			type: 'post',
+			dateType: 'json',
+			async: false,
+			success: function(eventObjList) {
+				console.log("확인");
+				console.log(eventObjList);
+				eventList=eventObjList;
+			},
+			error: function() {
+				alert('error');
+			}
+		});
+	}
+	
+	function createCalendar(){
+		selectEventObjList();
+		var calendarEl = document.getElementById('calendar');
 	    var calendar = new FullCalendar.Calendar(calendarEl, {
 	    	timeZone: 'Asia/Seoul',
 	    	initialView: 'dayGridMonth', 	// 홈페이지에서 다른 형태의 view를 확인할  수 있다.
@@ -89,7 +134,7 @@
 	        expandRows: true,           // 화면에 맞게 높이 재설정
 	        locale: 'ko',				// 언어설정
 	        eventClick: function (info){// 클릭했을때의 이벤트 (상세보기)
-	        	console.log(info.event._instance.range.start);
+	        	console.log(info.event);
 	       
 	        	$("#DetailcalendarModal").modal("show");						  // modal 나타내기
 	        	$("#updatePlan_seq").val(info.event._def.extendedProps.plan_seq); // 수정시 seq번호 전송
@@ -97,12 +142,22 @@
 	        	
 	        	let checkBoxs = $('.updateCheck');
 	        	let arrAttendant = new Array();
+	        	let arrOnOfAttendant = new Array();
 	        	for(let i=0 ; i<info.event._def.extendedProps.attendantList.length ; i++){
 	        		arrAttendant.push(info.event._def.extendedProps.attendantList[i].memb_mail);
+	        		if(info.event._def.extendedProps.attendantList[i].att_whether === 1)
+	        			arrOnOfAttendant.push(info.event._def.extendedProps.attendantList[i].memb_mail);
 	        	}
 	        	for(let i=0 ; i<checkBoxs.length ; i++){
 	        		if(arrAttendant.includes(checkBoxs[i].value))
 	        			checkBoxs[i].checked = true;
+	        		else
+	        			checkBoxs[i].checked = false;
+	        	}
+	        	let att_whetherList = $('.att_whetherOfAttendee');
+	        	for(let i=0 ; i<att_whetherList.length ; i++){
+	        		if(arrOnOfAttendant.includes(att_whetherList[i].getAttribute('membMail')))
+	        			$(att_whetherList[i]).bootstrapToggle('on');
 	        	}
 	        	
 	        	// modal 안 p 하나하나에 info.event._def.title... 이런것들을 세팅
@@ -113,9 +168,18 @@
 	        	$("#viewPlan_priority").val(info.event._def.extendedProps.plan_priority);
 	        	$("#viewPlan_content").val(info.event._def.extendedProps.plan_content);
 	        	
+	        	console.log("체크되있음?");
+	        	console.log($('#view_att_whether').is(':checked'));
+	        	console.log(info.event._def.extendedProps.att_whether);
+	        	
+	        	// 데이터베이스 자주 오류나서 결과가 오류날수있으나 코드상으론 문제없음
+	        	if(info.event._def.extendedProps.att_whether===1)
+	        		$('#view_att_whether').bootstrapToggle('on');
+	        	if(info.event._def.extendedProps.att_whether===0)
+	        		$('#view_att_whether').bootstrapToggle('off');
+	        	
 	        	if(username === info.event._def.extendedProps.memb_mail){
 	        		$('#isWhether').addClass("hiding");
-	        		console.log($('.view-att-whether')[0]);
 	        		$('#view_att_whether').bootstrapToggle('on');
 	        	} else {
 	        		$('#isWhether').removeClass("hiding");
@@ -139,7 +203,6 @@
                 
 	        	//수정버튼 클릭시
 	        	$("#updateCalendar").on("click",function(){
-	        		alert("수정");
 	        		$('#updatePlan').submit();
 	        	});
 	        	
@@ -150,7 +213,8 @@
 	        }
 	    });
 	    calendar.render();
-	});
+	    console.log("수정됨");
+	}
 	
 	function dateFormat(dateStr) {
 		let date = new Date(dateStr)
@@ -169,15 +233,6 @@
 
         return date.getFullYear() + '-' + month + '-' + day + 'T' + hour + ':' + minute + ':' + second;
 	}
-	
-/* 	// AttendantList 에서 이름만 빼서 참가자 명단을 만들어주는 함수
-	function createMemberList (arrObj){
-		var memberStrList = new Array();
-		for(let memberObj of arrObj){
-			memberStrList.push(memberObj.memb_mail);
-		}
-		return memberStrList;
-	} */
 	
 	function createJson(str){
 		var plans = new Array();
@@ -198,7 +253,10 @@
 		
 		return plans;
 	}
-
+	
+	
+	
+	
 	</script>
 </head>
 <body>
@@ -298,6 +356,7 @@
 		                    		<p th:if="${#authentication.name} != ${attendee.memb_mail}" class="attendees2">
 		                    			<input type="checkbox" class="custom-control-input updateCheck" th:id="|updateCheck_${attendee.memb_name}|" name="attendees" th:value="${attendee.memb_mail}">
       									<label class="custom-control-label" th:for="|updateCheck_${attendee.memb_name}|" th:text="${attendee.memb_name}">참석자A</label>
+      									<input class="att_whetherOfAttendee" th:membMail="${attendee.memb_mail}" type="checkbox" data-toggle="toggle" data-on="참석" data-off="불참" data-onstyle="primary" data-offstyle="danger" data-width="50" data-size="xs" readonly>
 		                    		</p>
 	                    	     </th:block> 
 								
@@ -330,7 +389,7 @@
 		                	</form>
 		                </div>
 		                <div class="modal-footer" id="modal-footer">
-		                	<button type="button" class="btn btn-warning" data-dismiss="modal" id="">닫기</button>
+		                	<button type="button" class="btn btn-warning" data-dismiss="modal">닫기</button>
 		                </div>
 		            </div>
 		        </div>

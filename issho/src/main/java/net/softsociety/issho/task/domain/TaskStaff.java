@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Taskstaff {
+public class TaskStaff {
 	
 	private int task_seq;
 	private String memb_mail;
