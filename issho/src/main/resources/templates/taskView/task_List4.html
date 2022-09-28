@@ -11,7 +11,7 @@
 	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script
 	src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-
+	
 <!-- gijgo datepicker library -->
 <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js"
 	type="text/javascript"></script>
@@ -44,18 +44,17 @@ ul#memList li.mem-item:hover {
 	color: #4CD3E3;
 	border: 1px solid #4CD3E3;
 }
-
-#naviDiv {
-	margin: 0 auto;
-}
-
-.taskCard {
-	width: 170%;
-}
-
-.bookmarked {
-	color: yellow;
-}
+	#naviDiv {
+		margin: 0 auto;
+	}
+	
+	.taskCard {
+		width : 170%;
+	}
+	
+	.bookmarked {
+		color : yellow;
+	}
 </style>
 <script type="text/javascript" th:inline="javascript">
 	let page = [[${page}]];
@@ -397,19 +396,19 @@ ul#memList li.mem-item:hover {
 				
 				$(':radio[name=view_chk_startDate][value="' + isEmptyStartDate + '"]').attr('checked', true);
 				if(isEmptyStartDate == 1){
-	/* 				$("#datepicker3").show();
-					$('#datepicker3').datepicker();
+					$("#datepicker").show();
+					$('#datepicker').datepicker();
 					$(".gj-icon").show();
-					 */
+					
 					let year = result.showTask.exp_startdate.substr(0, 4);
 					let month = result.showTask.exp_startdate.substr(5, 2);
 					let day = result.showTask.exp_startdate.substr(8, 2);
 					
-					$('#datepicker3').val(month+"/"+day+"/"+year);
-				}/* else {
-					$("#datepicker3").hide();
+					$('#datepicker').val(month+"/"+day+"/"+year);
+				}else {
+					$("#datepicker").hide();
 					$(".gj-icon").hide();
-				} */
+				}
 				
 				let isEmptyEndDate;
 				if(result.showTask.exp_enddate == null)
@@ -419,18 +418,18 @@ ul#memList li.mem-item:hover {
 				
 				$(':radio[name=view_chk_endDate][value="' + isEmptyEndDate + '"]').attr('checked', true);
 				if(isEmptyEndDate == 1){
-	/* 				$("#datepicker4").show();
-					$('#datepicker4').datepicker();
+					$("#datepicker2").show();
+					$('#datepicker2').datepicker();
 					$(".gj-icon").show();
-					 */
+					
 					let year = result.showTask.exp_enddate.substr(0, 4);
 					let month = result.showTask.exp_enddate.substr(5, 2);
 					let day = result.showTask.exp_enddate.substr(8, 2);
 					
-					$('#datepicker4').val(month+"/"+day+"/"+year);
+					$('#datepicker2').val(month+"/"+day+"/"+year);
 				}else {
-/* 					$("#datepicker4").hide();
-					$(".gj-icon").hide(); */
+					$("#datepicker2").hide();
+					$(".gj-icon").hide();
 				}
 				
 				$('#view_task_content').val(result.showTask.task_content);
@@ -544,15 +543,11 @@ ul#memList li.mem-item:hover {
 </head>
 <body>
 	<div id="wrapper">
-		<!-- sidebar 시작 -->
-		<th:block th:replace="fragments/sidebar :: sidebar"></th:block>
-		<!-- sidebar 끝 -->
-
-
 		<!-- content 시작 -->
+		<th:block th:replace="fragments/sidebar :: sidebar"></th:block>
+		<!-- content 끝 -->
+
 		<div id="content-wrapper" class="d-flex flex-column">
-		
-		
 			<!-- header 시작 -->
 			<nav th:fragment="navFragment"
 				class="navbar navbar-expand navbar-light bg-white topbar static-top shadow">
@@ -574,7 +569,8 @@ ul#memList li.mem-item:hover {
 						aria-expanded="false"> <i class="fas fa-bell fa-fw"></i> <!-- Counter - Alerts -->
 							<span class="badge badge-danger badge-counter">3+</span>
 					</a> <!-- Dropdown - Alerts -->
-						<div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+						<div
+							class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
 							aria-labelledby="alertsDropdown">
 							<h6 class="dropdown-header">Alerts Center</h6>
 							<a class="dropdown-item d-flex align-items-center" href="#">
@@ -702,15 +698,6 @@ ul#memList li.mem-item:hover {
 						</div></li>
 				</ul>
 			</nav>
-			
-			
-			
-			
-			
-			
-			
-			
-			
 			<nav class="navbar navbar-expand-lg"
 				style="background-color: #f1f3f5; border-bottom: solid 2px black;">
 				<div>
@@ -719,72 +706,46 @@ ul#memList li.mem-item:hover {
 						data-bs-target="exampleModal">
 						<i class="fa-solid fa-plus"></i>태스크 추가
 					</button>
-
+					
 					<div class="btn btn-primary">
-						<label><input type="checkbox" id="task_sender_checkbox">
-							내가 할당</label> <label><input type="checkbox"
-							id="task_staff_checkbox"> 내가 담당</label>
+					  <label><input type="checkbox" id="task_sender_checkbox"> 내가 할당</label>
+			    	  <label><input type="checkbox" id="task_staff_checkbox">  내가 담당</label>
 					</div>
-
+					
 					<button class="btn btn-primary task_order_btn" do="task_state">
-						진행도별</button>
-
+						진행도별	
+					</button>
+					
 					<button class="btn btn-primary task_order_btn" do="task_rank">
-						우선순위별</button>
-
+						우선순위별
+					</button>
+					
 					<button class="btn btn-primary task_order_btn" do="bookmark">
-						즐겨찾기별</button>
-
-					<input
-						type="text" id="searchWord" name="searchWord"
-						th:value="${searchWord}">
-						<button class="btn btn-primary" type="button" id="searchBtn">
-							<i class="fas fa-search fa-sm"></i>
-						</button>
+						즐겨찾기별
+					</button>
+					
+					<td style="text-align:left;" class="col-lg-6">
+						 <input type="text" id="searchWord" name="searchWord" th:value="${searchWord}">								
+	                     <button class="btn btn-primary" type="button" id="searchBtn">
+			                     <i class="fas fa-search fa-sm"></i>
+		              	 </button>
+					</td>
 				</div>
 			</nav>
-
-
-
-
-
-
-
-
-
-
-
+			
 			<!-- 테스크 목록 출력 -->
-			<div class="col-xl-7 col-md-6 m-3" id="taskListDiv"></div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-			<!-- 페이지네이션 nav 시작 -->
+			<div class="col-xl-7 col-md-6 m-3" id="taskListDiv">
+				
+			</div>
+			
+			<!-- nav 시작 -->
 			<ul class="pagination" id="naviDiv">
 			</ul>
-			<!-- 페이지네이션nav 끝 -->
-
-
-
-
-
-
-
-			<!-- * 신승훈 태스크 상세보기 창 모달 -->
-			<div class="modal fade" id="showTaskModal" tabindex="-1"
+			<!-- nav 끝 -->
+		<!-- * 신승훈 태스크 상세보기 창 모달 -->
+	<div class="modal fade" id="showTaskModal" tabindex="-1"
 				aria-labelledby="showTaskModalLabel" aria-hidden="true">
+
 				<form>
 					<div class="modal-dialog modal-lg">
 						<div class="modal-content">
@@ -792,38 +753,36 @@ ul#memList li.mem-item:hover {
 								<h5 class="modal-title" id="showTaskModalLabel">태스크 상세보기</h5>
 								<button class="ml-auto mr-2 btn btn-primary">수정</button>
 								<button class="mr-2 btn btn-primary">삭제</button>
-								<button type="button" class="btn-close view-modal-closeBtn"
-									data-bs-dismiss="modal" aria-label="Close"></button>
+								<button type="button" class="btn-close view-modal-closeBtn" data-bs-dismiss="modal" aria-label="Close"></button>
 							</div>
 							<div class="modal-body">
-
+							
 								<!-- 신승훈 * 할당자 -->
 								<div class="input-group m-3">
 									<div class="input-group-prepend">
 										<span class="input-group-text">할당자</span>
 									</div>
-
-									<input type="text" id="view_task_sender"
-										class="mr-4 form-control" readonly aria-label="Username"
-										aria-describedby="basic-addon1">
+									
+									<input type="text" id="view_task_sender" class="mr-4 form-control" readonly
+										aria-label="Username" aria-describedby="basic-addon1">
 								</div>
 
 								<div class="input-group m-3">
 									<div class="input-group-prepend">
 										<span class="input-group-text">담당자</span>
 									</div>
-									<input type="text" class="mr-4 form-control"
-										id="view_staffInput" name="staffs" placeholder="담당자를 추가해주세요"
-										aria-label="Username" value="" aria-describedby="basic-addon1">
+									<input type="text" class="mr-4 form-control" id="view_staffInput"
+										name="staffs" placeholder="담당자를 추가해주세요" aria-label="Username"
+										value="" aria-describedby="basic-addon1">
 								</div>
 
 								<div class="input-group m-3">
 									<div class="input-group-prepend">
 										<span class="input-group-text">제목</span>
-									</div>
-									<input type="text" class="mr-4 form-control" name="task_name"
-										id="view_task_name" readonly placeholder="태스크 제목을 입력하세요"
-										aria-label="Username" required aria-describedby="basic-addon1">
+									</div> 
+									<input type="text" class="mr-4 form-control" name="task_name" id="view_task_name" readonly
+										placeholder="태스크 제목을 입력하세요" aria-label="Username" required
+										aria-describedby="basic-addon1">
 								</div>
 
 								<div class="input-group m-3">
@@ -831,18 +790,17 @@ ul#memList li.mem-item:hover {
 										<span class="input-group-text">우선순위</span>
 									</div>
 									<div class="btn-group btn-group-toggle" data-toggle="buttons">
-										<label class="btn btn-outline-info view_task_rank_label"
-											for="view_task_rank_0"> <input type="radio"
-											name="view_task_rank" id="view_task_rank_0"
-											class="radioSelection" value="0"> 낮음
-										</label> <label class="btn btn-outline-info view_task_rank_label"
-											for="view_task_rank_1"> <input type="radio"
-											name="view_task_rank" id="view_task_rank_1"
-											class="radioSelection" value="1">보통
-										</label> <label class="btn btn-outline-info view_task_rank_label"
-											for="view_task_rank_2"> <input type="radio"
-											name="view_task_rank" id="view_task_rank_2"
-											class="radioSelection" value="2"> 높음
+										<label class="btn btn-outline-info view_task_rank_label" for="view_task_rank_0"> 
+											<input type="radio" name="view_task_rank" id="view_task_rank_0"
+												class="radioSelection" value="0"> 낮음
+										</label> 
+										<label class="btn btn-outline-info view_task_rank_label" for="view_task_rank_1"> 
+											<input type="radio" name="view_task_rank" id="view_task_rank_1"
+												class="radioSelection" value="1">보통
+										</label> 
+										<label class="btn btn-outline-info view_task_rank_label" for="view_task_rank_2"> 
+											<input type="radio" name="view_task_rank"id="view_task_rank_2"
+												class="radioSelection" value="2"> 높음
 										</label>
 									</div>
 								</div>
@@ -852,58 +810,44 @@ ul#memList li.mem-item:hover {
 										<span class="input-group-text">진행도</span>
 									</div>
 									<div class="btn-group btn-group-toggle" data-toggle="buttons">
-										<label class="btn btn-outline-secondary view_task_state_label"
-											for="view_task_state_0"> <input type="radio"
-											name="view_task_state" id="view_task_state_0"
-											class="radioSelection" value="0"> 진행전
-										</label> <label
-											class="btn btn-outline-secondary view_task_state_label"
-											for="view_task_state_1"> <input type="radio"
-											name="view_task_state" id="view_task_state_1"
-											class="radioSelection" value="1"> 진행중
-										</label> <label
-											class="btn btn-outline-secondary view_task_state_label"
-											for="view_task_state_2"> <input type="radio"
-											name="view_task_state" id="view_task_state_2"
-											class="radioSelection" value="2"> 완료
-										</label> <label
-											class="btn btn-outline-secondary view_task_state_label"
-											for="view_task_state_3"> <input type="radio"
-											name="view_task_state" id="view_task_state_3"
-											class="radioSelection" value="3"> 보류
+										<label class="btn btn-outline-secondary view_task_state_label" for="view_task_state_0"> 
+											<input type="radio" name="view_task_state" id="view_task_state_0" class="radioSelection" value="0"> 진행전
+										</label> 
+										<label class="btn btn-outline-secondary view_task_state_label" for="view_task_state_1"> 
+											<input type="radio" name="view_task_state" id="view_task_state_1" class="radioSelection" value="1"> 진행중
+										</label> 
+										<label class="btn btn-outline-secondary view_task_state_label" for="view_task_state_2"> 
+											<input type="radio" name="view_task_state" id="view_task_state_2" class="radioSelection" value="2"> 완료
+										</label> 
+										<label class="btn btn-outline-secondary view_task_state_label" for="view_task_state_3"> 
+											<input type="radio" name="view_task_state" id="view_task_state_3" class="radioSelection" value="3"> 보류
 										</label>
 									</div>
 								</div>
 
 								<div class="input-group m-3">
 									<div class="input-group-prepend">
-										<span class="input-group-text">예상시작일</span> <input
-											type="radio" class="ml-3" id="startNone"
-											name="view_chk_startDate" value="0" checked="checked"><span
-											class="mt-2 ml-1">없음</span> <input type="radio" class="ml-3"
-											id="startExist1" name="view_chk_startDate" value="1"><span
-											class="mt-2 ml-1">있음</span> <input id="datepicker3"
-											class="ml-3 mt-2" width="150" name="exp_startdate"
-											style="margin-left: 20px;" />
+										<span class="input-group-text">예상시작일</span>
+										<input type="radio" class="ml-3" id="startNone" name="view_chk_startDate" value="0" checked="checked"><span class="mt-2 ml-1">없음</span>
+										<input type="radio" class="ml-3" id="startExist" name="view_chk_startDate" value="1"><span class="mt-2 ml-1">있음</span>
+										<input id="datepicker" class="ml-3 mt-2" width="150" name="exp_startdate" style="margin-left: 20px;" />
 									</div>
 								</div>
 
 								<div class="input-group m-3">
 									<div class="input-group-prepend">
-										<span class="input-group-text">예상종료일</span> <input
-											type="radio" class="ml-3" id="endNone"
-											name="view_chk_endDate" value="0" checked="checked"><span
-											class="mt-2 ml-1">없음</span> <input type="radio" class="ml-3"
-											id="endExist2" name="view_chk_endDate" value="1"><span
-											class="mt-2 ml-1">있음</span> <input id="datepicker4"
-											class="ml-3 mt-2" width="150" name="exp_enddate"
-											style="margin-left: 20px;" />
+										<span class="input-group-text">예상종료일</span>
+										<input type="radio" class="ml-3" id="endNone" name="view_chk_endDate" value="0"checked="checked"><span class="mt-2 ml-1">없음</span>
+										<input type="radio" class="ml-3" id="endExist" name="view_chk_endDate" value="1"><span class="mt-2 ml-1">있음</span>
+										<input id="datepicker2" class="ml-3 mt-2" width="150" name="exp_enddate" style="margin-left: 20px;" />
 									</div>
 								</div>
-
+								
 								<!-- 신승훈 * 수행도 -->
-								<div class="slidecontainer" id="view_perform_list"></div>
-
+								<div class="slidecontainer" id="view_perform_list">
+	
+								</div>
+								
 
 								<div class="input-group m-3">
 									<div class="input-group-prepend">
@@ -915,21 +859,78 @@ ul#memList li.mem-item:hover {
 								<div class="file-list"></div>
 
 								<div class="input-group m-3">
-									<textarea class="mr-4 form-control" name="task_content"
-										id="view_task_content" readonly style="resize: none;" rows="5">내용을 입력하세요</textarea>
+									<textarea class="mr-4 form-control" name="task_content" id="view_task_content" readonly style="resize:none;" rows="5">내용을 입력하세요</textarea>
 								</div>
+								
+							
+							
+						 <!-- 댓글 html -->
+				   <!-- 홍상혁 댓글 입력 폼 -->
+ 					<div class="mb-3">
+						<form id="ReplyForm" th:action="@{/taskRpl/writeReply}" method="post" onsubmit="return writeORupdate();">
+
+							<div style="display:inline" height="50px">
+						
+								<input type="hidden" name="task_seq" id="task_seq" th:value="${task_seq}"/>
+								<input type="text" class="col-lg-10" id="treply_content" name="treply_content" placeholder="댓글을 입력하세요">
+								<input type="file" id="uploadFile" name="uploadFile" class="col-lg-9 mt-2" value="첨부파일"/> 	
+								<input type="submit" id="submitReply" class="btn btn-primary bg-gradient-primary" value="댓글저장" />
+							</div>
+						</form>
+					</div>
+					<br>
+	 
+
+					<!-- 홍상혁 1번째 댓글 -->
+					
+				<th:block th:if="${replyList}">
+							<div th:each="taskReplyDetail:${replyList}" class="m-0 p-0 bg-white" style="border-bottom: 1px solid rgb(192, 192, 192); border-top: 1px solid rgb(192, 192, 192); ">
+								<th:block th:if="${#authentication.name} == ${taskReplyDetail.treply_writer}">
+									<b><p th:text="${taskReplyDetail.treply_content}" class="text-primary m-0 mx-2 my-2 p-0">댓글 제목입니다.</p></b>
+								</th:block>
+								<th:block th:unless="${#authentication.name} == ${taskReplyDetail.treply_writer}">
+									<p th:text="${taskReplyDetail.treply_content}" class="m-0 mx-2 my-2 p-0">댓글 제목입니다.</p>
+								</th:block>
+
+						        <div class="d-flex m-0 mb-2 mx-3 p-0 justify-content-between">
+ 									<div class="d-flex m-0 p-0 justify-content-between align-items-center"><i class="fas fa-user mr-2"></i><span th:text="${taskReplyDetail.memb_name}">홍길동 </span> </div> 
+									<div class="d-flex m-0 p-0 align-items-center"><i class="fas fa-clock mr-2"></i><span th:text="${taskReplyDetail.treply_inputdate}">2022.09.15 15:03:00</span> </div>
+									<div class="m-0 p-0 text-white">
+										<div th:if="${#authentication.name} == ${taskReplyDetail.treply_writer}">
+											<a class="btn-sm bg-gradient-primary text-white" href="#" th:onclick="'changeMode(' + ${taskReplyDetail.treply_seq} + ');'"><i class="fas fa-pen"></i></a>							
+				<!-- 							<a class="btn-sm bg-gradient-primary text-white" th:href="@{/taskReply/changeReply(treply_seq=${taskReplyDetail.treply_seq})}">수정</a>  -->								
+				<!-- 							<a class="btn-sm bg-gradient-primary text-white" th:href="@{/taskReply/changeReply(treply_seq=${taskReplyDetail.treply_seq})}">수정</a>  -->	
+											<!-- <a class="btn-sm bg-gradient-primary text-white" href="|javascript:/taskReply/deleteReply(${taskReplyDetail.treply_seq})|" th:onclick="${'return deleteReply('+taskReplyDetail.treply_seq +');'">삭제</a> -->
+											<a class="btn-sm bg-gradient-primary text-white" th:href="@{/taskRpl/replyList(task_seq= ${taskReplyDetail.task_seq})}" th:onclick="'return deleteReply('+${taskReplyDetail.treply_seq} +');'"><i class="fas fa-trash-alt"></i></a>
+											
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+				</th:block>
+						<br><br>								<!-- 홍상혁 댓글 html 끝 -->
+							
+							
+							
+							
+							
+							
+							
+							
+							
+							
+								
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary view-modal-closeBtn" data-bs-dismiss="modal">취소</button>
 							</div>
 						</div>
 					</div>
 				</form>
 			</div>
-			<!-- 상세보기 모달창 끝 -->
-
-
-
-
-
-			<!-- 태스크 추가 modal 시작-->
+			
+			<!-- 태스크 추가 modal -->
 			<div class="modal fade" id="exampleModal" tabindex="-1"
 				aria-labelledby="exampleModalLabel" aria-hidden="true">
 
@@ -1078,50 +1079,18 @@ ul#memList li.mem-item:hover {
 								<button type="button" class="btn btn-primary"
 									onclick="submitForm();">등록</button>
 							</div>
-						</div>
-					</div>
-				</form>
+					</form>
+				</div>
 			</div>
-			<!-- 태스크 추가 모달 끝 -->
-
-
-
-
-
-
 		</div>
-	</div>
 	<!-- header 끝 -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	<!-- footer 시작 -->
 	<th:block th:replace="fragments/footer :: footerFragment"></th:block>
 	<!-- footer 끝 -->
-
-
-
-
-
-
-
-
-
+	</div>
+	</div>
 
 	<script>
-		console.log($("#datepicker"));
-	
 		//파일 업로드 개수
 		let fileCount = 0;
 
@@ -1146,16 +1115,11 @@ ul#memList li.mem-item:hover {
 
 		//예상 시작일/종료일 제어
 		$("#startNone").change(function() {
-			
-			console.log('startnone');
-			
 			$("#datepicker").hide();
 			$(".gj-icon").hide();
 		});
 
 		$("#startExist").change(function() {
-			
-			console.log('startexist');
 
 			$("#datepicker").show();
 			$('#datepicker').datepicker({format : 'yyyy-mm-dd'});
@@ -1163,17 +1127,11 @@ ul#memList li.mem-item:hover {
 		});
 
 		$("#endNone").change(function() {
-			
-			console.log('endnone');
-			
 			$("#datepicker2").hide();
 			$(".gj-icon").hide();
 		});
 
 		$("#endExist").change(function() {
-			
-			console.log('endexist');
-			
 			$("#datepicker2").show();
 			$('#datepicker2').datepicker({format : 'yyyy-mm-dd'});
 			$(".gj-icon").show();

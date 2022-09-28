@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 import net.softsociety.issho.manager.domain.DriveFile;
 import net.softsociety.issho.manager.domain.InvitationMember;
-import net.softsociety.issho.manager.util.PageNavigator;
 import net.softsociety.issho.member.domain.Members;
+import net.softsociety.issho.util.PageNavigator;
 
 
 public interface ManagerService {

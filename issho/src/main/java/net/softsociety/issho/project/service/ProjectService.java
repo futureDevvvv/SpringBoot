@@ -17,7 +17,7 @@ public interface ProjectService {
 	Projects searchOne(String prj_domain);
 	
 	//관리자 페이지 프로젝트 리스트
-	ArrayList<Projects> listProjects(PageNavigator navi, String searchWord);
+	ArrayList<Projects> listProjects(net.softsociety.issho.util.PageNavigator navi, String searchWord);
 
 	Projects getProjectsInfo(String domain);
 
