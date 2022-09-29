@@ -233,7 +233,7 @@
 	
 	<select id="taskCntDone" parameterType="String"
 		resultType="TaskCntDone">
-		SELECT s.memb_mail as memb_mail, COUNT(t.task_seq) as taskCnt
+		SELECT s.memb_mail as memb_mail, COUNT(t.task_seq) as taskCntDone
 		FROM taskstaff s, task t
 		WHERE s.task_seq = t.task_seq
 		AND s.memb_mail = #{memb_mail}

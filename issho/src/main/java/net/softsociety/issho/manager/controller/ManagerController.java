@@ -450,9 +450,15 @@ public class ManagerController {
 	 * @throws Exception
 	 */
 	@PostMapping("/mailSender2")
-	public String mailSender(InvitationMember invitation) throws Exception {
-
-		mailSenderService.mailSend(invitation.getMembInv_recipient(), invitation.getPrj_domain());
+	public String mailSender(HttpServletRequest request,InvitationMember invitation) throws Exception {
+		
+		String calledValue = request.getServletPath();
+	     String[] splitedUrl = calledValue.split("/");
+	     String prj_domain = splitedUrl[1];
+	     
+	     log.debug("메일 초대 도메인 ",prj_domain);
+	     
+		mailSenderService.mailSend(invitation.getMembInv_recipient(), prj_domain);
 		log.debug("메일샌더 실행");
 		/*
 		 * log.debug("이메일"+ memb_mail); log.debug("도메인"+prj_domain);
@@ -460,7 +466,8 @@ public class ManagerController {
 		 * invitation.setPrj_domain(prj_domain);
 		 * invitation.setMembInv_recipient(memb_mail);
 		 */
-
+		invitation.setPrj_domain(prj_domain);
+		
 		service.insertAttendant(invitation);
 
 		log.debug("메일초대 도메인" + invitation.getPrj_domain());
@@ -477,8 +484,12 @@ public class ManagerController {
 	 */
 	@ResponseBody
 	@PostMapping("mailIdCheck")
-	public int idCheck(InvitationMember invitationMember, String membInv_recipient, String prj_domain) {
-
+	public int idCheck(HttpServletRequest request,InvitationMember invitationMember, String membInv_recipient) {
+		
+		String calledValue = request.getServletPath();
+	     String[] splitedUrl = calledValue.split("/");
+	     String prj_domain = splitedUrl[1];
+		
 		log.debug("이메일 : {}", membInv_recipient);
 		log.debug("도메인 : {}", prj_domain);
 
