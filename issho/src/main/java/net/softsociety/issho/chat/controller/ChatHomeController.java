@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -46,14 +48,18 @@ public class ChatHomeController {
 	 * @return 프로젝트 도메인과 아이디 일치하는 채팅방 목록을 불러와 모델에 담은 뒤 chat_home.html로 리턴
 	 */
 	@GetMapping("/chatHome")
-	public String chatHome(Model model, @AuthenticationPrincipal UserDetails user, String domain) {
+	public String chatHome(HttpServletRequest request, Model model, @AuthenticationPrincipal UserDetails user) {
 
+		String calledValue = request.getServletPath();
+		String[] splitedUrl = calledValue.split("/");
+		String prj_domain = splitedUrl[1];
+		
 		String id = user.getUsername();
 
 		Map<String, String> map = new HashMap<String, String>();
 
 		map.put("chat_member", id);
-		map.put("prj_domain", domain);
+		map.put("prj_domain", prj_domain);
 
 		List<Chatrooms> list = chatservice.chatList(map);
 
@@ -61,7 +67,7 @@ public class ChatHomeController {
 		
 		log.debug("chatmsg : {}", chatmsg);
 
-		Projects project = pjservice.searchOne(domain);
+		Projects project = pjservice.searchOne(prj_domain);
 
 		model.addAttribute("project", project);
 		model.addAttribute("list", list);

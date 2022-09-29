@@ -40,7 +40,6 @@ public interface ManagerDAO {
 
 	public Members listMembers2(HashMap<String, String> map);
 
-
 	public ArrayList<MemberTemp> listWork(HashMap<String, String> map, RowBounds rb);
 
 	public ArrayList<MemberTemp> listWork(String prj_domain);
