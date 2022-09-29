@@ -254,7 +254,7 @@ public class TaskServiceImpl implements TaskService {
 
 
 	@Override
-	public List<Task> SelectAlltask(String prj_domain) {
+	public List<Task> SelectAlltask1(String prj_domain) {
 		
 		List<Task> list = taskDAO.SelectAllTask(prj_domain);
 		

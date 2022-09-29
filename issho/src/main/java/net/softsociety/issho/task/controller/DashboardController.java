@@ -52,7 +52,7 @@ public class DashboardController {
 		String[] splitedUrl = calledValue.split("/");
 		String prj_domain = splitedUrl[1];
 
-		List<Task> list = taskservice.SelectAlltask(prj_domain);
+		List<Task> list = taskservice.SelectAlltask1(prj_domain);
 
 		List<Taskstaff> pjmb = taskservice.projectMembers(prj_domain);
 		log.debug("pjmb : {}", pjmb);
@@ -174,7 +174,7 @@ public class DashboardController {
 		String[] splitedUrl = calledValue.split("/");
 		String prj_domain = splitedUrl[1];
 
-		List<Task> list = taskservice.SelectAlltask(prj_domain);
+		List<Task> list = taskservice.SelectAlltask1(prj_domain);
 
 		List<Taskstaff> pjmb = taskservice.projectMembers(prj_domain);
 		
