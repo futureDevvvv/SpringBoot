@@ -57,9 +57,14 @@ public class ChatRoomController {
 			chatService.addChatMem(roomid, list[i]);
 		}
 
+		Chatrooms chatroom2 = chatService.chatroomInfo(roomid);
+		
+		log.debug("chatroom2 : {}", chatroom2);
+		
 		model.addAttribute("list", list);
 		model.addAttribute("roomId", roomid);
 		model.addAttribute("id", id);
+		model.addAttribute("chatInfo", chatroom2);
 		
 		log.debug("chatroom roomId", roomid);
 
