@@ -22,20 +22,11 @@
 		FROM
 		members m, projectmember p
 		where
-
-			m.memb_mail = p.memb_mail 
-			AND p.prj_domain = #{prj_domain}
-			<if test="searchWord != null">
-				AND m.memb_name like '%' || #{searchWord} || '%'
-				
-			</if>
-
 		m.memb_mail = p.memb_mail
 		AND p.prj_domain = #{prj_domain}
 		<if test="searchWord != null">
 			AND memb_name like '%' || #{searchWord} || '%'
 		</if>
-
 		order by
 		1 desc
 	</select>
