@@ -4,7 +4,7 @@
 <mapper namespace="net.softsociety.issho.task.dao.TaskDAO">
 
 	<!-- * 테스크 전체 검색 -->
-	<select id="SelectAlltask" parameterType="String"
+	<select id="SelectAllTask" parameterType="String"
 		resultType="Task">
 		select
 		task.task_seq AS task_seq
@@ -391,6 +391,15 @@
      	,t.task_enddate
 	</select>
 	
+
+	
+	
+
+	
+	
+	
+
+
 	<update id="changeDate" parameterType="GanttTask">
 		UPDATE task
 		SET <if test="task_startdate != null and task_enddate != null">

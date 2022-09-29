@@ -57,7 +57,7 @@ public interface TaskService {
 
 	public void changeDate(GanttTask task);
 	
-	public List<Task> SelectAlltask(String prj_domain);
+	public List<Task> SelectAlltask1(String prj_domain); 
 	
 
 

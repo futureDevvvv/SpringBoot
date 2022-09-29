@@ -85,24 +85,24 @@ public class NoticeController {
 			model.addAttribute("searchWord", searchWord);
 			
 			log.debug("----- 호출 : noticeView/noticeList");	
-			return "/noticeView/noticeList";
+			return "./noticeView/noticeList";
 	}
 	
 	@GetMapping("readNotice")
 	public String readNotice(
-			@RequestParam(name="notice_seq", defaultValue = "0") int notice_seq, 
+			int noticeNum, 
 			Model model) { 
 
 		log.debug("----- 진입 GET : notice/readNotice");
-		log.debug("----- PARAM: {} ", notice_seq);
+		log.debug("----- PARAM: {} ", noticeNum);
 
-		NoticeDetail noticeDetail = noticeService.readNotice(notice_seq, true);
+		NoticeDetail noticeDetail = noticeService.readNotice(noticeNum, true);
 		if (noticeDetail == null) {
-			return "redirect:/notice/noticeList"; //글이 없으면 목록으로
+			return "redirect:./notice/noticeList"; //글이 없으면 목록으로
 		}
 		
 		//현재 글에 달린 리플들
-		ArrayList<CommentDetail> commentList = noticeService.listComment(notice_seq);
+		ArrayList<CommentDetail> commentList = noticeService.listComment(noticeNum);
 
 		//결과를 모델에 담아서 HTML에서 출력
 		model.addAttribute("noticeDetail", noticeDetail);
@@ -210,7 +210,7 @@ public class NoticeController {
 
 		log.debug("----- 호출 : /noticeView/writeForm");
 
-		return "/noticeView/writeForm";
+		return "./noticeView/writeForm";
 	}
 
 	@PostMapping("updateNotice")
@@ -262,7 +262,7 @@ public class NoticeController {
 		Notice notice = noticeService.readNotice(notice_seq, false);
 		
 		if (notice == null) {
-			return "redirect:/notice/noticeList";
+			return "redirect:./notice/noticeList";
 		}
 		
 		//첨부된 파일명 확인
@@ -282,7 +282,7 @@ public class NoticeController {
 		}
 
 		log.debug("----- 호출 : /notice/noticeList");
-		return "redirect:/notice/noticeList";
+		return "redirect:./notice/noticeList";
 	}
 
 	/*

@@ -95,11 +95,11 @@ public class MemberController {
 		// log.debug("webRoot : {}", webRoot);
 		// log.debug("imgRoot : {}", imgRoot);
 
-		if (upload != null && !upload.isEmpty()) {
-			String savedfile = FileService.saveFile(upload, realpath + "/upload");
-			members.setMemb_ogfile(upload.getOriginalFilename());
-			members.setMemb_savedfile(savedfile);
-		}
+//		if (upload != null && !upload.isEmpty()) {
+//			String savedfile = FileService.saveFile(upload, realpath + "/upload");
+//			members.setMemb_ogfile(upload.getOriginalFilename());
+//			members.setMemb_savedfile(savedfile);
+//		}
 
 		/*
 		 * if(upload != null && !upload.isEmpty()) { try { String absolutePath = new

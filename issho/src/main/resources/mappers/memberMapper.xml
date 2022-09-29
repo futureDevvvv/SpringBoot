@@ -58,9 +58,9 @@
 		#{memb_work}, #{memb_phone}, 1)
 	</insert>
 	
-	<!-- 관리자 페이지에서 멤버 삭제 -->
+	<!-- 관리자 페이지에서 해당멤버 프로젝트 탈퇴 -->
 	<delete id="deleteMember" parameterType="String">
-		DELETE FROM members
+		DELETE FROM projectmember
 		where
 		memb_mail=#{memb_mail}
 	</delete>

@@ -4,6 +4,11 @@ import java.util.ArrayList;
 
 import net.softsociety.issho.manager.domain.DriveFile;
 import net.softsociety.issho.manager.domain.InvitationMember;
+
+import net.softsociety.issho.manager.domain.MemberTemp;
+import net.softsociety.issho.manager.domain.TaskCnt;
+import net.softsociety.issho.manager.domain.TaskCntDone;
+
 import net.softsociety.issho.member.domain.Members;
 import net.softsociety.issho.util.PageNavigator;
 
@@ -37,6 +42,17 @@ public interface ManagerService {
 	public DriveFile readDriveFile(int driveFile_seq);
 
 	public Members listManager(String damain,String email);
+	
+	//업무관리 리스트
+	public ArrayList<MemberTemp> listWork(String prj_domain, PageNavigator navi, String searchWord);
+	
+	public int editMembRight(Members members);
+
+	public int editPMRight(Members members);
+
+	public TaskCnt taskCnt(String memEmail);
+
+	public TaskCntDone taskCntDone(String memEmail);
 
 	
 

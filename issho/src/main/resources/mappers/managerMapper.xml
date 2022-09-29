@@ -183,4 +183,61 @@
 		where
 		driveFile_seq = #{driveFile_seq}
 	</select>
+	
+	
+	<!-- 업무관리 리스트 -->
+	<select id="listWork" parameterType="String"
+		resultType="MemberTemp">
+		WITH temp AS
+		(SELECT memb_mail, COUNT(memb_mail) AS cnt
+		FROM taskstaff s
+		GROUP BY memb_mail
+		),
+		donetemp AS
+		(SELECT t.prj_domain AS prj_domain,s.memb_mail AS donemail, COUNT(t.task_state) as donecnt
+		FROM taskstaff s, task t
+		WHERE s.task_seq = t.task_seq
+		AND t.task_state = 2
+		AND t.prj_domain = #{prj_domain}
+		GROUP BY s.memb_mail,t.prj_domain
+		)
+		SELECT prj_domain as prj_domain, donemail as memb_mail, TRUNC((donecnt/cnt) * 100) AS performance
+		FROM temp t, donetemp d
+		WHERE d.donemail = t.memb_mail
+	</select>
+	
+	<!--멤버 권한 변경 -->
+	<update id="editMembRight" parameterType="Members">
+		UPDATE projectmember
+		SET pjmb_right = 'member'
+		where
+			memb_mail=#{memb_mail}
+	</update>
+	<!--매니저 권한 변경 -->
+	<update id="editPMRight" parameterType="Members">
+		UPDATE projectmember
+		SET pjmb_right = 'PM'
+		where
+			memb_mail=#{memb_mail}
+	</update>
+	
+	<select id="taskCnt" parameterType="String"
+		resultType="TaskCnt">
+		SELECT s.memb_mail as memb_mail, COUNT(t.task_seq) as taskCnt
+		FROM taskstaff s, task t
+		WHERE s.task_seq = t.task_seq
+		AND s.memb_mail = #{memb_mail}
+		GROUP BY s.memb_mail
+	</select>
+	
+	
+	<select id="taskCntDone" parameterType="String"
+		resultType="TaskCntDone">
+		SELECT s.memb_mail as memb_mail, COUNT(t.task_seq) as taskCntDone
+		FROM taskstaff s, task t
+		WHERE s.task_seq = t.task_seq
+		AND s.memb_mail = #{memb_mail}
+		AND t.task_state = 2
+		GROUP BY s.memb_mail
+	</select>
 </mapper>

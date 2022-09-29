@@ -37,9 +37,11 @@ import org.springframework.web.multipart.MultipartFile;
 import lombok.extern.slf4j.Slf4j;
 import net.softsociety.issho.manager.domain.DriveFile;
 import net.softsociety.issho.manager.domain.InvitationMember;
+import net.softsociety.issho.manager.domain.MemberTemp;
+import net.softsociety.issho.manager.domain.TaskCnt;
+import net.softsociety.issho.manager.domain.TaskCntDone;
 import net.softsociety.issho.manager.service.MailSenderService;
 import net.softsociety.issho.manager.service.ManagerService;
-import net.softsociety.issho.manager.util.PageNavigator;
 import net.softsociety.issho.member.dao.MemberDAO;
 import net.softsociety.issho.member.domain.Members;
 import net.softsociety.issho.member.service.MemberService;
@@ -48,6 +50,7 @@ import net.softsociety.issho.project.service.ProjectService;
 import net.softsociety.issho.task.domain.Task;
 import net.softsociety.issho.task.service.TaskService;
 import net.softsociety.issho.util.FileService;
+import net.softsociety.issho.util.PageNavigator;
 
 @Slf4j
 @Controller
@@ -105,7 +108,7 @@ public class ManagerController {
 	     String prj_domain = splitedUrl[1];
 		
 		// 페이지 정보 생성
-		net.softsociety.issho.util.PageNavigator navi = service.getPageNavigator(pagePerGroup, countPerPage, page, searchWord);
+		PageNavigator navi = service.getPageNavigator(pagePerGroup, countPerPage, page, searchWord);
 
 		// 현재 페이지 글 정보
 		// DB에서 게시판의 모든 글을 조회.ArrayList 타입으로 리턴받음.
@@ -163,7 +166,7 @@ public class ManagerController {
 		
 		projects = pjService.getProjectsInfo(domain);
 		
-		List<Task> taskList = taskService.SelectAlltask(domain);
+		List<Task> taskList = taskService.SelectAlltask1(domain);
 		
 		log.debug("태스크 상세 정보 : {}", taskList);
 		
@@ -204,7 +207,7 @@ public class ManagerController {
 	     String prj_domain = splitedUrl[1];
 		
 		// 페이지 정보 생성
-		net.softsociety.issho.util.PageNavigator navi = service.getPageNavigator(pagePerGroup, countPerPage, page, searchWord);
+		PageNavigator navi = service.getPageNavigator(pagePerGroup, countPerPage, page, searchWord);
 
 		// 현재 페이지 글 정보
 		// DB에서 게시판의 모든 글을 조회.ArrayList 타입으로 리턴받음.
@@ -241,7 +244,7 @@ public class ManagerController {
 		Members member = memDao.getUserById(id);
 		ArrayList<Members> pjMemList = memberService.searchPjMem(prj_domain);
 		// 페이지 정보 생성
-		net.softsociety.issho.util.PageNavigator navi = service.getPageNavigator(pagePerGroup, countPerPage, page, searchWord);
+		PageNavigator navi = service.getPageNavigator(pagePerGroup, countPerPage, page, searchWord);
 
 		// 현재 페이지 글 정보
 		// DB에서 게시판의 모든 글을 조회.ArrayList 타입으로 리턴받음.
@@ -251,7 +254,7 @@ public class ManagerController {
 		// 리스트를 모델에 저장하고 HTML에서 출력
 		model.addAttribute("navi", navi);
 		model.addAttribute("member", member);
-		model.addAttribute("list", pjMemList);
+		model.addAttribute("list", list);
 		model.addAttribute("searchWord", searchWord);
 		
 
@@ -289,7 +292,8 @@ public class ManagerController {
 		Members members2 = service.listManager(prj_domain,memEmail);
 		log.debug("멤버상세 리스트 결과: {}", members2);
 		
-		String profileImg = uploadPath + "/" + members.getMemb_savedfile();
+		String profileImg = 
+				"http://localhost:9990/issho/savedImg/" + members.getMemb_savedfile();
 		
 		log.debug("profileImg :"+profileImg);
 		
@@ -324,6 +328,36 @@ public class ManagerController {
 
 		return "redirect:./manager/member";
 	}
+	
+	/**
+	 * 권한변경
+	 * @param email
+	 * @return
+	 */
+	@GetMapping("/editMembRight")
+	public String editMembRight(String email) {
+		
+		log.debug("권한변경 이메일 확인:" + email);
+		Members members = new Members();
+		
+		members.setMemb_mail(email);
+		
+		int result = service.editMembRight(members);
+		
+		return "redirect:./member";
+	}
+	@GetMapping("/editPMRight")
+	public String editPMRight(String email) {
+		
+		log.debug("권한변경 이메일 확인:" + email);
+		Members members = new Members();
+		
+		members.setMemb_mail(email);
+		
+		int result = service.editPMRight(members);
+		
+		return "redirect:./member";
+	}
 
 	/**
 	 * 업무관리 페이지
@@ -341,15 +375,22 @@ public class ManagerController {
 	     String prj_domain = splitedUrl[1];
 		
 		// 페이지 정보 생성
-		net.softsociety.issho.util.PageNavigator navi = service.getPageNavigator(pagePerGroup, countPerPage, page, searchWord);
+		PageNavigator navi = service.getPageNavigator(pagePerGroup, countPerPage, page, searchWord);
 
 		// 현재 페이지 글 정보
 		// DB에서 게시판의 모든 글을 조회.ArrayList 타입으로 리턴받음.
 		ArrayList<Members> list = service.listManager(prj_domain,navi, searchWord);
-		log.debug("list 결과: {}", list);
-
+		
+		ArrayList<MemberTemp> workList = service.listWork(prj_domain,navi, searchWord);
+		
+		
+		log.debug("업무 worklist 결과: {}", workList);
+		
+		
+		
 		// 리스트를 모델에 저장하고 HTML에서 출력
 		model.addAttribute("navi", navi);
+		model.addAttribute("workList", workList);
 		model.addAttribute("list", list);
 		model.addAttribute("searchWord", searchWord);
 
@@ -371,13 +412,19 @@ public class ManagerController {
 
 		
 		log.debug("멤버 정보: " + members);
-		
-		
+		TaskCnt taskCnt = service.taskCnt(memEmail);
+		TaskCntDone taskCntDone = service.taskCntDone(memEmail);
+		log.debug("태스크 할당량 : " + taskCnt);
+		log.debug("태스크 달성량 : " + taskCntDone);
 		
 		model.addAttribute("members", members);
+		model.addAttribute("taskCnt", taskCnt);
+		model.addAttribute("taskCntDone", taskCntDone);
 
 		Map<String, Object> result = new HashMap<>();
 		result.put("members", members);
+		result.put("taskCnt", taskCnt);
+		result.put("taskCntDone", taskCntDone);
 		
 
 		return result;
@@ -403,9 +450,15 @@ public class ManagerController {
 	 * @throws Exception
 	 */
 	@PostMapping("/mailSender2")
-	public String mailSender(InvitationMember invitation) throws Exception {
-
-		mailSenderService.mailSend(invitation.getMembInv_recipient(), invitation.getPrj_domain());
+	public String mailSender(HttpServletRequest request,InvitationMember invitation) throws Exception {
+		
+		String calledValue = request.getServletPath();
+	     String[] splitedUrl = calledValue.split("/");
+	     String prj_domain = splitedUrl[1];
+	     
+	     log.debug("메일 초대 도메인 ",prj_domain);
+	     
+		mailSenderService.mailSend(invitation.getMembInv_recipient(), prj_domain);
 		log.debug("메일샌더 실행");
 		/*
 		 * log.debug("이메일"+ memb_mail); log.debug("도메인"+prj_domain);
@@ -413,7 +466,8 @@ public class ManagerController {
 		 * invitation.setPrj_domain(prj_domain);
 		 * invitation.setMembInv_recipient(memb_mail);
 		 */
-
+		invitation.setPrj_domain(prj_domain);
+		
 		service.insertAttendant(invitation);
 
 		log.debug("메일초대 도메인" + invitation.getPrj_domain());
@@ -430,8 +484,12 @@ public class ManagerController {
 	 */
 	@ResponseBody
 	@PostMapping("mailIdCheck")
-	public int idCheck(InvitationMember invitationMember, String membInv_recipient, String prj_domain) {
-
+	public int idCheck(HttpServletRequest request,InvitationMember invitationMember, String membInv_recipient) {
+		
+		String calledValue = request.getServletPath();
+	     String[] splitedUrl = calledValue.split("/");
+	     String prj_domain = splitedUrl[1];
+		
 		log.debug("이메일 : {}", membInv_recipient);
 		log.debug("도메인 : {}", prj_domain);
 
@@ -531,7 +589,7 @@ public class ManagerController {
 			,@RequestParam(name="page",defaultValue = "1") int page
 			,String searchWord) {
 		//페이지 정보 생성
-				net.softsociety.issho.util.PageNavigator navi = service.getPageNavigator(
+				PageNavigator navi = service.getPageNavigator(
 						pagePerGroup,countPerPage,page,searchWord);
 				
 				//현재 페이지 글 정보
@@ -589,7 +647,7 @@ public class ManagerController {
 	     String prj_domain = splitedUrl[1];
 		
 		// 페이지 정보 생성
-		net.softsociety.issho.util.PageNavigator navi = service.getPageNavigator(pagePerGroup, countPerPage, page, searchWord);
+		PageNavigator navi = service.getPageNavigator(pagePerGroup, countPerPage, page, searchWord);
 
 		// 현재 페이지 글 정보
 		// DB에서 게시판의 모든 글을 조회.ArrayList 타입으로 리턴받음.
@@ -658,4 +716,6 @@ public class ManagerController {
 
 		return null;
 	}	
+	
+	
 }

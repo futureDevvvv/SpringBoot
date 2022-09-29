@@ -7,7 +7,6 @@ import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
 import net.softsociety.issho.member.domain.Members;
 import net.softsociety.issho.project.dao.ProjectDAO;
 import net.softsociety.issho.project.domain.ProjectMember;
