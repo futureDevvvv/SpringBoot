@@ -85,7 +85,7 @@ public class NoticeController {
 			model.addAttribute("searchWord", searchWord);
 			
 			log.debug("----- 호출 : noticeView/noticeList");	
-			return "/noticeView/noticeList";
+			return "./noticeView/noticeList";
 	}
 	
 	@GetMapping("readNotice")
@@ -98,7 +98,7 @@ public class NoticeController {
 
 		NoticeDetail noticeDetail = noticeService.readNotice(noticeNum, true);
 		if (noticeDetail == null) {
-			return "redirect:/notice/noticeList"; //글이 없으면 목록으로
+			return "redirect:./notice/noticeList"; //글이 없으면 목록으로
 		}
 		
 		//현재 글에 달린 리플들
@@ -210,7 +210,7 @@ public class NoticeController {
 
 		log.debug("----- 호출 : /noticeView/writeForm");
 
-		return "/noticeView/writeForm";
+		return "./noticeView/writeForm";
 	}
 
 	@PostMapping("updateNotice")
@@ -262,7 +262,7 @@ public class NoticeController {
 		Notice notice = noticeService.readNotice(notice_seq, false);
 		
 		if (notice == null) {
-			return "redirect:/notice/noticeList";
+			return "redirect:./notice/noticeList";
 		}
 		
 		//첨부된 파일명 확인
@@ -282,7 +282,7 @@ public class NoticeController {
 		}
 
 		log.debug("----- 호출 : /notice/noticeList");
-		return "redirect:/notice/noticeList";
+		return "redirect:./notice/noticeList";
 	}
 
 	/*
