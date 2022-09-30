@@ -240,4 +240,32 @@
 		AND t.task_state = 2
 		GROUP BY s.memb_mail
 	</select>
+	
+	
+	<select id="listInvitation" parameterType="Map"
+		resultType="Members">
+		SELECT
+		m.memb_mail as memb_mail
+		,m.memb_name as memb_name
+		,m.memb_ogfile
+		as memb_ogfile
+		,m.memb_savedfile as memb_savedfile
+		,m.memb_work as
+		memb_work
+		,m.memb_phone as memb_phone
+		,p.prj_domain as prj_domain
+		,p.pjmb_right as pjmb_right
+		,i.membInv_accept as membInv_accept
+		FROM
+		members m, projectmember p, invitation i
+		where
+		m.memb_mail = p.memb_mail
+		AND m.memb_mail = i.membInv_recipient(+)
+		AND p.prj_domain = #{prj_domain}
+		<if test="searchWord != null">
+			AND memb_name like '%' || #{searchWord} || '%'
+		</if>
+		order by
+		1 desc
+	</select>
 </mapper>

@@ -56,5 +56,7 @@ public interface ManagerDAO {
 
 	public void insertPrjMem(ProjectMember prjMem);
 
+	public ArrayList<Members> listInvitation(HashMap<String, String> map, RowBounds rb);
+
 
 }

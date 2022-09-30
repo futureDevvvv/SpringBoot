@@ -45,7 +45,7 @@ function validation() {
 <!-- 			<div class="container-fluid" width="80%">  -->
 	 			<div class="container-fluid	">
 						
-					<h2 th:text="${noticeDetail}?'공지사항 수정화면':_">공지사항 작성</h2>
+					<h2 th:text="${noticeDetail}?'공지사항 수정화면':_">공지사항 수정화면</h2>
 					<p>The .table-bordered class adds border on all sides of the table and cells:</p>            
 					
 					<form class="col-lg-9" th:action="${noticeDetail}?@{updateNotice}:@{writeNotice}" method="post" 

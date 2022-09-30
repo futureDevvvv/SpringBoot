@@ -54,6 +54,8 @@ public interface ManagerService {
 
 	public TaskCntDone taskCntDone(String memEmail);
 
+	public ArrayList<Members> listInvitation(String prj_domain, PageNavigator navi, String searchWord);
+
 	
 
 

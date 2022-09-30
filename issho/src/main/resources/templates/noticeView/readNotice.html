@@ -83,7 +83,7 @@
 
 				    <!-- 댓글 입력 폼 -->
 					<div class="mb-3">
-						<form id="CommentForm" th:action="@{/notice/readNotice}" method="get">
+						<form id="CommentForm" th:action="@{../notice/readNotice}" method="get">
 							<div style="display:inline" height="50px">
 								<input type="hidden" name="notice_seq" id="notice_seq" th:value="${noticeDetail.notice_seq}"/>
 								<input type="text" class="col-lg-10" id="noticeCmt_contents" name="noticeCmt_contents" placeholder="댓글을 입력하세요">
