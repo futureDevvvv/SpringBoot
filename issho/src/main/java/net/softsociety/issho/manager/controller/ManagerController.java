@@ -544,11 +544,10 @@ public class ManagerController {
 		cell = row.createCell(1);
 		cell.setCellValue("이름");
 		cell = row.createCell(2);
-		cell.setCellValue("작업량(개인별)");
+		cell.setCellValue("작업진척도");
 		cell = row.createCell(3);
-		cell.setCellValue("작업량(업무별)");
-		cell = row.createCell(4);
 		cell.setCellValue("업무능률");
+	
 
 		// Body
 		for (int i = 0; i < emails.length; i++) {
@@ -558,11 +557,10 @@ public class ManagerController {
 			cell = row.createCell(1);
 			cell.setCellValue(emails[i]);
 			cell = row.createCell(2);
-			cell.setCellValue("개인작업량");
+			cell.setCellValue("작업진척도");
 			cell = row.createCell(3);
-			cell.setCellValue("업무별작업량");
-			cell = row.createCell(4);
-			cell.setCellValue("업무능률수치");
+			cell.setCellValue("업무능률");
+
 			
 		}
 
