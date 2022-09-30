@@ -25,6 +25,11 @@
 	justify-content: center;
 }
 
+#imgSection{
+	margin-left : 200px;
+
+}
+
 #deleteImgBtn {
 	height: 35px;
 	border-radius: 20px;
@@ -89,11 +94,10 @@
 <body>
 <body class="bg-gradient-primary">
 	<div class="container">
-
 		<div class="card o-hidden border-0 shadow-lg my-5">
-			<div class="card-body p-0">
+			<div class="card-body p-3">
 				<!-- Nested Row within Card Body -->
-				<div class="row">
+				<div class="row justify-content-center">
 					<div class="col-lg-7">
 						<div class="p-5">
 							<div class="text-center">
@@ -101,7 +105,7 @@
 							</div>
 							<form class="user" th:action="@{/member/join}" method="POST"
 								onsubmit="return formCheck();" enctype="multipart/form-data">
-								<div class="form-group" id="imgSection">
+								<div class="form-group justify-content-around" id="imgSection">
 									<div class="box">
 										<img id="preview" th:src="@{/img/profile.png}" />
 									</div>
