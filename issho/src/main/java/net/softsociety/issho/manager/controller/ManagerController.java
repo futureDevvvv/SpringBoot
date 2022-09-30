@@ -40,6 +40,7 @@ import net.softsociety.issho.manager.domain.InvitationMember;
 import net.softsociety.issho.manager.domain.MemberTemp;
 import net.softsociety.issho.manager.domain.TaskCnt;
 import net.softsociety.issho.manager.domain.TaskCntDone;
+import net.softsociety.issho.manager.domain.WorkEmail;
 import net.softsociety.issho.manager.service.MailSenderService;
 import net.softsociety.issho.manager.service.ManagerService;
 import net.softsociety.issho.member.dao.MemberDAO;
@@ -529,6 +530,17 @@ public class ManagerController {
 		
 		//DB에 들려서 조인해서 데이터 불러오기
 		
+		
+		
+		ArrayList<WorkEmail> workEmail = new ArrayList<>();
+		
+		for (int i = 0; i < emails.length; i++) {
+			workEmail.get(i).setMemb_mail(emails[i]);
+			log.debug("업무관리 엑셀 이메일:" ,workEmail.get(i).getMemb_mail());
+		}
+		
+		
+	
 		
 		
 		Workbook wb = new XSSFWorkbook();
