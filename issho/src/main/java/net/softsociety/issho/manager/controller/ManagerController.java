@@ -212,8 +212,16 @@ public class ManagerController {
 
 		// 현재 페이지 글 정보
 		// DB에서 게시판의 모든 글을 조회.ArrayList 타입으로 리턴받음.
-		ArrayList<Members> list = service.listManager(prj_domain,navi, searchWord);
+		ArrayList<Members> list = service.listInvitation(prj_domain,navi, searchWord);
 		log.debug("list 결과: {}", list);
+		
+		for(int i = 0; i < list.size(); i++) {
+			if(list.get(i).getMembInv_accept() == null) {
+				list.get(i).setMembInv_accept("초대중");
+			} else {
+				list.get(i).setMembInv_accept("초대완료");
+			}
+		}
 
 		// 리스트를 모델에 저장하고 HTML에서 출력
 		model.addAttribute("navi", navi);

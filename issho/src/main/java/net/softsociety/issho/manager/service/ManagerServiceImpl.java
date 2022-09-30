@@ -139,6 +139,18 @@ public class ManagerServiceImpl implements ManagerService {
 		TaskCntDone taskCntDone = managerDAO.taskCntDone(memEmail);
 		return taskCntDone;
 	}
+
+	@Override
+	public ArrayList<Members> listInvitation(String prj_domain, PageNavigator navi, String searchWord) {
+		HashMap<String, String> map = new HashMap<>();
+		map.put("searchWord", searchWord);
+		map.put("prj_domain", prj_domain);
+		log.debug("서비스단 도메인:" + prj_domain);
+		RowBounds rb = new RowBounds(navi.getStartRecord(),navi.getCountPerPage());
+		ArrayList<Members> list = managerDAO.listInvitation(map, rb);
+		
+		return list;
+	}
 	
 	
 	
