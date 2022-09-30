@@ -127,13 +127,16 @@
 
 									</table>
 								</form> -->
-								
-								
+ 
+                 
+								<div class="row">
 								<div th:each="l:${list}">
-									
-									<div class="card border-left-primary shadow h-100 py-2" style="margin-bottom: 5px; margin-right: 5px;">
+									<div class="card border-left shadow h-100 py-2" style="margin-left: 20px;margin-bottom: 5px; margin-right: 5px; ">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
+                                        <div class="col-auto" style="margin-left: 5px; margin-right: 5px;">
+                                            <i class="fa fa-regular fa-file" style="font-size: xx-large;"></i>
+                                        </div>
                                         <div class="col mr-2">
                                             <!-- <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                                 Earnings (Monthly)</div> -->
@@ -143,15 +146,23 @@
 												style="cursor: pointer;" th:text=${l.driveFile_ogFile}></a>
                                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1" th:text=${l.driveFile_date}></div>
                                         </div>
-                                        <div class="col-auto">
-                                            <i class="fa fa-regular fa-file" style="font-size: xx-large;"></i>
-                                            
-                                        </div>
+                                        
                                     </div>
                                 </div>
                             </div>
-									
 								</div>
+								</div>
+								
+							<!-- 	<div class="container" th:each="l:${list}">
+								  <div class="row">
+								    <div class="col">
+                                    <a
+                                     th:num="${l.driveFile_seq}" onclick="driveDownload(this.getAttribute('num'))"
+									style="cursor: pointer;" th:text=${l.driveFile_ogFile}>
+									</a>
+								    </div>
+								  </div>
+								</div> -->
 								
 								
 								
