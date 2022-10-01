@@ -15,6 +15,15 @@
 		</div>
 	</div>
 	<script>
+	function showPop() {
+
+        console.log('showPop 실행');
+
+        window.open("multiRoom/chatHome", "메신저",
+              "width=500, height=700, top=10, left=10");
+     }
+	
+	
 	let myChartOne = document.getElementById('myChartOne').getContext('2d');
 
 	let barChart = new Chart(myChartOne,{

@@ -225,6 +225,8 @@
 						<div class="row">
 							<div class="col-md-12">
 								<canvas id="myChartOne" width="200" height="200"></canvas>
+								
+								<div id="taskStateChart"></div>
 							</div>
 						</div>
 					</div>
@@ -252,6 +254,16 @@
 
 
 	<script>
+	
+	
+	function showPop() {
+
+        console.log('showPop 실행');
+
+        window.open("multiRoom/chatHome", "메신저",
+              "width=500, height=700, top=10, left=10");
+     }
+	
 		function pagingFormSubmit(currentPage) {
 			var form = document.getElementById('pagingForm');
 			var page = document.getElementById('page');
@@ -267,6 +279,8 @@
 
 		//새로운 태스크 모달창 제어
 		function openModal(id) {
+			
+		    
 			let email = id;
 
 			$.ajax({
@@ -285,6 +299,26 @@
 							insertImg.innerHTML = '<img src="'+ resultMap.profileImg + '" class="rounded"  height="140" width="130" />';
 					 */
 					//$('#modalMembImg').text(resultMap.profileImg);
+					 
+					/*  let taskStateChart = document.getElementById("insertImg"); */
+					 
+/* 					//first page
+					 var requested = resultMap.taskState.requested;
+					 localStorage.setItem("requested", requested);
+					 var progress = resultMap.taskState.progress;
+					 localStorage.setItem("progress", progress);
+					 var done = resultMap.taskState.done;
+					 localStorage.setItem("done", done);
+					 var pending = resultMap.taskState.pending;
+					 localStorage.setItem("pending", pending);
+
+					 console.log(requested);
+					 console.log(progress);
+					 console.log(done);
+					 console.log(pending); */
+					 
+					 
+					$('#modalTaskState').text(resultMap.taskState);
 					$('#modalTaskCntDone').text(resultMap.taskCntDone.taskCntDone);
 					$('#modalTaskCnt').text(resultMap.taskCnt.taskCnt);
 					$('#modalMembMail').text(resultMap.members.memb_mail);
@@ -292,15 +326,74 @@
 					$('#modalMembPhone').text(resultMap.members.memb_phone);
 					$('#modalMembRolename').text(resultMap.members.pjmb_right);
 					$('#modalMembWork').text(resultMap.members.memb_work);
-
+					
+					
+					
 					$("#exampleModal").modal("show");
+					
+/* 					var requested = resultMap.taskState.requested;
+					 localStorage.setItem("requested", requested);
+					 var progress = resultMap.taskState.progress;
+					 localStorage.setItem("progress", progress);
+					 var done = resultMap.taskState.done;
+					 localStorage.setItem("done", done);
+					 var pending = resultMap.taskState.pending;
+					 localStorage.setItem("pending", pending); */
+					 
+						//차트
+						
+						let myChartOne = document.getElementById('myChartOne').getContext('2d');
+
+						
+		/* 				 //second page
+						 var requested = localStorage.getItem("requested");
+						 var progress = localStorage.getItem("progress");
+						 var done = localStorage.getItem("done");
+						 var pending = localStorage.getItem("pending"); */
+	/* 					 
+						 console.log(requested);
+						 console.log(progress);
+						 console.log(done);
+						 console.log(pending);
+						
+						  */
+						
+						  
+						
+							 
+						 
+						  
+						var barChart = new Chart(myChartOne, {
+							type : 'polarArea', //pir,line,doughnut,polarArea
+							data : {
+								labels : [ '진행전', '진행중', '완료', '보류' ],
+								datasets : [ {
+									labels : '업무 평균 진행도',
+									data : [resultMap.taskState.requested
+											,resultMap.taskState.progress
+											,resultMap.taskState.done
+											,resultMap.taskState.pending],
+									backgroundColor : [ 'rgba(255, 99, 132, 0.2)',
+											'rgba(255, 206, 86, 0.2)',
+											'rgba(54, 162, 235, 0.2)',
+											'rgba(255, 190, 260, 0.2)', ],
+									borderColor : [ 'rgba(255, 99, 132, 1)',
+											'rgba(255, 206, 86, 1)', 'rgba(54, 162, 235, 1)',
+											'rgba(255, 190, 260, 1)', ],
+									borderWidth : 1
+								} ]
+							},
+							options : {
+								responsive : false
+							}
+						})
 				},
 				error : function(e) {
 					alert(JSON.stringify(e));
 				}
 			});
-
 		}
+		
 
 		//체크 박스
 		function checkedBox() {
@@ -377,40 +470,20 @@
 							});
 				});
 
+
 		$("#closeNewTask").click(function(e) {
 			e.preventDefault();
+			barChart.destroy();
 			$("#exampleModal").modal("hide");
-		})
 
-		//차트
-		let myChartOne = document.getElementById('myChartOne').getContext('2d');
+		}) 
+
 		
 		
+
 		
-		
-		let barChart = new Chart(myChartOne, {
-			type : 'doughnut', //pir,line,doughnut,polarArea
-			data : {
-				labels : [ '진행전', '진행중', '완료', '보류' ],
-				datasets : [ {
-					labels : '업무 평균 진행도',
-					data : [ 10, 50, 30, 10 ],
-					backgroundColor : [ 'rgba(255, 99, 132, 0.2)',
-							'rgba(255, 206, 86, 0.2)',
-							'rgba(54, 162, 235, 0.2)',
-							'rgba(255, 190, 260, 0.2)', ],
-					borderColor : [ 'rgba(255, 99, 132, 1)',
-							'rgba(255, 206, 86, 1)', 'rgba(54, 162, 235, 1)',
-							'rgba(255, 190, 260, 1)', ],
-					borderWidth : 1
-				} ]
-			},
-			options : {
-				responsive : false
-			}
-		})
 	</script>
-
+	
 
 </body>
 </html>
