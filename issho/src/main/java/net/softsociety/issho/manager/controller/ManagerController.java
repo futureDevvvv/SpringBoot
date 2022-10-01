@@ -40,6 +40,7 @@ import net.softsociety.issho.manager.domain.InvitationMember;
 import net.softsociety.issho.manager.domain.MemberTemp;
 import net.softsociety.issho.manager.domain.TaskCnt;
 import net.softsociety.issho.manager.domain.TaskCntDone;
+import net.softsociety.issho.manager.domain.TaskState;
 import net.softsociety.issho.manager.domain.WorkEmail;
 import net.softsociety.issho.manager.service.MailSenderService;
 import net.softsociety.issho.manager.service.ManagerService;
@@ -148,7 +149,9 @@ public class ManagerController {
 		model.addAttribute("navi", navi);
 		model.addAttribute("list", list);
 		model.addAttribute("searchWord", searchWord);
-
+		
+		
+		
 		return "managerView/managerProjects";
 	}
 
@@ -182,6 +185,7 @@ public class ManagerController {
 		Map<String, Object> result = new HashMap<>();
 		result.put("projects", projects);
 		result.put("taskList", taskList);
+		
 		
 
 		return result;
@@ -415,25 +419,27 @@ public class ManagerController {
 		
 		log.debug("멤버정보 이메일 : " + memEmail); 
 
-		/* members.setMemb_mail(memEmail); */
-		
-		log.debug("멤버정보 이메일 2 : " + memEmail); 
-
-		
 		log.debug("멤버 정보: " + members);
+		
 		TaskCnt taskCnt = service.taskCnt(memEmail);
 		TaskCntDone taskCntDone = service.taskCntDone(memEmail);
+		TaskState taskState = service.taskState(memEmail);
+		
 		log.debug("태스크 할당량 : " + taskCnt);
 		log.debug("태스크 달성량 : " + taskCntDone);
+		log.debug("태스크 달성량 : " + taskState);
+		
 		
 		model.addAttribute("members", members);
 		model.addAttribute("taskCnt", taskCnt);
 		model.addAttribute("taskCntDone", taskCntDone);
+		model.addAttribute("taskState", taskState);
 
 		Map<String, Object> result = new HashMap<>();
 		result.put("members", members);
 		result.put("taskCnt", taskCnt);
 		result.put("taskCntDone", taskCntDone);
+		result.put("taskState", taskState);
 		
 
 		return result;

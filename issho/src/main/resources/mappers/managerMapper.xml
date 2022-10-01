@@ -268,4 +268,43 @@
 		order by
 		1 desc
 	</select>
+	
+	
+	<select id="taskState" parameterType="String"
+		resultType="TaskState">
+		WITH temp AS
+		(SELECT COUNT(task_seq) AS cnt
+		FROM taskstaff s
+		WHERE s.memb_mail = #{memb_mail}
+		),
+requested AS
+        (SELECT COUNT(t.task_seq) AS req
+        FROM taskstaff s, task t
+        WHERE t.task_seq = s.task_seq
+        AND s.memb_mail = #{memb_mail}
+        AND t.task_state = 0
+        ),
+progress AS
+        (SELECT COUNT(t.task_seq) AS pro
+        FROM taskstaff s, task t
+        WHERE t.task_seq = s.task_seq
+        AND s.memb_mail = #{memb_mail}
+        AND t.task_state = 1
+        ),
+don AS 
+        (SELECT COUNT(t.task_seq) AS d
+        FROM taskstaff s, task t
+        WHERE t.task_seq = s.task_seq
+        AND s.memb_mail = #{memb_mail}
+        AND t.task_state = 2
+        ),
+pending AS (SELECT COUNT(t.task_seq) AS pen
+        FROM taskstaff s, task t
+        WHERE t.task_seq = s.task_seq
+        AND s.memb_mail = #{memb_mail}
+        AND t.task_state = 3
+        )
+SELECT ROUND((requested.req/temp.cnt),1)*100 AS requested, ROUND((progress.pro/temp.cnt),1)*100 AS progress, ROUND((don.d/temp.cnt),1)*100 AS done, ROUND((pending.pen/temp.cnt),1)*100 AS pending
+FROM temp, requested, progress, don, pending
+	</select>
 </mapper>
