@@ -57,8 +57,7 @@ ul#memList li.mem-item:hover {
 	color: yellow;
 }
 
-
-.profileBox {
+.profileBox2 {
 	position: relative;
 }
 
@@ -74,16 +73,7 @@ ul#memList li.mem-item:hover {
 .btn-close {
 	border: none;
 	background-color: transparent;
-}
-
-.profileBox {
-	width: 50px;
-	height: 50px;
-	border-radius: 70px;
-	overflow: hidden;
-	float: left;
-	position: relative;
-}
+} 
 
 .profilePic {
 	width: 100%;
@@ -331,7 +321,7 @@ ul#memList li.mem-item:hover {
 						memberList += `<div class="profile">
 											<input type="hidden" id="m_mail" value="${member.memb_mail}">
 											<input type="hidden" id="m_name" value="${member.memb_name}">
-											<div class="profileBox">
+											<div class="profileBox2">
 												<div class="profilePicBox">
 													<img class="profilePic" src="${member.memb_ogfile}"
 														onerror="this.src='../../img/profile.png'">
@@ -367,7 +357,7 @@ ul#memList li.mem-item:hover {
  
 			$(this).find(".profilePicBox").css('border', '3px solid #727272');
 			
-			$(this).find(".profileBox").append(
+			$(this).find(".profileBox2").append(
 				'<span class="membInfo">'+ memb_name + '  ' + memb_mail + '</span>'		
 			);
 		}, function(){
