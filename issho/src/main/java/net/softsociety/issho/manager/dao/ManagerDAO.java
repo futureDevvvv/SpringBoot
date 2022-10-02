@@ -11,6 +11,7 @@ import net.softsociety.issho.manager.domain.InvitationMember;
 import net.softsociety.issho.manager.domain.MemberTemp;
 import net.softsociety.issho.manager.domain.TaskCnt;
 import net.softsociety.issho.manager.domain.TaskCntDone;
+import net.softsociety.issho.manager.domain.TaskState;
 import net.softsociety.issho.member.domain.Members;
 import net.softsociety.issho.project.domain.ProjectMember;
 
@@ -55,6 +56,10 @@ public interface ManagerDAO {
 	public ProjectMember getPrjMem(ProjectMember prjMem);
 
 	public void insertPrjMem(ProjectMember prjMem);
+
+	public ArrayList<Members> listInvitation(HashMap<String, String> map, RowBounds rb);
+
+	public TaskState taskState(String memEmail);
 
 
 }
