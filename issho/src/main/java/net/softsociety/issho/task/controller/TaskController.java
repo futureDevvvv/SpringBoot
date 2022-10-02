@@ -79,21 +79,13 @@ public class TaskController {
 	 * 
 	 * @author 윤영혜, 신승훈
 	 */
-
-
+	
 	@GetMapping("/taskList")
 	public String taskList(HttpServletRequest request, @AuthenticationPrincipal UserDetails user, 
 			@RequestParam(name = "page", defaultValue = "1") int page, String searchWord,
 			Model model, String domain) {
 		log.debug("TaskController [taskList] Start");
 	
-
-	@GetMapping("/taskList")
-	public String taskList(HttpServletRequest request, @AuthenticationPrincipal UserDetails user,
-			@RequestParam(name = "page", defaultValue = "1") int page, String searchWord, Model model, String domain) {
-		log.debug("Controller [taskList] Start");
-
-
 		String id = user.getUsername();
 
 		// 신승훈 * prj_domain 설정
@@ -121,7 +113,6 @@ public class TaskController {
 
 		// 신승훈 * 메인 화면 첫 진입시 테스크 전체 검색
 		List<Task> tasklist = taskservice.SelectAlltask(navi, prj_domain, searchWord);
-
 		log.debug("TaskController [taskList] tasklist : {}", tasklist);
 		
 		List<Taskstaff> pjmb = taskservice.projectMembers(prj_domain);
@@ -131,18 +122,7 @@ public class TaskController {
 		model.addAttribute("page", page);
 		model.addAttribute("pjmb", pjmb);
 		
-		log.debug("TaskController [taskList] End");
-		
-
-		log.debug("Controller [taskList] tasklist : {}", tasklist);
-
-//		// 신승훈 * 테스크 전체 검색 + 멤버 테이블 멤버 NAME 검색
-//		ArrayList<Task> tasklist = (ArrayList<Task>) taskservice.SelectAlltask(prj_domain);
-//		log.debug("tasklist : {}", tasklist);
-		model.addAttribute("tasklist", tasklist);
-		model.addAttribute("page", page);
-
-		log.debug("Controller [taskList] End");
+		log.debug("TaskController [taskList] End");	
 
 		return "taskView/task_List";
 	}
@@ -194,9 +174,6 @@ public class TaskController {
 
 		log.debug("TaskController [selectTask] Start");
 		log.debug("TaskController [selectTask] param : {}", param);
-	
-		log.debug("Controller [selectTask] Start");
-		log.debug("Controller [selectTask] param : {}", param);
 
 		String calledValue = request.getServletPath();
 		String[] splitedUrl = calledValue.split("/");
@@ -237,7 +214,7 @@ public class TaskController {
 		log.debug("navi : {}", navi);
 
 		List<Task> taskList = taskservice.selectTaskAll(navi, orderList);
-		log.debug("Controller [selectTask] taskList : {}", taskList);
+		log.debug("TaskController [selectTask] taskList : {}", taskList);
 		Map<String, Object> resultObj = new HashMap<>();
 		resultObj.put("taskList", taskList);
 		resultObj.put("page", page);
@@ -252,7 +229,7 @@ public class TaskController {
 	@PostMapping("/bookmark")
 	public boolean bookmark(@RequestParam String taskSeq, @AuthenticationPrincipal UserDetails user) {
 		log.debug("TaskController [bookmark] Start");
-		log.debug("taskSeq : {}", taskSeq);
+		log.debug("TaskController [bookmark] taskSeq : {}", taskSeq);
 
 		Bookmark bookmark = new Bookmark();
 		bookmark.setTask_seq(Integer.parseInt(taskSeq));
@@ -277,7 +254,7 @@ public class TaskController {
 	@PostMapping("/performChange")
 	public Taskstaff performChange(@ModelAttribute Taskstaff taskStaff, @AuthenticationPrincipal UserDetails user) {
 		log.debug("TaskController [performChange] Start");
-		log.debug("taskStaff : {}", taskStaff);
+		log.debug("TaskController [performChange] taskStaff : {}", taskStaff);
 
 		taskStaff.setMemb_mail(user.getUsername());
 
@@ -295,7 +272,7 @@ public class TaskController {
 
 		Task task = taskservice.stateChange(task_seq, user.getUsername());
 		if (task == null)
-			throw new Exception("Controller [stateChange] 에러");
+			throw new Exception("TaskController [stateChange] 에러");
 
 		log.debug("TaskController [stateChange] End");
 		return task;
