@@ -61,5 +61,11 @@
 		SELECT * FROM chatroom
 		WHERE chatroom_seq = #{chatroom_seq}
 	</select>
+	
+	<delete id="leaveChat" parameterType="ChatMember">
+		DELETE FROM chatmember
+		WHERE chatroom_seq = #{chatroom_seq}
+		AND chat_member = #{chatmember}
+	</delete>
 
 </mapper>

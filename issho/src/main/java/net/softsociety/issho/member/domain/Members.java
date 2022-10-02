@@ -29,5 +29,8 @@ public class Members{
 	private String prj_domain;
 	private String pjmb_right;
 	
+	//지윤 초대관련
+	private String membInv_accept;
+	
 	
 }

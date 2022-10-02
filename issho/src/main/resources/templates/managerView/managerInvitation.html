@@ -138,7 +138,7 @@
 														<td th:text=${l.memb_name}></td>
 														<td th:text=${l.pjmb_right}></td>
 														<td th:text=${l.memb_mail}></td>
-														<td>초대중</td>
+														<td th:text=${l.membInv_accept}></td>
 														
 													</tr>
 												</tbody>
@@ -204,6 +204,14 @@
 	
 	
 	<script>
+	function showPop() {
+
+        console.log('showPop 실행');
+
+        window.open("multiRoom/chatHome", "메신저",
+              "width=500, height=700, top=10, left=10");
+     }
+	
 		function pagingFormSubmit(currentPage) {
 			var form = document.getElementById('pagingForm');
 			var page = document.getElementById('page');

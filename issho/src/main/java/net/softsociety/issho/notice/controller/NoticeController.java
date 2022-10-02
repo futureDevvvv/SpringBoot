@@ -85,7 +85,7 @@ public class NoticeController {
 			model.addAttribute("searchWord", searchWord);
 			
 			log.debug("----- 호출 : noticeView/noticeList");	
-			return "./noticeView/noticeList";
+			return "noticeView/noticeList";
 	}
 	
 	@GetMapping("readNotice")
@@ -94,7 +94,7 @@ public class NoticeController {
 			Model model) { 
 
 		log.debug("----- 진입 GET : notice/readNotice");
-		log.debug("----- PARAM: {} ", noticeNum);
+		log.debug("-----noticeNum PARAM: {} ", noticeNum);
 
 		NoticeDetail noticeDetail = noticeService.readNotice(noticeNum, true);
 		if (noticeDetail == null) {
@@ -112,7 +112,7 @@ public class NoticeController {
 		log.debug("----- commentList : {} ", commentList);
 			
 		log.debug("----- 호출 : notice/readNotice");
-		return "/noticeView/readNotice";
+		return "noticeView/readNotice";
 	}	
 
 	@GetMapping("fileDownload")
@@ -182,7 +182,7 @@ public class NoticeController {
 		int result = noticeService.writeNotice(notice);
 		
 		log.debug("----- 호출 : notice/noticeList");	
-		return "redirect:/notice/noticeList";
+		return "redirect:./notice/noticeList";
 	}
 
 	@GetMapping("writeNotice")
@@ -250,7 +250,7 @@ public class NoticeController {
 		}
 		
 		log.debug("----- 호출 : notice/readNotice?notice_seq=notice.getNotice_seq()");
-		return "redirect:/notice/readNotice?notice_seq=" + notice.getNotice_seq();
+		return "redirect:./notice/readNotice?notice_seq=" + notice.getNotice_seq();
 	}
 
 	@GetMapping ("deleteNotice")

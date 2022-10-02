@@ -42,6 +42,7 @@
 									id="noticeUpdateForm">
 									<input type="hidden" name="noticeNum" id="noticeNum">
 								</form>
+								
 					<!-- Collapse 시작 -->
 					  <div class="card-header  bg-orange" id="headingOne" style="background-color:rgb(255, 249, 227)">
 					      <h3 class="mb-0">
@@ -57,9 +58,8 @@
 <!--  나중에 데이터 정비되면 바꾸어야 됨	-->						
 							<div th:if="${#authentication.name} == ${noticeDetail.notice_writer}">
 								<div>
-									<a class="btn btn-sm bg-gradient-primary text-white" th:num="${notice.notice_seq}"
-													th:onclick="updateNotice(this.getAttribute('num'))"
-													>　수정　</a>
+								
+									<a class="btn btn-sm bg-gradient-primary text-white" th:href="@{./updateNotice(notice_seq=${noticeDetail.notice_seq})}">수정</a>              
 	 								<a class="btn btn-sm bg-gradient-primary text-white" th:href="|javascript:deleteNotice(${noticeDetail.notice_seq})|">　삭제　</a>		
  <!--									<a class="btn btn-sm bg-gradient-primary text-white" data-toggle="modal" data-target="#deleteNoticeModal">　삭제　</a> -->
 								</div>
@@ -83,7 +83,7 @@
 
 				    <!-- 댓글 입력 폼 -->
 					<div class="mb-3">
-						<form id="CommentForm" th:action="@{/notice/readNotice}" method="get">
+						<form id="CommentForm" th:action="@{../notice/readNotice}" method="get">
 							<div style="display:inline" height="50px">
 								<input type="hidden" name="notice_seq" id="notice_seq" th:value="${noticeDetail.notice_seq}"/>
 								<input type="text" class="col-lg-10" id="noticeCmt_contents" name="noticeCmt_contents" placeholder="댓글을 입력하세요">

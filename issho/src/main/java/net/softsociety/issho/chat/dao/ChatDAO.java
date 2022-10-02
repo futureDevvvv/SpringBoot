@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import net.softsociety.issho.chat.domain.ChatMember;
 import net.softsociety.issho.chat.domain.ChatMsg;
 import net.softsociety.issho.chat.domain.Chatrooms;
 import net.softsociety.issho.member.domain.Members;
@@ -34,5 +35,7 @@ public interface ChatDAO {
 	List<ChatMsg> recentMsgs();
 
 	Chatrooms chatroomInfo(String chatroom_seq);
+
+	void leaveChat(ChatMember chatmember);
 
 }

@@ -6,11 +6,14 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import lombok.extern.slf4j.Slf4j;
 import net.softsociety.issho.chat.dao.ChatDAO;
+import net.softsociety.issho.chat.domain.ChatMember;
 import net.softsociety.issho.chat.domain.ChatMsg;
 import net.softsociety.issho.chat.domain.Chatrooms;
 import net.softsociety.issho.member.domain.Members;
 
+@Slf4j
 @Service
 public class ChatServiceImpl implements ChatService{
 	
@@ -39,7 +42,9 @@ public class ChatServiceImpl implements ChatService{
 		
 		List<Members> chatMemList = chatDao.chatMemList(roomid);
 		
-		return null;
+		log.debug("chatMemblist : {}", chatMemList);
+		
+		return chatMemList;
 	}
 
 	@Override
@@ -73,6 +78,13 @@ public class ChatServiceImpl implements ChatService{
 		Chatrooms chatroom = chatDao.chatroomInfo(roomid);
 		
 		return chatroom;
+	}
+
+	@Override
+	public void leaveChat(ChatMember chatmember) {
+		
+		chatDao.leaveChat(chatmember);
+		
 	}
 
 }

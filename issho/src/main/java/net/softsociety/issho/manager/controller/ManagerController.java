@@ -20,7 +20,6 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -40,6 +39,8 @@ import net.softsociety.issho.manager.domain.InvitationMember;
 import net.softsociety.issho.manager.domain.MemberTemp;
 import net.softsociety.issho.manager.domain.TaskCnt;
 import net.softsociety.issho.manager.domain.TaskCntDone;
+import net.softsociety.issho.manager.domain.TaskState;
+import net.softsociety.issho.manager.domain.WorkEmail;
 import net.softsociety.issho.manager.service.MailSenderService;
 import net.softsociety.issho.manager.service.ManagerService;
 import net.softsociety.issho.member.dao.MemberDAO;
@@ -147,7 +148,9 @@ public class ManagerController {
 		model.addAttribute("navi", navi);
 		model.addAttribute("list", list);
 		model.addAttribute("searchWord", searchWord);
-
+		
+		
+		
 		return "managerView/managerProjects";
 	}
 
@@ -182,6 +185,7 @@ public class ManagerController {
 		result.put("projects", projects);
 		result.put("taskList", taskList);
 		
+		
 
 		return result;
 
@@ -211,8 +215,16 @@ public class ManagerController {
 
 		// 현재 페이지 글 정보
 		// DB에서 게시판의 모든 글을 조회.ArrayList 타입으로 리턴받음.
-		ArrayList<Members> list = service.listManager(prj_domain,navi, searchWord);
+		ArrayList<Members> list = service.listInvitation(prj_domain,navi, searchWord);
 		log.debug("list 결과: {}", list);
+		
+		for(int i = 0; i < list.size(); i++) {
+			if(list.get(i).getMembInv_accept() == null) {
+				list.get(i).setMembInv_accept("초대중");
+			} else {
+				list.get(i).setMembInv_accept("초대완료");
+			}
+		}
 
 		// 리스트를 모델에 저장하고 HTML에서 출력
 		model.addAttribute("navi", navi);
@@ -406,25 +418,27 @@ public class ManagerController {
 		
 		log.debug("멤버정보 이메일 : " + memEmail); 
 
-		/* members.setMemb_mail(memEmail); */
-		
-		log.debug("멤버정보 이메일 2 : " + memEmail); 
-
-		
 		log.debug("멤버 정보: " + members);
+		
 		TaskCnt taskCnt = service.taskCnt(memEmail);
 		TaskCntDone taskCntDone = service.taskCntDone(memEmail);
+		TaskState taskState = service.taskState(memEmail);
+		
 		log.debug("태스크 할당량 : " + taskCnt);
 		log.debug("태스크 달성량 : " + taskCntDone);
+		log.debug("태스크 달성량 : " + taskState);
+		
 		
 		model.addAttribute("members", members);
 		model.addAttribute("taskCnt", taskCnt);
 		model.addAttribute("taskCntDone", taskCntDone);
+		model.addAttribute("taskState", taskState);
 
 		Map<String, Object> result = new HashMap<>();
 		result.put("members", members);
 		result.put("taskCnt", taskCnt);
 		result.put("taskCntDone", taskCntDone);
+		result.put("taskState", taskState);
 		
 
 		return result;
@@ -531,6 +545,17 @@ public class ManagerController {
 		
 		
 		
+		ArrayList<WorkEmail> workEmail = new ArrayList<>();
+		
+		for (int i = 0; i < emails.length; i++) {
+			workEmail.get(i).setMemb_mail(emails[i]);
+			log.debug("업무관리 엑셀 이메일:" ,workEmail.get(i).getMemb_mail());
+		}
+		
+		
+	
+		
+		
 		Workbook wb = new XSSFWorkbook();
 		Sheet sheet = wb.createSheet("업무리스트");
 		Row row = null;
@@ -544,11 +569,10 @@ public class ManagerController {
 		cell = row.createCell(1);
 		cell.setCellValue("이름");
 		cell = row.createCell(2);
-		cell.setCellValue("작업량(개인별)");
+		cell.setCellValue("작업진척도");
 		cell = row.createCell(3);
-		cell.setCellValue("작업량(업무별)");
-		cell = row.createCell(4);
 		cell.setCellValue("업무능률");
+	
 
 		// Body
 		for (int i = 0; i < emails.length; i++) {
@@ -558,11 +582,10 @@ public class ManagerController {
 			cell = row.createCell(1);
 			cell.setCellValue(emails[i]);
 			cell = row.createCell(2);
-			cell.setCellValue("개인작업량");
+			cell.setCellValue("작업진척도");
 			cell = row.createCell(3);
-			cell.setCellValue("업무별작업량");
-			cell = row.createCell(4);
-			cell.setCellValue("업무능률수치");
+			cell.setCellValue("업무능률");
+
 			
 		}
 
