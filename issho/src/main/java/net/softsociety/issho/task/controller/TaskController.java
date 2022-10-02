@@ -1,5 +1,9 @@
 package net.softsociety.issho.task.controller;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -7,7 +11,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,6 +22,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -49,7 +56,7 @@ public class TaskController {
 	@Value("${user.task.group}")
 	int pagePerGroup;
 
-	// 신승훈 * 게시판 첨부파일 업로드 경로
+	// 신승훈 * 테스크 첨부파일 업로드 경로
 	@Value("${spring.servlet.multipart.location}")
 	String uploadPath;
 
@@ -77,7 +84,7 @@ public class TaskController {
 	public String taskList(HttpServletRequest request, @AuthenticationPrincipal UserDetails user, 
 			@RequestParam(name = "page", defaultValue = "1") int page, String searchWord,
 			Model model, String domain) {
-		log.debug("Controller [taskList] Start");
+		log.debug("TaskController [taskList] Start");
 	
 		String id = user.getUsername();
 
@@ -106,15 +113,16 @@ public class TaskController {
 		
 		// 신승훈 * 메인 화면 첫 진입시 테스크 전체 검색
 		List<Task> tasklist = taskservice.SelectAlltask(navi, prj_domain, searchWord);
-		log.debug("Controller [taskList] tasklist : {}", tasklist);
+		log.debug("TaskController [taskList] tasklist : {}", tasklist);
+		
+		List<Taskstaff> pjmb = taskservice.projectMembers(prj_domain);
+		log.debug("TaskController [taskList] pjmb : {}", pjmb);
 
-//		// 신승훈 * 테스크 전체 검색 + 멤버 테이블 멤버 NAME 검색
-//		ArrayList<Task> tasklist = (ArrayList<Task>) taskservice.SelectAlltask(prj_domain);
-//		log.debug("tasklist : {}", tasklist);
 		model.addAttribute("tasklist", tasklist);
 		model.addAttribute("page", page);
+		model.addAttribute("pjmb", pjmb);
 		
-		log.debug("Controller [taskList] End");
+		log.debug("TaskController [taskList] End");
 		
 		return "taskView/task_List";
 	}
@@ -135,22 +143,24 @@ public class TaskController {
 	@ResponseBody @PostMapping("/showTaskModal")
 
 	public Map<String, Object> showTaskModal(String taskSeq) {
-		log.debug("Controller [showTaskModal] Start");
+		log.debug("TaskController [showTaskModal] Start");
 
 		Task showTask = taskservice.selectTaskByTaskSeq(Integer.parseInt(taskSeq));
-		log.debug("Controller [showTaskModal] showTask : {}", showTask);
+		log.debug("TaskController [showTaskModal] showTask : {}", showTask);
 
 		ArrayList<Taskstaff> showTaskstaff = taskservice.selectStaff(Integer.parseInt(taskSeq));
-		log.debug("Controller [showTaskModal] showTaskstaff : {}", showTaskstaff);
+		log.debug("TaskController [showTaskModal] showTaskstaff : {}", showTaskstaff);
 
 		// 신승훈 * 상세보기 첨부파일 확인
 		List<Taskfile> taskFileList = taskservice.selectTaskFile(taskSeq);
-
+		log.debug("TaskController [showTaskModal] taskFileList : {}", taskFileList);
+		
 		Map<String, Object> result = new HashMap<>();
 		result.put("showTask", showTask);
 		result.put("showStaff", showTaskstaff);
-
-		log.debug("Controller [showTaskModal] End");
+		result.put("taskFileList", taskFileList);
+		
+		log.debug("TaskController [showTaskModal] End");
 
 		return result;
 	}
@@ -160,8 +170,8 @@ public class TaskController {
 	@PostMapping("/selectTask")
 	public Map<String, Object> selectTask(HttpServletRequest request, @RequestParam Map<String, String> param,
 			@AuthenticationPrincipal UserDetails user) {
-		log.debug("Controller [selectTask] Start");
-		log.debug("Controller [selectTask] param : {}", param);
+		log.debug("TaskController [selectTask] Start");
+		log.debug("TaskController [selectTask] param : {}", param);
 	
 		String calledValue = request.getServletPath();
 		String[] splitedUrl = calledValue.split("/");
@@ -194,7 +204,7 @@ public class TaskController {
 		if (!searchWord.equals(""))
 			orderList.put("searchWord", searchWord);
 		orderList.put("prj_domain", prj_domain);
-		log.debug("Controller [selectTask] orderList : {}", orderList);
+		log.debug("TaskController [selectTask] orderList : {}", orderList);
 
 		// 신승훈 * 네비
 		int totalCount = taskservice.countAllBoard(orderList);
@@ -207,7 +217,7 @@ public class TaskController {
 		resultObj.put("taskList", taskList);
 		resultObj.put("page", page);
 		resultObj.put("navi", navi);
-		log.debug("Controller [selectTask] End");
+		log.debug("TaskController [selectTask] End");
 
 		return resultObj;
 	}
@@ -216,7 +226,7 @@ public class TaskController {
 	@ResponseBody
 	@PostMapping("/bookmark")
 	public boolean bookmark(@RequestParam String taskSeq, @AuthenticationPrincipal UserDetails user) {
-		log.debug("Controller [bookmark] Start");
+		log.debug("TaskController [bookmark] Start");
 		log.debug("taskSeq : {}", taskSeq);
 
 		Bookmark bookmark = new Bookmark();
@@ -226,13 +236,13 @@ public class TaskController {
 		try {
 			// 신승훈 * 즐겨찾기 추가
 			taskservice.insertBookmark(bookmark);
-			log.debug("Controller [bookmark] End");
+			log.debug("TaskController [bookmark] End");
 			return true;
 		} catch (Exception e) {
 			log.debug(e.getMessage());
 			// 신승훈 * 즐겨찾기 삭제
 			taskservice.deleteBookmark(bookmark);
-			log.debug("Controller [bookmark] End");
+			log.debug("TaskController [bookmark] End");
 			return false;
 		}
 	}
@@ -241,14 +251,14 @@ public class TaskController {
 	@ResponseBody
 	@PostMapping("/performChange")
 	public Taskstaff performChange(@ModelAttribute Taskstaff taskStaff, @AuthenticationPrincipal UserDetails user) {
-		log.debug("Controller [performChange] Start");
+		log.debug("TaskController [performChange] Start");
 		log.debug("taskStaff : {}", taskStaff);
 
 		taskStaff.setMemb_mail(user.getUsername());
 
 		taskStaff = taskservice.updatePerform(taskStaff);
 
-		log.debug("Controller [performChange] End");
+		log.debug("TaskController [performChange] End");
 		return taskStaff;
 	}
 
@@ -256,13 +266,13 @@ public class TaskController {
 	@ResponseBody
 	@PostMapping("/stateChange")
 	public Task stateChange(@RequestParam int task_seq, @AuthenticationPrincipal UserDetails user) throws Exception {
-		log.debug("Controller [stateChange] Start");
+		log.debug("TaskController [stateChange] Start");
 
 		Task task = taskservice.stateChange(task_seq, user.getUsername());
 		if (task == null)
 			throw new Exception("Controller [stateChange] 에러");
 
-		log.debug("Controller [stateChange] End");
+		log.debug("TaskController [stateChange] End");
 		return task;
 	}
 
@@ -352,4 +362,48 @@ public class TaskController {
 		log.debug("task 객체 처리 후 : {}", task);
 		return "redirect:/" + prj_domain + "/task/taskList";
 	}
+	
+	// * 신승훈 첨부파일 다운로드
+	@GetMapping(value = "/download")
+	public String getDownload(@RequestParam("fileSeq") String tfileSeq, 
+						HttpServletResponse response) {
+		
+		log.debug("TaskController [getDownload] Start");
+		// * 신승훈 첨부파일 다운로드
+		Taskfile file = taskservice.selectTaskFileByTfileSeq(tfileSeq);
+		
+		//원래의 파일명
+		String originalfile = new String(file.getTfile_ogfile());
+		try {
+			response.setHeader("Content-Disposition", 
+					" attachment;filename="+ URLEncoder.encode(originalfile, "UTF-8"));
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		
+		//저장된 파일 경로
+		String fullPath = uploadPath + "/" + file.getTfile_savefile();
+		
+		
+		log.debug("fullPath: " + fullPath);
+		
+		//서버의 파일을 읽을 입력 스트림과 클라이언트에게 전달할 출력스트림
+		FileInputStream filein = null;
+		ServletOutputStream fileout = null;
+		
+		try {
+			filein = new FileInputStream(fullPath);
+			fileout = response.getOutputStream();
+			
+			//Spring의 파일 관련 유틸 이용하여 출력
+			FileCopyUtils.copy(filein, fileout);
+			
+			filein.close();
+			fileout.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}	
 }

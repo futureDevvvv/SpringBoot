@@ -34,6 +34,8 @@ public interface TaskService {
 	public Task stateChange(int task_seq, String usrid);
 	// 신승훈 * 상세보기 첨부파일 확인
 	public List<Taskfile> selectTaskFile(String taskSeq);
+	
+	public Taskfile selectTaskFileByTfileSeq(String fileSeq);
 
 
 	//새로운 태스크 추가

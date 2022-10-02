@@ -202,4 +202,24 @@
 		AND noticeCmt_writer = #{noticeCmt_writer}
 </delete>
 
+<!-- 신승훈 메인창 목록 (최신 공지사항) -->
+<select id="selectMainNotice" resultType="Notice">
+<![CDATA[
+	select 
+		*
+    FROM
+        (SELECT 
+			notice_seq,
+			notice_name,
+			prj_domain
+		FROM 
+			notice
+        WHERE		 
+			prj_domain = #{prj_domain}
+        ORDER BY notice_seq DESC)
+	WHERE
+		ROWNUM <= 4
+	]]>	
+</select>
+
 </mapper>

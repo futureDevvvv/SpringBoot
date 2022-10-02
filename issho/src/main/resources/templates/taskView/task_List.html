@@ -50,11 +50,57 @@ ul#memList li.mem-item:hover {
 }
 
 .taskCard {
-	width: 170%;
+	width: 140%;
 }
 
 .bookmarked {
 	color: yellow;
+}
+
+.profileBox {
+	position: relative;
+}
+
+.profilePicBox {
+	width: 50px;
+	height: 50px;
+	border-radius: 70px;
+	overflow: hidden;
+	float: left;
+	position: relative;
+}
+
+.profilePic {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	position: absolute;
+	top: 0;
+	left: 0;
+	margin: 0;
+	padding: 0;
+}
+
+.membInfo {
+	background-color: #404040;
+	color: #fff;
+	margin-top: 55px;
+	margin-left: -110px;
+	text-align: center;
+	border-radius: 6px;
+	padding: 5px;
+	position: absolute; /* 절대 위치를 사용 */
+	z-index: 1;
+}
+
+.membInfo::after {
+	content: " ";
+	position: absolute;
+	bottom: 100%; /* At the top of the tooltip */
+	left: 50%;
+	border-width: 5px;
+	border-style: solid;
+	border-color: transparent transparent #404040 transparent;
 }
 </style>
 <script type="text/javascript" th:inline="javascript">
@@ -62,6 +108,15 @@ ul#memList li.mem-item:hover {
 	let task_state = '';
 	let task_rank = '';
 	let bookmark = '';
+	let pjMember = [[${pjmb}]];
+	
+	function showPop() {
+
+        console.log('showPop 실행');
+
+        window.open("multiRoom/chatHome", "메신저",
+              "width=500, height=700, top=10, left=10");
+     }
 	
 	function pagingFormSubmit(currentPage) {
 		var searchWord = $('#searchWord').val();
@@ -157,7 +212,7 @@ ul#memList li.mem-item:hover {
 		let taskHTML = '';
 		for(let task of taskList){
 			taskHTML += `
-				<div class="card shadow h-20 py-2 mt-3 taskCard">
+				<div class="card shadow h-20 py-2 mt-2 taskCard">
 				<div class="card-body clickTask" taskSeq="${task.task_seq}">	
 					<div class="no-gutters align-items-center">
 						<div class="row mr-2">
@@ -176,32 +231,41 @@ ul#memList li.mem-item:hover {
 								
 				taskHTML += `</div>
 							
-							<div class="col-5 row">
+							<div class="col-3 row">
 								<div class="h5 col-12 font-weight-bold text-uppercase mb-1">
 									${task.task_name}
 								</div>
 								<div class="col-12 mb-0 font-weight-bold text-gray-800">
-									할당자 ${task.task_sender}
+									할당자 : ${task.memb_name}
 								</div>
 							</div>
 							<div class="col-2">`;
 							
+				taskHTML += '<div class="col-12 pl-4 mb-0 font-weight-bold text-gray-800">우선순위</div>';
+							
 				if(task.task_rank == 0)
-					taskHTML += '<div class="h5 mt-3 mb-0 font-weight-bold text-gray-800 text-warning">우선순위 : 낮음';
+					
+					taskHTML += '<div class="h5 ml-4 mt-1 mb-2 font-weight-bold text-gray-800 btn btn-warning text-white">낮음';
 				if(task.task_rank == 1)
-					taskHTML += '<div class="h5 mt-3 mb-0 font-weight-bold text-gray-800 text-primary">우선순위 : 보통';
+					
+					taskHTML += '<div class="h5 ml-4 mt-1 mb-2 font-weight-bold text-gray-800 btn btn-primary text-white">보통';
 				if(task.task_rank == 2)
-					taskHTML += '<div class="h5 mt-3 mb-0 font-weight-bold text-gray-800 text-danger">우선순위 : 높음';
+					
+					taskHTML += '<div class="h5 ml-4 mt-1 mb-2 font-weight-bold text-gray-800 btn btn-danger text-white">높음';
 				
-				//<!-- 신승훈 진행상태 변경 -->	
+					
+					
+					taskHTML += `</div>
+							</div>
+						<div class="col-2">
+					<div class="col-12 mb-0 pl-1 font-weight-bold text-gray-800">진행도</div>`;
+				//<!-- 신승훈 진행상태 변경 -->
 				if(task.task_state == 0){
 					if(task.task_sender != [[${#authentication.name}]]){
-						taskHTML += `</div>
-								</div>
+						taskHTML += `
 							<div class="h5 mt-1 mb-2 font-weight-bold text-gray-800 btn btn-warning text-white" id="stateSeq_${task.task_seq}" taskseq="${task.task_seq}">`
 					}else{
-						taskHTML += `</div>
-								</div>
+						taskHTML += `
 							<div class="h5 mt-1 mb-2 font-weight-bold text-gray-800 btn btn-warning text-white stateChange" id="stateSeq_${task.task_seq}" taskseq="${task.task_seq}">`
 					}
 					taskHTML += '진행전';	
@@ -209,12 +273,10 @@ ul#memList li.mem-item:hover {
 					
 				if(task.task_state == 1){
 					if(task.task_sender != [[${#authentication.name}]]){
-						taskHTML += `</div>
-								</div>
+						taskHTML += `
 							<div class="h5 mt-1 mb-2 font-weight-bold text-gray-800 btn btn-primary text-white" id="stateSeq_${task.task_seq}" taskseq="${task.task_seq}">`
 					}else{
-						taskHTML += `</div>
-								</div>
+						taskHTML += `
 							<div class="h5 mt-1 mb-2 font-weight-bold text-gray-800 btn btn-primary text-white stateChange" id="stateSeq_${task.task_seq}" taskseq="${task.task_seq}">`
 					}
 					taskHTML += '진행중';	
@@ -222,12 +284,10 @@ ul#memList li.mem-item:hover {
 					
 				if(task.task_state == 2){
 					if(task.task_sender != [[${#authentication.name}]]){
-						taskHTML += `</div>
-								</div>
+						taskHTML += `
 							<div class="h5 mt-1 mb-2 font-weight-bold text-gray-800 btn btn-success text-white" id="stateSeq_${task.task_seq}" taskseq="${task.task_seq}">`
 					}else{
-						taskHTML += `</div>
-								</div>
+						taskHTML += `
 							<div class="h5 mt-1 mb-2 font-weight-bold text-gray-800 btn btn-success text-white stateChange" id="stateSeq_${task.task_seq}" taskseq="${task.task_seq}">`
 					}
 					taskHTML += '완료';	
@@ -235,22 +295,43 @@ ul#memList li.mem-item:hover {
 				
 				if(task.task_state == 3){
 					if(task.task_sender != [[${#authentication.name}]]){
-						taskHTML += `</div>
-								</div>
+						taskHTML += `
 							<div class="h5 mt-1 mb-2 font-weight-bold text-gray-800 btn btn-secondary text-white" id="stateSeq_${task.task_seq}" taskseq="${task.task_seq}">`
-					}else{
-						taskHTML += `</div>
-								</div>
+					}else{ 
+						taskHTML += `
 							<div class="h5 mt-1 mb-2 font-weight-bold text-gray-800 btn btn-secondary text-white stateChange" id="stateSeq_${task.task_seq}" taskseq="${task.task_seq}">`
 					}
 					taskHTML += '보류';	
 				}
 				taskHTML += `</div>
 						</div>
+						<div class="col">
+							<div class="col-12 mb-0 pl-1 font-weight-bold text-gray-800">
+								담당자
+							</div>`;
+				let memberList = '<div>';
+				for(let member of pjMember){
+					if(member.task_seq == task.task_seq)
+						memberList += `<div class="profile">
+											<input type="hidden" id="m_mail" value="${member.memb_mail}">
+											<input type="hidden" id="m_name" value="${member.memb_name}">
+											<div class="profileBox">
+												<div class="profilePicBox">
+													<img class="profilePic" src="${member.memb_ogfile}"
+														onerror="this.src='../../img/profile.png'">
+												</div>
+											</div>
+										</div>`;
+				}
+				if(memberList === '<div>')
+					memberList += '<button type="button" class=" h5 mt-1 mb-2 btn btn-outline-danger">없음</button>';
+					taskHTML += memberList;
+				taskHTML += `</div>
+						</div>
 					</div>
 				</div>
 			</div>
-			`;
+		</div>`;
 					
 		}
 		$('#taskListDiv').html(taskHTML);
@@ -263,6 +344,20 @@ ul#memList li.mem-item:hover {
 		
 		//신승훈 * 진행도 클릭시
     	$(".stateChange").click(stateControlFunc); 
+		
+    	$(".profile").hover(function(){
+			let memb_mail = $(this).find("#m_mail").val();
+			let memb_name = $(this).find("#m_name").val();
+ 
+			$(this).find(".profilePicBox").css('border', '3px solid #727272');
+			
+			$(this).find(".profileBox").append(
+				'<span class="membInfo">'+ memb_name + '  ' + memb_mail + '</span>'		
+			);
+		}, function(){
+			$(this).find(".profilePicBox").css('border', 'none');
+			$(".membInfo").remove();
+		});
 	}
 	
 	//신승훈 * 진행상태 변경
@@ -451,6 +546,13 @@ ul#memList li.mem-item:hover {
 				for(let i=0 ; i<performIndex ; i++){
 					$('#perform_'+i).val(result.showStaff[i].tsuper_perform/25);
 				}
+				
+				fileListHTML = '';
+				let link = [[@{/}]];
+				for(let file of result.taskFileList){
+					fileListHTML += `<li><a href="${link}${result.showTask.prj_domain}/task/download?fileSeq=${file.tfile_seq}">${file.tfile_ogfile}</a></li>`;
+				}
+				$('#fileList').html(fileListHTML);
 				
 				$('.view_tsuper_perform').change(tsuper_perform_change);
 				
@@ -710,24 +812,24 @@ ul#memList li.mem-item:hover {
 				style="background-color: #f1f3f5; border-bottom: solid 2px black;">
 				<div>
 					<!-- 태스크 추가 modal trigger -->
-					<button class="btn btn-primary" id="newTask" data-bs-toggle="modal"
+					<button class="mr-1 btn btn-primary" id="newTask" data-bs-toggle="modal"
 						data-bs-target="exampleModal">
 						<i class="fa fa-solid fa-plus"></i>태스크 추가
 					</button>
 
-					<div class="btn btn-primary">
-						<label><input type="checkbox" id="task_sender_checkbox">
-							내가 할당</label> <label><input type="checkbox"
+					<div class="mr-1 btn btn-primary">
+						<label class="mb-0"><input type="checkbox" id="task_sender_checkbox">
+							내가 할당</label> <label class="mb-0"><input type="checkbox"
 							id="task_staff_checkbox"> 내가 담당</label>
 					</div>
-
-					<button class="btn btn-primary task_order_btn" do="task_state">
+					
+					<button class="mr-1 btn btn-primary task_order_btn" do="task_rank">
+						우선순위별</button>
+					
+					<button class="mr-1 btn btn-primary task_order_btn" do="task_state">
 						진행도별</button>
 
-					<button class="btn btn-primary task_order_btn" do="task_rank">
-						우선순위별</button>
-
-					<button class="btn btn-primary task_order_btn" do="bookmark">
+					<button class="mr-1 btn btn-primary task_order_btn" do="bookmark">
 						즐겨찾기별</button>
 
 					<input
@@ -904,10 +1006,14 @@ ul#memList li.mem-item:hover {
 									<div class="input-group-prepend">
 										<span class="input-group-text">첨부파일</span>
 									</div>
-									<input type="file" onchange="addFile(this);">
+									<input type="file" class="ml-2 mt-1" onchange="addFile(this);">
 								</div>
 
-								<div class="file-list"></div>
+								<div class="ml-5">
+									<ul id="fileList" class="ml-4" style="list-style:none;">
+										<li>어쩌구 저쩌구 파일</li>
+									</ul>
+								</div>
 
 								<div class="input-group m-3">
 									<textarea class="mr-4 form-control" name="task_content"
