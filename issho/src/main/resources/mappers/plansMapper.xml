@@ -162,4 +162,23 @@
 		memb_mail = #{memb_mail}	
 </insert>
 
+<!-- 신승훈 메인창 목록 (내 일정) -->
+<select id="selectMainPlan" parameterType="String" resultType="plans">
+<![CDATA[
+select 
+	*
+   FROM
+       (select 
+          plan_seq,
+		  plan_name
+       from 
+           plans
+       where 
+           MEMB_MAIL = #{memb_mail}
+       ORDER BY plan_seq DESC)
+WHERE
+	ROWNUM <= 4
+]]>	
+</select>
+
 </mapper>

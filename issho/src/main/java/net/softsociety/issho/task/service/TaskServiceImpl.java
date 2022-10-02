@@ -177,11 +177,25 @@ public class TaskServiceImpl implements TaskService {
 		
 		List<Taskfile> result = taskDAO.selectTaskFile(taskSeq);
 		log.debug("TaskServiceImpl [selectTaskFile] result : {}", result);
-		
+			
 		log.debug("TaskServiceImpl [selectTaskFile] End");
 		return result;
 	}
+	
+	// 신승훈 * 상세보기 첨부파일 다운로드
+	@Override
+	public Taskfile selectTaskFileByTfileSeq(String fileSeq) {
+		log.debug("TaskServiceImpl [selectTaskFileByTfileSeq] Start");
+		
+		Taskfile taskfile = taskDAO.selectTaskFileByTfileSeq(fileSeq);
+		log.debug("TaskServiceImpl [selectTaskFileByTfileSeq] result : {}", taskfile);
+		
+		log.debug("TaskServiceImpl [selectTaskFileByTfileSeq] End");
+		return taskfile;
+	}
 
+	
+	
 	@Override
 	public void addNewTask(Task task) {
 
@@ -260,6 +274,7 @@ public class TaskServiceImpl implements TaskService {
 		
 		return list;
 	}
+
 
 
 }

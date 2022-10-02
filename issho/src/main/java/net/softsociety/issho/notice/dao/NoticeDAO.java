@@ -2,6 +2,7 @@ package net.softsociety.issho.notice.dao;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.session.RowBounds;
@@ -10,6 +11,7 @@ import net.softsociety.issho.notice.domain.Notice;
 import net.softsociety.issho.notice.domain.Comment;
 import net.softsociety.issho.notice.domain.CommentDetail;
 import net.softsociety.issho.notice.domain.NoticeDetail;
+import net.softsociety.issho.plans.domain.Plans;
 
 @Mapper
 public interface NoticeDAO {
@@ -49,4 +51,8 @@ public interface NoticeDAO {
 	
 	// 댓글 삭제
 	public int deleteComment(Comment comment);
+	
+	//* 신승훈 메인창 목록 (최신 공지사항)
+	public List<Notice> selectMainNotice(String prj_domain);
+
 }

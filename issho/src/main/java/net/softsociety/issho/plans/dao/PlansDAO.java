@@ -29,6 +29,7 @@ public interface PlansDAO {
 	public int insertAttendant(Attendant attendant);
 	// 신승훈 * 일정 참석 여부 설정(ajax)
 	public void ifYouWillAttend(Attendant attendant);
-	
+	//* 신승훈 메인창 목록 (내 일정)
+	public List<Plans> selectMainPlan(String userid);
 	
 }
