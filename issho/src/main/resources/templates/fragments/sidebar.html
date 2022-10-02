@@ -6,9 +6,6 @@
 <!-- Custom styles for this template
 <link href="css/sb-admin-2.min.css" rel="stylesheet">-->
 
-
-
-
 </head>
 <body>
 
@@ -32,25 +29,25 @@
 			<hr class="sidebar-divider my-0">
 			<!-- ISSHO HOME Item - Dashboard -->
 			<li class="nav-item active"><a class="nav-link"
-				th:href="|@{/}${session.prj_domain}/main|"> <i class="fas fa-fw fa-tachometer-alt"></i> <span>ISSHO
-						HOME</span></a></li>
+				th:href="|@{/}${session.prj_domain}/main|"> <i class="fas fa-fw fa-solid fa-door-open"></i><span>ISSHO HOME</span></a></li>
 
 			<!-- Divider -->
 			<hr class="sidebar-divider">
 
 			<!-- Heading -->
-			<div class="sidebar-heading">협업 관리	</div>
+			<div class="sidebar-heading">협업 관리</div>
 			<!-- 프로젝트 Item - Pages Collapse Menu -->
 			<li class="nav-item"><a class="nav-link collapsed" href="#"
 				data-toggle="collapse" data-target="#collapseTwo"
-				aria-expanded="true" aria-controls="collapseTwo"> <i
-					class="fas fa-fw fa-cog"></i> <span>프로젝트</span>
+				aria-expanded="true" aria-controls="collapseTwo"> <i class="fas fa-fw fa-tachometer-alt"></i> <span>프로젝트</span>
 			</a>
 				<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo"
 					data-parent="#accordionSidebar">
 					<div class="bg-white py-2 collapse-inner rounded">
-						<a class="collapse-item" th:href="|@{/}${session.prj_domain}/task/taskList|">업무</a> <a
-							class="collapse-item" th:href="|@{/}${session.prj_domain}/task/kanban|">대시보드</a>
+						<a class="collapse-item"
+							th:href="|@{/}${session.prj_domain}/task/taskList|">업무</a> <a
+							class="collapse-item"
+							th:href="|@{/}${session.prj_domain}/task/kanban|">대시보드</a>
 					</div>
 				</div></li>
 
@@ -58,38 +55,41 @@
 
 
 
-			<li class="nav-item"><a class="nav-link" th:href="|@{/}${session.prj_domain}/manager/addressBook|">
-					<i class="fas fa-fw fa-chart-area"></i> <span>맴버주소록</span>
+			<li class="nav-item"><a class="nav-link"
+				th:href="|@{/}${session.prj_domain}/manager/addressBook|"> <i
+					class="fas fa-fw fa-solid fa-address-book"></i><span>맴버주소록</span>
 			</a></li>
 
 			<!-- 일정관리 Item -->
-			<li class="nav-item"><a class="nav-link" th:href="|@{/}${session.prj_domain}/plans/plan|">
-					<i class="fas fa-fw fa-chart-area"></i> <span>일정관리</span>
+			<li class="nav-item"><a class="nav-link"
+				th:href="|@{/}${session.prj_domain}/plans/plan|"> <i
+					class="fas fa-fw fa-solid fa-calendar-check"></i><span>일정관리</span>
 			</a></li>
 
 			<!-- 드라이브 Item -->
-			<li class="nav-item"><a class="nav-link" th:href="|@{/}${session.prj_domain}/manager/drive|">
-					<i class="fas fa-fw fa-chart-area"></i> <span>드라이브</span>
+			<li class="nav-item"><a class="nav-link"
+				th:href="|@{/}${session.prj_domain}/manager/drive|"> <i class="fas fa-fw fa-solid fa-file-import"></i> <span>드라이브</span>
 			</a></li>
-			
+
 			<!-- 공지사항 Item -->
-			<li class="nav-item"><a class="nav-link" th:href="|@{/}${session.prj_domain}/notice/noticeList|">
-					<i class="fas fa-fw fa-chart-area"></i> <span>공지사항</span>
+			<li class="nav-item"><a class="nav-link"
+				th:href="|@{/}${session.prj_domain}/notice/noticeList|"> <i class="fas fa-fw fa-solid fa-clipboard-list"></i> <span>공지사항</span>
 			</a></li>
-			
-<!-- 			 홍상혁 테스트용 테스크 댓글 Item
+
+			<!-- 			 홍상혁 테스트용 테스크 댓글 Item
 	         <li class="nav-item"><a class="nav-link" th:href="@{/taskRpl/replyList?task_seq=41}">
 	               <i class="fas fa-fw fa-chart-area"></i> <span>테스크 댓글</span>
 	         </a></li> -->
-				
+
 			<!-- Divider -->
 			<hr class="sidebar-divider">
 
 			<!-- Heading -->
 			<div class="sidebar-heading">프로젝트 관리</div>
 			<!-- 멤버 관리 Item -->
-			<li class="nav-item"><a class="nav-link" th:href="|@{/}${session.prj_domain}/manager/member|">
-					<i class="fas fa-fw fa-chart-area"></i> <span>관리자 메뉴</span>
+			<li class="nav-item"><a class="nav-link"
+				th:href="|@{/}${session.prj_domain}/manager/member|"> <i
+					class="fas fa-fw fa-chart-area"></i> <span>관리자 메뉴</span>
 			</a></li>
 
 			<!-- Divider -->
@@ -104,6 +104,6 @@
 		<!-- End of Sidebar -->
 	</div>
 	<!-- End of Sidebar -->
-	
+
 </body>
 </html>

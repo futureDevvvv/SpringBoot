@@ -74,11 +74,10 @@ public class TaskController {
 	 */
 
 	@GetMapping("/taskList")
-	public String taskList(HttpServletRequest request, @AuthenticationPrincipal UserDetails user, 
-			@RequestParam(name = "page", defaultValue = "1") int page, String searchWord,
-			Model model, String domain) {
+	public String taskList(HttpServletRequest request, @AuthenticationPrincipal UserDetails user,
+			@RequestParam(name = "page", defaultValue = "1") int page, String searchWord, Model model, String domain) {
 		log.debug("Controller [taskList] Start");
-	
+
 		String id = user.getUsername();
 
 		// 신승훈 * prj_domain 설정
@@ -92,18 +91,18 @@ public class TaskController {
 
 		model.addAttribute("member", member);
 		model.addAttribute("list", pjMemList);
-		
+
 		Map<String, String> map = new HashMap<>();
 		map.put("prj_domain", prj_domain);
-		if(searchWord != null)
+		if (searchWord != null)
 			map.put("searchWord", searchWord);
-		
+
 		// 신승훈 * 태스크 네비
 		int totalCount = taskservice.countAllBoard(map);
 		PageNavigator navi = new PageNavigator(pagePerGroup, countPerPage, page, totalCount);
 		log.debug("navi : {}", navi);
 		model.addAttribute("navi", navi);
-		
+
 		// 신승훈 * 메인 화면 첫 진입시 테스크 전체 검색
 		List<Task> tasklist = taskservice.SelectAlltask(navi, prj_domain, searchWord);
 		log.debug("Controller [taskList] tasklist : {}", tasklist);
@@ -113,26 +112,27 @@ public class TaskController {
 //		log.debug("tasklist : {}", tasklist);
 		model.addAttribute("tasklist", tasklist);
 		model.addAttribute("page", page);
-		
+
 		log.debug("Controller [taskList] End");
-		
+
 		return "taskView/task_List";
 	}
 
 	@PostMapping("/newProject")
 	public void newProject(@AuthenticationPrincipal UserDetails user, Task task, String staffs) {
-	
+
 		String id = user.getUsername();
-		
+
 		task.setTask_sender(id);
-		
+
 		return;
 //		return "taskView/task_List";
 
 	}
 
 	// 신승훈 * 테스크 상세보기
-	@ResponseBody @PostMapping("/showTaskModal")
+	@ResponseBody
+	@PostMapping("/showTaskModal")
 
 	public Map<String, Object> showTaskModal(String taskSeq) {
 		log.debug("Controller [showTaskModal] Start");
@@ -162,7 +162,7 @@ public class TaskController {
 			@AuthenticationPrincipal UserDetails user) {
 		log.debug("Controller [selectTask] Start");
 		log.debug("Controller [selectTask] param : {}", param);
-	
+
 		String calledValue = request.getServletPath();
 		String[] splitedUrl = calledValue.split("/");
 		String prj_domain = splitedUrl[1];
@@ -275,7 +275,7 @@ public class TaskController {
 	 *
 	 * @author 윤영혜
 	 */
-	
+
 	@PostMapping("/addNewTask")
 	public String newProject(HttpServletRequest request, @AuthenticationPrincipal UserDetails user, Task task,
 			String memList2, @RequestParam List<MultipartFile> uploads) {
@@ -311,24 +311,33 @@ public class TaskController {
 
 		// 담당자가 없다면 할당자를 담당자로 설정해주고, 담당자가 있는 경우 split하여 담는다.
 		if (memList2.length() == 0 || memList2.equals("")) {
+			
+			log.debug("memList2.length == 0");
+			
 			memList2 = id;
+			
+			log.debug("staffs : {}", memList2);
+			
 		} else {
 			staffList = memList2.split(",");
+		
+			log.debug("staffs : {}", memList2);
 		}
-
-		log.debug("staffs : {}", memList2);
 
 		// 태스크 추가
 		taskservice.addNewTask(task);
 		log.debug("저장후 task:{}", task);
 
-		log.debug("memList2 길이 : {}", staffList.length);
-
 		// 해당 태스크에 대한 담당자 추가
-		for (int i = 0; i < staffList.length; i++) {
-			Taskstaff staff = new Taskstaff(task.getTask_seq(), staffList[i], 0);
-			log.debug("staff 객체 : {} ", staff);
+		if (staffList == null) {
+			Taskstaff staff = new Taskstaff(task.getTask_seq(), memList2, 0);
 			taskservice.addStaffs(staff);
+		} else {
+			for (int i = 0; i < staffList.length; i++) {
+				Taskstaff staff = new Taskstaff(task.getTask_seq(), staffList[i], 0);
+				log.debug("staff 객체 : {} ", staff);
+				taskservice.addStaffs(staff);
+			}
 		}
 
 		log.debug("uploads : {}", uploads.size());
