@@ -104,11 +104,13 @@
 			,t.exp_enddate AS exp_enddate
 			,t.ptask_num AS ptask_num
 			,bm.memb_mail AS bookmark_memb_mail
+			,m.memb_name AS memb_name
 		FROM 
-			task t, bookmark bm
+			task t, bookmark bm, members m
 		WHERE 
 			t.prj_domain = #{prj_domain}
 			AND bm.task_seq(+) = t.task_seq
+			AND t.task_sender = m.memb_mail
 			<if test="bookmark != null">
 				AND t.task_seq IN (SELECT
                                        task_seq
@@ -225,16 +227,69 @@
 	</update>
 	
 	<!-- 신승훈 * 상세보기 첨부파일 확인 -->
-	<select id="selectTaskFile" parameterType="String" resultType="TaskFile">
+	<select id="selectTaskFile" parameterType="String" resultType="Taskfile">
 		select
 			*
 		from
-			TaskFile
+			taskfile
 		where
 			task_seq = #{task_seq}
 	</select>
 	
-
+	<!-- 신승훈 * 상세보기 첨부파일 다운로드 -->
+	<select id="selectTaskFileByTfileSeq" parameterType="String" resultType="Taskfile">
+		select
+			*
+		from
+			taskfile
+		where
+			tfile_seq = #{tfile_seq}
+	</select>
+	
+	<!-- 신승훈 메인창 목록 (할당 태스크 현황) -->
+	<select id="selectMainMysender" parameterType="Map" resultType="Task">
+	<![CDATA[
+	select 
+		*
+    FROM
+        (select 
+            task_seq,
+            task_name,
+            task_state
+        from 
+            task
+        where 
+            prj_domain = #{prj_domain}
+        AND	
+            task_sender = #{task_sender}
+        ORDER BY task_seq DESC)
+	WHERE
+		ROWNUM <= 4
+	]]>	
+	</select>
+	
+	<!-- 신승훈 메인창 목록  담당 태스크 리스트) --> 
+	<select id="selectMainMyStaff" parameterType="String" resultType="Task">
+	<![CDATA[
+		select 
+			*
+	    FROM
+	        (select 
+	            t.task_name, t.task_state
+	        from 
+	            task t, taskstaff ts
+	        where 
+	            t.prj_domain = #{prj_domain}
+	            AND ts.task_seq(+) = t.task_seq
+				AND ts.memb_mail = #{task_sender}
+	        ORDER BY ts.task_seq DESC)
+		WHERE
+			ROWNUM <= 4
+	]]>	
+	</select>
+	
+	
+	
 	<!-- 태스크 추가 -->
 	<insert id="addNewTask" parameterType="Task">
 		<!-- 구문 실행 후 방금 넣은 데이터의 아이디를 조회하자 -->
@@ -392,13 +447,6 @@
 	</select>
 	
 
-	
-	
-
-	
-	
-	
-
 
 	<update id="changeDate" parameterType="GanttTask">
 		UPDATE task
@@ -412,5 +460,8 @@
 		</if>
 		WHERE task_seq = #{task_seq}
 	</update>
+	
+	
 
+	
 </mapper>

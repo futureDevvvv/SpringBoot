@@ -191,6 +191,21 @@ public class MemberController {
 		return member.getMemb_name();
 
 	}
+	
+	@PostMapping(value = "/memSearchObject")
+	@ResponseBody
+	public Members memSearchObject(String memb_mail) {
+		
+		log.debug("memSearch 진입");
+		
+		log.debug("memSearch mail : {}", memb_mail);
+		
+		Members member = memDao.getUserById(memb_mail);
+		
+		log.debug("membSearch Memb 객체 : {}", member);
+		
+		return member;
+	}
 
 	@PostMapping("/memSearchByIdName")
 	@ResponseBody

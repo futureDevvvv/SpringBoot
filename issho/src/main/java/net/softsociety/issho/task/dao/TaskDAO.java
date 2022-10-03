@@ -44,11 +44,15 @@ public interface TaskDAO {
 	public int stateChange(Task task);
 	// 신승훈 * 상세보기 첨부파일 확인
 	public List<Taskfile> selectTaskFile(String taskSeq);
-	
+	// 신승훈 * 상세보기 첨부파일 다운로드
+	public Taskfile selectTaskFileByTfileSeq(String fileSeq);
+	// 신승훈 * 메인창 목록 (할당 태스크 현황)
+	public List<Task> selectMainMysender(Map<String, String> domainAndUsrid);
+	// 신승훈 * 메인창 목록 (담당 태스크 리스트)
+	public List<Task> selectMainMyStaff(Map<String, String> domainAndUsrid);
 	
 
 	//* 테스크 전체 검색
-
 	public void addNewTask(Task task);
 
 	public void addStaffs(Taskstaff staff);
@@ -68,7 +72,8 @@ public interface TaskDAO {
 	public void changeDate(GanttTask task);
 	
 	public List<Task> SelectAllTask(String prj_domain);
-
-
+	
+	
+	
 
 }
