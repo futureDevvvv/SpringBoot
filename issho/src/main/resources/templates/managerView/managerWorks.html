@@ -342,7 +342,7 @@
 					 
 						//차트
 						
-						let myChartOne = document.getElementById('myChartOne').getContext('2d');
+						
 
 						
 		/* 				 //second page
@@ -360,9 +360,8 @@
 						
 						  
 						
-							 
+					let myChartOne = document.getElementById('myChartOne').getContext('2d');
 						 
-						  
 						var barChart = new Chart(myChartOne, {
 							type : 'polarArea', //pir,line,doughnut,polarArea
 							data : {
@@ -456,7 +455,6 @@
 										imgWidth, imgHeight);
 								heightLeft -= pageHeight;
 
-								// 한 페이지 이상일 경우 루프 돌면서 출력
 								while (heightLeft >= 20) {
 									position = heightLeft - imgHeight;
 									doc.addImage(imgData, 'PNG', 0, position,
@@ -465,7 +463,6 @@
 									heightLeft -= pageHeight;
 								}
 
-								// 파일 저장
 								doc.save('멤버별 업무리스트.pdf');
 							});
 				});

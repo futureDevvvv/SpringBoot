@@ -19,6 +19,13 @@
 	rel="stylesheet" type="text/css" />
 <meta charset="UTF-8">
 <style>
+.task_order_btn {
+	border : none;
+	background-color : transparent;
+
+}
+
+
 #basicSelection, #basicSelection2, #basicSelection3, #basicSelection4,
 	#basicSelection5 {
 	margin-right: 10px;
@@ -58,6 +65,26 @@ ul#memList li.mem-item:hover {
 }
 
 .profileBox {
+	width: 50px;
+	height: 50px;
+	border-radius: 70px;
+	overflow: hidden;
+	float: left;
+	position: relative;
+}
+
+.profilePic {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	position: absolute;
+	top: 0;
+	left: 0;
+	margin: 0;
+	padding: 0;
+}
+
+.profileBox2 {
 	position: relative;
 }
 
@@ -68,6 +95,11 @@ ul#memList li.mem-item:hover {
 	overflow: hidden;
 	float: left;
 	position: relative;
+}
+
+.btn-close {
+	border: none;
+	background-color: transparent;
 }
 
 .profilePic {
@@ -102,7 +134,6 @@ ul#memList li.mem-item:hover {
 	border-style: solid;
 	border-color: transparent transparent #404040 transparent;
 }
-
 
 </style>
 <script type="text/javascript" th:inline="javascript">
@@ -816,29 +847,29 @@ ul#memList li.mem-item:hover {
 				style="background-color: #f1f3f5; border-bottom: solid 2px black;">
 				<div>
 					<!-- 태스크 추가 modal trigger -->
-					<button class="mr-1 btn btn-primary" id="newTask" data-bs-toggle="modal"
-						data-bs-target="exampleModal">
+					<button class="mr-1 btn btn-info" id="newTask"
+						data-bs-toggle="modal" data-bs-target="exampleModal">
 						<i class="fa fa-solid fa-plus"></i>태스크 추가
 					</button>
 
-					<div class="mr-1 btn btn-primary">
-						<label class="mb-0"><input type="checkbox" id="task_sender_checkbox">
-							내가 할당</label> <label class="mb-0"><input type="checkbox"
-							id="task_staff_checkbox"> 내가 담당</label>
+					<div class="mr-1 btn">
+						<label class="mb-0"><input type="checkbox"
+							id="task_sender_checkbox"> 내가 할당</label> <label class="mb-0"><input
+							type="checkbox" id="task_staff_checkbox"> 내가 담당</label>
 					</div>
-					
-					<button class="mr-1 btn btn-primary task_order_btn" do="task_rank">
+
+					<button class="mr-1 task_order_btn" do="task_rank">
 						우선순위별</button>
-					
-					<button class="mr-1 btn btn-primary task_order_btn" do="task_state">
+
+					<button class="mr-1 task_order_btn" do="task_state">
 						진행도별</button>
 
-					<button class="mr-1 btn btn-primary task_order_btn" do="bookmark">
+					<button class="mr-1 task_order_btn" do="bookmark">
 						즐겨찾기별</button>
 
 					<input type="text" id="searchWord" name="searchWord"
 						th:value="${searchWord}">
-					<button class="btn btn-primary" type="button" id="searchBtn">
+					<button class="btn btn-light" type="button" id="searchBtn">
 						<i class="fas fa-search fa-sm"></i>
 					</button>
 				</div>
@@ -1013,7 +1044,7 @@ ul#memList li.mem-item:hover {
 								</div>
 
 								<div class="ml-5">
-									<ul id="fileList" class="ml-4" style="list-style:none;">
+									<ul id="fileList" class="ml-4" style="list-style: none;">
 										<li>어쩌구 저쩌구 파일</li>
 									</ul>
 								</div>
@@ -1072,6 +1103,8 @@ ul#memList li.mem-item:hover {
 
 								</div>
 
+
+								<!-- 담당자 검색 (영혜) -->
 								<div id="memDiv">
 									<input type="text" class="form-control" id="staffInput"
 										name="staffs" placeholder="아이디 또는 이름으로 멤버를 검색하세요"
