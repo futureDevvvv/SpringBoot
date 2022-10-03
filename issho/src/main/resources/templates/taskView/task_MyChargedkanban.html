@@ -9,6 +9,10 @@
 	crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <title>Insert title here</title>
 <style>
+@import
+	url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap')
+	;
+
 .parent {
 	width: 90%;
 	height: 100%;
@@ -71,6 +75,12 @@
 }
 
 #requestedTitle {
+	font-family: 'Montserrat', sans-serif;
+	color: black;
+	text-align: center;
+	font-size: 18px;
+	padding-top: 15px;
+	font-weight: bold;
 	width: 100%;
 	height: 60px;
 	background-color: #f6c23e;
@@ -87,10 +97,20 @@
 }
 
 #progressTitle {
+	font-family: 'Montserrat', sans-serif;
+	color: black;
+	text-align: center;
+	font-size: 18px;
+	padding-top: 15px;
+	font-weight: bold;
 	width: 100%;
 	height: 60px;
 	background-color: #1cc88a;
 	border-radius: 10px 10px 0px 0px;
+	color: black;
+	text-align: center;
+	font-size: 18px;
+	padding-top: 15px;
 }
 
 .done {
@@ -102,10 +122,20 @@
 }
 
 #doneTitle {
+	font-family: 'Montserrat', sans-serif;
+	color: black;
+	text-align: center;
+	font-size: 18px;
+	padding-top: 15px;
+	font-weight: bold;
 	width: 100%;
 	height: 60px;
 	background-color: #36b9cc;
 	border-radius: 10px 10px 0px 0px;
+	color: black;
+	text-align: center;
+	font-size: 18px;
+	padding-top: 15px;
 }
 
 .pending {
@@ -116,14 +146,43 @@
 }
 
 #pendingTitle {
+	font-family: 'Montserrat', sans-serif;
+	color: white;
+	text-align: center;
+	font-size: 18px;
+	padding-top: 15px;
+	font-weight: bold;
 	width: 100%;
 	height: 60px;
 	background-color: #5a5c69;
 	border-radius: 10px 10px 0px 0px;
+	text-align: center;
+	font-size: 18px;
+	padding-top: 15px;
 }
 
 .draggable.dragging {
 	opacity: 0.5;
+}
+
+.nav-link {
+	color: black;
+	font-size: 17px;
+}
+
+a:link  {
+	 color:  black;
+	 text-decoration:  none;
+}
+
+a:visited  {
+	 color:  black;
+	 text-decoration:  none;
+}
+
+a:hover  {
+	 color:  black;
+	 text-decoration:  underline;
 }
 </style>
 </head>
@@ -288,10 +347,10 @@
 				style="background-color: #f1f3f5; padding-left: 55px; border-bottom: solid 1px #b0bec5">
 				<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
 					<ul class="navbar-nav">
+						<li class="nav-item"><a class="nav-link" href="">태스크요약</a></li>
 						<li class="nav-item"><a class="nav-link active"
-							aria-current="page" href="">칸반보드</a></li>
-						<li class="nav-item"><a class="nav-link" href="">차트</a></li>
-						<li class="nav-item"><a class="nav-link" href="">간트차트</a></li>
+							aria-current="page" href="../task/kanban" style="font-weight: bold">칸반보드</a></li>
+						<li class="nav-item"><a class="nav-link" href="../task/gantt">간트차트</a></li>
 					</ul>
 
 				</div>
@@ -304,7 +363,7 @@
 						<li class="nav-item"><a class="nav-link"
 							href="../task/myAllocateKanban">할당태스크</a></li>
 						<li class="nav-item"><a class="nav-link"
-							href="../task/myChargedKanban">담당태스크</a></li>
+							href="../task/myChargedKanban" style="font-weight: bold">담당태스크</a></li>
 					</ul>
 
 				</div>
@@ -312,7 +371,7 @@
 
 			<div class="parent">
 				<div class="containerBox requested">
-					<div id="requestedTitle">requested</div>
+					<div id="requestedTitle">REQUESTED</div>
 					<div class="card m-2 py-3 border-left-warning" draggable="true"
 						th:each="list : ${list}" th:if="${list.task_state == '0'}">
 						<div class="card-body">
@@ -333,7 +392,7 @@
 
 				</div>
 				<div class="containerBox inprogress">
-					<div id="progressTitle">in progress</div>
+					<div id="progressTitle">IN PROGRESS</div>
 					<div class="card m-2 py-3 border-left-success" draggable="true"
 						th:each="list : ${list}" th:if="${list.task_state == '1'}">
 						<div class="card-body">
@@ -354,7 +413,7 @@
 					</div>
 				</div>
 				<div class="containerBox done">
-					<div id="doneTitle">done</div>
+					<div id="doneTitle">DONE</div>
 					<div class="card m-2 py-3 border-left-info" draggable="true"
 						th:each="list : ${list}" th:if="${list.task_state == '2'}">
 						<div class="card-body">
@@ -375,7 +434,7 @@
 				</div>
 
 				<div class="containerBox pending">
-					<div id="pendingTitle">pending</div>
+					<div id="pendingTitle">PENDING</div>
 					<div class="card m-2 py-3 border-left-dark" draggable="true"
 						th:each="list : ${list}" th:if="${list.task_state == '3'}">
 						<div class="card-body">
