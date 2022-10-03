@@ -111,6 +111,9 @@
 			t.prj_domain = #{prj_domain}
 			AND bm.task_seq(+) = t.task_seq
 			AND t.task_sender = m.memb_mail
+			<if test="task_staff == null and task_sender == null and task_rank == null and task_state == null and bookmark == null and searchWord == null">
+				ORDER BY t.task_seq DESC
+			</if>
 			<if test="bookmark != null">
 				AND t.task_seq IN (SELECT
                                        task_seq
