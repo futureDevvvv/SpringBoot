@@ -7,8 +7,17 @@
 	src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"
 	integrity="sha512-zYXldzJsDrNKV+odAwFYiDXV2Cy37cwizT+NkuiPGsa9X1dOz04eHvUWVuxaJ299GvcJT31ug2zO4itXBjFx4w=="
 	crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<!-- gijgo datepicker library -->
+<script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js"
+	type="text/javascript"></script>
+<link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css"
+	rel="stylesheet" type="text/css" />
 <title>Insert title here</title>
 <style>
+@import
+	url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap')
+	;
+
 .parent {
 	width: 90%;
 	height: 100%;
@@ -71,6 +80,12 @@
 }
 
 #requestedTitle {
+	font-family: 'Montserrat', sans-serif;
+	color: black;
+	text-align: center;
+	font-size: 18px;
+	padding-top: 15px;
+	font-weight: bold;
 	width: 100%;
 	height: 60px;
 	background-color: #f6c23e;
@@ -87,10 +102,20 @@
 }
 
 #progressTitle {
+	font-family: 'Montserrat', sans-serif;
+	color: black;
+	text-align: center;
+	font-size: 18px;
+	padding-top: 15px;
+	font-weight: bold;
 	width: 100%;
 	height: 60px;
 	background-color: #1cc88a;
 	border-radius: 10px 10px 0px 0px;
+	color: black;
+	text-align: center;
+	font-size: 18px;
+	padding-top: 15px;
 }
 
 .done {
@@ -102,10 +127,20 @@
 }
 
 #doneTitle {
+	font-family: 'Montserrat', sans-serif;
+	color: black;
+	text-align: center;
+	font-size: 18px;
+	padding-top: 15px;
+	font-weight: bold;
 	width: 100%;
 	height: 60px;
 	background-color: #36b9cc;
 	border-radius: 10px 10px 0px 0px;
+	color: black;
+	text-align: center;
+	font-size: 18px;
+	padding-top: 15px;
 }
 
 .pending {
@@ -116,14 +151,28 @@
 }
 
 #pendingTitle {
+	font-family: 'Montserrat', sans-serif;
+	color: white;
+	text-align: center;
+	font-size: 18px;
+	padding-top: 15px;
+	font-weight: bold;
 	width: 100%;
 	height: 60px;
 	background-color: #5a5c69;
 	border-radius: 10px 10px 0px 0px;
+	text-align: center;
+	font-size: 18px;
+	padding-top: 15px;
 }
 
 .draggable.dragging {
 	opacity: 0.5;
+}
+
+.nav-link {
+	color: black;
+	font-size: 17px;
 }
 
 a:link  {
@@ -304,7 +353,8 @@ a:hover  {
 				<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
 					<ul class="navbar-nav">
 						<li class="nav-item"><a class="nav-link active"
-							aria-current="page" href="">칸반보드</a></li>
+							aria-current="page" href="../task/kanban"
+							style="font-weight: bold">칸반보드</a></li>
 						<li class="nav-item"><a class="nav-link" href="../task/gantt">간트차트</a></li>
 					</ul>
 
@@ -314,7 +364,8 @@ a:hover  {
 				<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
 					<ul class="navbar-nav">
 						<li class="nav-item"><a class="nav-link active"
-							aria-current="page" href="../task/kanban">전체</a></li>
+							aria-current="page" href="../task/kanban"
+							style="font-weight: bold">전체</a></li>
 						<li class="nav-item"><a class="nav-link"
 							href="../task/myAllocateKanban">할당태스크</a></li>
 						<li class="nav-item"><a class="nav-link"
@@ -326,12 +377,12 @@ a:hover  {
 
 			<div class="parent">
 				<div class="containerBox requested">
-					<div id="requestedTitle">requested</div>
+					<div id="requestedTitle">REQUESTED</div>
 					<div class="card m-2 py-3 border-left-warning" draggable="true"
 						th:each="list : ${list}" th:if="${list.task_state == '0'}">
-						<div class="card-body">
-							
-							<input type="hidden" th:value="${list.task_seq}">
+						<div class="card-body clickTask">
+
+							<input type="hidden" id="t_seq" th:value="${list.task_seq}">
 							<p>[[${list.task_name}]]</p>
 
 							<div class="profile" th:each="member : ${members}"
@@ -339,7 +390,8 @@ a:hover  {
 								<input type="hidden" id="m_mail" th:value="${member.memb_mail}">
 								<input type="hidden" id="m_name" th:value="${member.memb_name}">
 								<div class="profileBox">
-									<img class="profilePic" th:src="@{/savedImg/}+${member.memb_ogfile}"
+									<img class="profilePic"
+										th:src="@{/savedImg/}+${member.memb_ogfile}"
 										onerror="this.src='../../img/profile.png'">
 								</div>
 							</div>
@@ -348,11 +400,11 @@ a:hover  {
 
 				</div>
 				<div class="containerBox inprogress">
-					<div id="progressTitle">in progress</div>
+					<div id="progressTitle">IN PROGRESS</div>
 					<div class="card m-2 py-3 border-left-success" draggable="true"
 						th:each="list : ${list}" th:if="${list.task_state == '1'}">
-						<div class="card-body">
-							<input type="hidden" th:value="${list.task_seq}">
+						<div class="card-body clickTask">
+							<input type="hidden" id="t_seq" th:value="${list.task_seq}">
 							<p>[[${list.task_name}]]</p>
 
 							<div class="profile" th:each="member : ${members}"
@@ -369,11 +421,18 @@ a:hover  {
 					</div>
 				</div>
 				<div class="containerBox done">
-					<div id="doneTitle">done</div>
+					<div id="doneTitle">DONE</div>
 					<div class="card m-2 py-3 border-left-info" draggable="true"
 						th:each="list : ${list}" th:if="${list.task_state == '2'}">
-						<div class="card-body">
-							<input type="hidden" th:value="${list.task_seq}">
+						<div class="card-body clickTask">
+							<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25"
+								fill="currentColor" class="bi bi-star bookmarkicon"
+								taskseq="${task.task_seq}" viewBox="0 0 16 16">
+									<path
+									d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z" />
+								</svg>
+
+							<input type="hidden" id="t_seq" th:value="${list.task_seq}">
 							<p>[[${list.task_name}]]</p>
 
 							<div class="profile" th:each="member : ${members}"
@@ -390,11 +449,11 @@ a:hover  {
 				</div>
 
 				<div class="containerBox pending">
-					<div id="pendingTitle">pending</div>
+					<div id="pendingTitle">PENDING</div>
 					<div class="card m-2 py-3 border-left-dark" draggable="true"
 						th:each="list : ${list}" th:if="${list.task_state == '3'}">
-						<div class="card-body">
-							<input type="hidden" th:value="${list.task_seq}">
+						<div class="card-body clickTask" taskSeq="${list.task_seq}">
+							<input type="hidden" id="t_seq" th:value="${list.task_seq}">
 							<p>[[${list.task_name}]]</p>
 
 							<div class="profile" th:each="member : ${members}"
@@ -416,7 +475,186 @@ a:hover  {
 			<!-- footer 끝 -->
 		</div>
 	</div>
-	<script>
+
+
+
+
+	<!-- 상세보기 모달 -->
+	<div class="modal fade" id="showTaskModal" tabindex="-1"
+		aria-labelledby="showTaskModalLabel" aria-hidden="true">
+		<form>
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="showTaskModalLabel">태스크 상세보기</h5>
+						<button class="ml-auto mr-2 btn btn-primary">수정</button>
+						<button class="mr-2 btn btn-primary">삭제</button>
+						<button type="button" class="btn-close view-modal-closeBtn"
+							data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+
+						<!-- 신승훈 * 할당자 -->
+						<div class="input-group m-3">
+							<div class="input-group-prepend">
+								<span class="input-group-text">할당자</span>
+							</div>
+
+							<input type="text" id="view_task_sender"
+								class="mr-4 form-control" readonly aria-label="Username"
+								aria-describedby="basic-addon1">
+						</div>
+
+						<div class="input-group m-3">
+							<div class="input-group-prepend">
+								<span class="input-group-text">담당자</span>
+							</div>
+							<input type="text" class="mr-4 form-control" id="view_staffInput"
+								name="staffs" placeholder="담당자를 추가해주세요" aria-label="Username"
+								value="" aria-describedby="basic-addon1">
+						</div>
+
+						<div class="input-group m-3">
+							<div class="input-group-prepend">
+								<span class="input-group-text">제목</span>
+							</div>
+							<input type="text" class="mr-4 form-control" name="task_name"
+								id="view_task_name" readonly placeholder="태스크 제목을 입력하세요"
+								aria-label="Username" required aria-describedby="basic-addon1">
+						</div>
+
+						<div class="input-group m-3">
+							<div class="input-group-prepend">
+								<span class="input-group-text">우선순위</span>
+							</div>
+							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+								<label class="btn btn-outline-info view_task_rank_label"
+									for="view_task_rank_0"> <input type="radio"
+									name="view_task_rank" id="view_task_rank_0"
+									class="radioSelection" value="0"> 낮음
+								</label> <label class="btn btn-outline-info view_task_rank_label"
+									for="view_task_rank_1"> <input type="radio"
+									name="view_task_rank" id="view_task_rank_1"
+									class="radioSelection" value="1">보통
+								</label> <label class="btn btn-outline-info view_task_rank_label"
+									for="view_task_rank_2"> <input type="radio"
+									name="view_task_rank" id="view_task_rank_2"
+									class="radioSelection" value="2"> 높음
+								</label>
+							</div>
+						</div>
+
+						<div class="input-group m-3">
+							<div class="input-group-prepend">
+								<span class="input-group-text">진행도</span>
+							</div>
+							<div class="btn-group btn-group-toggle" data-toggle="buttons">
+								<label class="btn btn-outline-secondary view_task_state_label"
+									for="view_task_state_0"> <input type="radio"
+									name="view_task_state" id="view_task_state_0"
+									class="radioSelection" value="0"> 진행전
+								</label> <label class="btn btn-outline-secondary view_task_state_label"
+									for="view_task_state_1"> <input type="radio"
+									name="view_task_state" id="view_task_state_1"
+									class="radioSelection" value="1"> 진행중
+								</label> <label class="btn btn-outline-secondary view_task_state_label"
+									for="view_task_state_2"> <input type="radio"
+									name="view_task_state" id="view_task_state_2"
+									class="radioSelection" value="2"> 완료
+								</label> <label class="btn btn-outline-secondary view_task_state_label"
+									for="view_task_state_3"> <input type="radio"
+									name="view_task_state" id="view_task_state_3"
+									class="radioSelection" value="3"> 보류
+								</label>
+							</div>
+						</div>
+
+						<div class="input-group m-3">
+							<div class="input-group-prepend">
+								<span class="input-group-text">예상시작일</span> <input type="radio"
+									class="ml-3" id="startNone" name="view_chk_startDate" value="0"
+									checked="checked"><span class="mt-2 ml-1">없음</span> <input
+									type="radio" class="ml-3" id="startExist1"
+									name="view_chk_startDate" value="1"><span
+									class="mt-2 ml-1">있음</span> <input id="datepicker3"
+									class="ml-3 mt-2" width="150" name="exp_startdate"
+									style="margin-left: 20px;" />
+							</div>
+						</div>
+
+						<div class="input-group m-3">
+							<div class="input-group-prepend">
+								<span class="input-group-text">예상종료일</span> <input type="radio"
+									class="ml-3" id="endNone" name="view_chk_endDate" value="0"
+									checked="checked"><span class="mt-2 ml-1">없음</span> <input
+									type="radio" class="ml-3" id="endExist2"
+									name="view_chk_endDate" value="1"><span
+									class="mt-2 ml-1">있음</span> <input id="datepicker4"
+									class="ml-3 mt-2" width="150" name="exp_enddate"
+									style="margin-left: 20px;" />
+							</div>
+						</div>
+
+						<!-- 신승훈 * 수행도 -->
+						<div class="slidecontainer" id="view_perform_list"></div>
+
+
+						<div class="input-group m-3">
+							<div class="input-group-prepend">
+								<span class="input-group-text">첨부파일</span>
+							</div>
+							<input type="file" class="ml-2 mt-1" onchange="addFile(this);">
+						</div>
+
+						<div class="ml-5">
+							<ul id="fileList" class="ml-4" style="list-style: none;">
+								<li>어쩌구 저쩌구 파일</li>
+							</ul>
+						</div>
+
+						<div class="input-group m-3">
+							<textarea class="mr-4 form-control" name="task_content"
+								id="view_task_content" readonly style="resize: none;" rows="5">내용을 입력하세요</textarea>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+	<!-- 상세보기 모달창 끝 -->
+
+
+
+
+
+
+	<script th:inline="javascript">
+	$(document).ready(function () {
+		let taskList = [[${list}]];
+		let mList = [[${members}]];
+		
+		$('.view-modal-closeBtn').click(function() {
+			$('#showTaskModal').modal('hide');
+		});
+		
+		createMembers(mList);
+	});
+	
+
+	
+	let members = new Map();
+	
+	function createMembers(memberList) {
+		
+		for(let member of memberList){
+			members.set(member.memb_mail, member);
+		}
+		console.log(members);
+	}
+	
+	
+	/*칸반보드 드래그 앤 드롭 이벤트*/
+	
 	//어떤 컨테이너에 떨어졌는지
 	let where = null;
 	
@@ -681,6 +919,131 @@ a:hover  {
 		).element
 	}
 	*/
+	
+	
+	/*태스크 상세조회 */
+	$(".clickTask").click(showTaskModalControlFunc); 
+	
+	function showTaskModalControlFunc(event){
+		
+		$("#showTaskModal").modal("show");
+		
+		$.ajax({
+			url: 'showTaskModal',
+			type: 'post',
+			data: { taskSeq: $(this).children('#t_seq').val() },
+			dataType: 'JSON',
+			success: function(result) {
+				console.log(members.get(result.showTask.task_sender));
+				// 신승훈 * 태스크 상세보기 정보 세팅
+				$('#view_task_sender').val(members.get(result.showTask.task_sender).memb_name + " " + result.showTask.task_sender);
+				$('#view_task_name').val(result.showTask.task_name);
+				
+				let staffListStr = '';
+				if(result.showStaff != null){
+					for(let staff of result.showStaff){
+						if(staffListStr === '')
+							staffListStr += members.get(staff.memb_mail).memb_name+"("+staff.memb_mail+")";
+						else
+							staffListStr += ", " + members.get(staff.memb_mail).memb_name+"("+staff.memb_mail+")";
+					}
+				}
+				$('#view_staffInput').val(staffListStr);
+				
+				console.log('result.showTask.task_rank');
+				let viewRankId = $(':radio[name=view_task_rank][value="' + result.showTask.task_rank + '"]').attr('id');
+				$(`#${viewRankId}`).attr('checked', true);
+				$('.view_task_rank_label').removeClass("active");
+				$(`label[for='${viewRankId}']`).addClass("active");
+				
+				let viewRadioId2 = $(':radio[name=view_task_state][value="' + result.showTask.task_state + '"]').attr('id');
+				console.log(viewRadioId2);
+				$(`#${viewRadioId2}`).attr('checked', true);
+				$('.view_task_state_label').removeClass("active");
+				$(`label[for='${viewRadioId2}']`).addClass("active");
+				
+				let isEmptyStartDate;
+				if(result.showTask.exp_startdate == null)
+					isEmptyStartDate = 0;
+				else
+					isEmptyStartDate = 1;
+				
+				$(':radio[name=view_chk_startDate][value="' + isEmptyStartDate + '"]').attr('checked', true);
+				if(isEmptyStartDate == 1){
+	/* 				$("#datepicker3").show();
+					$('#datepicker3').datepicker();
+					$(".gj-icon").show();
+					 */
+					let year = result.showTask.exp_startdate.substr(0, 4);
+					let month = result.showTask.exp_startdate.substr(5, 2);
+					let day = result.showTask.exp_startdate.substr(8, 2);
+					
+					$('#datepicker3').val(month+"/"+day+"/"+year);
+				}/* else {
+					$("#datepicker3").hide();
+					$(".gj-icon").hide();
+				} */
+				
+				let isEmptyEndDate;
+				if(result.showTask.exp_enddate == null)
+					isEmptyEndDate = 0;
+				else
+					isEmptyEndDate = 1;
+				
+				$(':radio[name=view_chk_endDate][value="' + isEmptyEndDate + '"]').attr('checked', true);
+				if(isEmptyEndDate == 1){
+	/* 				$("#datepicker4").show();
+					$('#datepicker4').datepicker();
+					$(".gj-icon").show();
+					 */
+					let year = result.showTask.exp_enddate.substr(0, 4);
+					let month = result.showTask.exp_enddate.substr(5, 2);
+					let day = result.showTask.exp_enddate.substr(8, 2);
+					
+					$('#datepicker4').val(month+"/"+day+"/"+year);
+				}else {
+/* 					$("#datepicker4").hide();
+					$(".gj-icon").hide(); */
+				}
+				
+				$('#view_task_content').val(result.showTask.task_content);
+				
+				let performHTML = '<span class="input-group-text" style="justify-content:center; margin-left:15px; margin-bottom:10px; width:100px;">수행도</span> <ul>';
+				let performIndex = 0;
+				if(result.showStaff != null)
+					for(let staff of result.showStaff){
+						if(staff.memb_mail === [[${#authentication.name}]])
+							performHTML += `<li>${members.get(staff.memb_mail).memb_name} <input type="range" class="view_tsuper_perform" id="perform_${performIndex}" taskSeq="${result.showTask.task_seq}" min="0" max="4" style="width: 250px;"></li>`;
+						else 
+							performHTML += `<li>${members.get(staff.memb_mail).memb_name} <input type="range" class="view_tsuper_perform" id="perform_${performIndex}" taskSeq="${result.showTask.task_seq}" min="0" max="4" style="width: 250px;" disabled></li>`;
+						performIndex++;
+					}
+				performHTML += "</ul>";
+				
+				$('#view_perform_list').html(performHTML);
+				for(let i=0 ; i<performIndex ; i++){
+					$('#perform_'+i).val(result.showStaff[i].tsuper_perform/25);
+				}
+				
+				fileListHTML = '';
+				let link = [[@{/}]];
+				for(let file of result.taskFileList){
+					fileListHTML += `<li><a href="${link}${result.showTask.prj_domain}/task/download?fileSeq=${file.tfile_seq}">${file.tfile_ogfile}</a></li>`;
+				}
+				$('#fileList').html(fileListHTML);
+				
+				$('.view_tsuper_perform').change(tsuper_perform_change);
+				
+				// 첨부파일 $("#basic_addon_8").val(result.showTask.);
+			},
+			error: function() {
+				alert('showTaskModal error');
+			}
+		});
+	}
+	
+	
+	
 </script>
 </body>
 </html>
