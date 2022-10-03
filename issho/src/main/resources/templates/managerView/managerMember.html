@@ -290,18 +290,15 @@
 					success : function(resultMap) {
 							console.log(resultMap);
 							console.log("resultMap.profileImg : " + resultMap.profileImg);
-							//http://localhost:9990/issho/savedImg/20220916.JPG
 							let insertImg = document.getElementById("insertImg");
 							
 							insertImg.innerHTML = '<img src="'+ resultMap.profileImg +'" class="rounded"  height="140" width="130" />';
 							
-							//$('#modalMembImg').text(resultMap.profileImg);
-							//$('#modalMembImg').text("http://localhost:9990/issho/savedImg/20220916.JPG");
-							$('#modalMembMail').text(resultMap.members2.memb_mail);
-							$('#modalMembName').text(resultMap.members2.memb_name);
-							$('#modalMembPhone').text(resultMap.members2.memb_phone);
-							$('#modalMembRolename').text(resultMap.members2.pjmb_right);
-							$('#modalMembWork').text(resultMap.members2.memb_work);
+							$('#modalMembMail').text(resultMap.membersList.memb_mail);
+							$('#modalMembName').text(resultMap.membersList.memb_name);
+							$('#modalMembPhone').text(resultMap.membersList.memb_phone);
+							$('#modalMembRolename').text(resultMap.membersList.pjmb_right);
+							$('#modalMembWork').text(resultMap.membersList.memb_work);
 							
 						 	$("#exampleModal").modal("show");
 					},

@@ -1,3 +1,4 @@
+
 package net.softsociety.issho.manager.domain;
 
 import lombok.AllArgsConstructor;
