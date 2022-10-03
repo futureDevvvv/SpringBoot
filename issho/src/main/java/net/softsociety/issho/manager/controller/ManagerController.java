@@ -275,35 +275,27 @@ public class ManagerController {
 	}
 	
 	/**
-	 * 구성원관리 해당멤버 클릭시 멤버 정보 폼으로 이동
-	 * 
-	 * @param email
+	 * メンバーの情報をモーダルウィンドウで表示
+	 * @param request
+	 * @param memEmail
 	 * @param model
 	 * @return
 	 */
 	@ResponseBody
 	@PostMapping("ShowMemberInfo")
-	public Map<String, Object> memberInfo(HttpServletRequest request,String domain,String memEmail, Model model) {
-		
+	public Map<String, Object> memberInfo(
+			HttpServletRequest request
+			,String memEmail
+			,Model model) {
 		
 		String calledValue = request.getServletPath();
-	     String[] splitedUrl = calledValue.split("/");
-	     String prj_domain = splitedUrl[1];
+	    String[] splitedUrl = calledValue.split("/");
+	    String prj_domain = splitedUrl[1];
 		
 		Members members = memDao.getUserById(memEmail);
-		
-		log.debug("멤버정보 이메일 : " + memEmail); 
 
-		/* members.setMemb_mail(memEmail); */
-		
-		log.debug("멤버정보 이메일 2 : " + memEmail); 
-
-		
-		log.debug("멤버 정보: " + members);
-		
-		
-		Members members2 = service.listManager(prj_domain,memEmail);
-		log.debug("멤버상세 리스트 결과: {}", members2);
+		Members membersList = service.listManager(prj_domain,memEmail);
+		log.debug("멤버상세 리스트 결과: {}", membersList);
 		
 		String profileImg = 
 				"http://localhost:9990/issho/savedImg/" + members.getMemb_savedfile();
@@ -315,7 +307,7 @@ public class ManagerController {
 
 		Map<String, Object> result = new HashMap<>();
 		result.put("members", members);
-		result.put("members2", members2);
+		result.put("membersList", membersList);
 		result.put("profileImg", profileImg);
 		
 
@@ -457,15 +449,16 @@ public class ManagerController {
 	}
 
 	/**
-	 * 초대 메일 전송
-	 * 
-	 * @param email
-	 * @param domain
+	 * 招待メール
+	 * @param request
+	 * @param invitation
 	 * @return
 	 * @throws Exception
 	 */
 	@PostMapping("/mailSender2")
-	public String mailSender(HttpServletRequest request,InvitationMember invitation) throws Exception {
+	public String mailSender(
+			HttpServletRequest request
+			,InvitationMember invitation) throws Exception {
 		
 		String calledValue = request.getServletPath();
 	     String[] splitedUrl = calledValue.split("/");
@@ -475,12 +468,6 @@ public class ManagerController {
 	     
 		mailSenderService.mailSend(invitation.getMembInv_recipient(), prj_domain);
 		log.debug("메일샌더 실행");
-		/*
-		 * log.debug("이메일"+ memb_mail); log.debug("도메인"+prj_domain);
-		 * 
-		 * invitation.setPrj_domain(prj_domain);
-		 * invitation.setMembInv_recipient(memb_mail);
-		 */
 		invitation.setPrj_domain(prj_domain);
 		
 		service.insertAttendant(invitation);
@@ -553,10 +540,6 @@ public class ManagerController {
 			log.debug("업무관리 엑셀 이메일:" ,workEmail.get(i).getMemb_mail());
 		}
 		
-		
-	
-		
-		
 		Workbook wb = new XSSFWorkbook();
 		Sheet sheet = wb.createSheet("업무리스트");
 		Row row = null;
@@ -587,10 +570,9 @@ public class ManagerController {
 			cell = row.createCell(3);
 			cell.setCellValue("업무능률");
 
-			
 		}
 
-		// 컨텐츠 타입과 파일명 지정
+		
 		response.setContentType("ms-vnd/excel");
 //        response.setHeader("Content-Disposition", "attachment;filename=example.xls");
 		response.setHeader("Content-Disposition", "attachment;filename="+prj_domain+"_woksList.xlsx");
