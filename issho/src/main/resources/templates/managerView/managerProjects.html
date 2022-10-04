@@ -101,7 +101,7 @@
 							<td th:text=${l.task_enddate}>
 							</td>
 							<td>
-							<button class="btn btn-primary">
+							<button class="btn btn-primary" th:num="${l.task_seq}" onclick="helpWork(this.getAttribute('num'))">
 							  <span class="spinner-grow spinner-grow-sm"></span>
 							  요청
 							</button>
@@ -183,6 +183,14 @@
 
 
 	<script th:inline="javascript">
+	
+	
+	//요청버튼
+	function helpWork(num){
+		window.open("../manager/helpWork?task_seq="+num,
+				"업무 요청", "width=500, height=450, top=30, left=30");
+	}
+	
 	
 	function showPop() {
 

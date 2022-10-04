@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.extern.slf4j.Slf4j;
+import net.softsociety.issho.chat.service.ChatService;
 import net.softsociety.issho.manager.domain.DriveFile;
 import net.softsociety.issho.manager.domain.InvitationMember;
 import net.softsociety.issho.manager.domain.MemberTemp;
@@ -72,9 +73,16 @@ public class ManagerController {
 	
 	@Autowired
 	TaskService taskService;
+
+	@Autowired
+	ChatService chatservice;
+
+	
+
 	
 	@Autowired
 	MemberDAO memDao;
+	
 
 	/*
 	 * 메일 전송 서비스
@@ -527,17 +535,22 @@ public class ManagerController {
 		String[] emails = email.split(",");
 		
 		log.debug(emails[0]);
+		 
+		
+		
 		
 		//DB에 들려서 조인해서 데이터 불러오기
-		
-		
-		
-		ArrayList<WorkEmail> workEmail = new ArrayList<>();
-		
+		Map<String, ArrayList<MemberTemp>> workListMap = new HashMap<>();
+		Map<String, ArrayList<MemberTemp>> taskStateMap = new HashMap<>();
+		ArrayList<MemberTemp> workListTemp = new ArrayList<>();
 		for (int i = 0; i < emails.length; i++) {
-			workEmail.get(i).setMemb_mail(emails[i]);
-			log.debug("업무관리 엑셀 이메일:" ,workEmail.get(i).getMemb_mail());
+			workListTemp = service.listWork(emails[i]);
+			workListMap.put(emails[i], workListTemp);
 		}
+//		MemberTemp t = (MemberTemp) workListMap.get(emails[1]);
+//		System.out.println(t.getPerformance());
+//		System.out.println(workListMap.get(emails[1]).get(0).getPerformance());
+//		System.out.println("진행중:"+workListMap.get(emails[1]).get(0).getProgress());
 		
 		Workbook wb = new XSSFWorkbook();
 		Sheet sheet = wb.createSheet("업무리스트");
@@ -552,8 +565,12 @@ public class ManagerController {
 		cell = row.createCell(1);
 		cell.setCellValue("이름");
 		cell = row.createCell(2);
-		cell.setCellValue("작업진척도");
+		cell.setCellValue("업무진행도(평균)");
 		cell = row.createCell(3);
+		cell.setCellValue("할당된업무량");
+		cell = row.createCell(4);
+		cell.setCellValue("완료된업무량");
+		cell = row.createCell(5);
 		cell.setCellValue("업무능률");
 	
 
@@ -563,12 +580,19 @@ public class ManagerController {
 			cell = row.createCell(0);
 			cell.setCellValue(emails[i]);
 			cell = row.createCell(1);
-			cell.setCellValue(emails[i]);
+			cell.setCellValue(workListMap.get(emails[i]).get(0).getMemb_name());
 			cell = row.createCell(2);
-			cell.setCellValue("작업진척도");
+			cell.setCellValue("진행전:"+workListMap.get(emails[i]).get(0).getRequested()+"%,"
+			+"진행중:"+workListMap.get(emails[i]).get(0).getProgress()+"%,"
+			+"완료:"+workListMap.get(emails[i]).get(0).getDone()+"%,"
+			+"보류:"+workListMap.get(emails[i]).get(0).getProgress()+"%"
+					);
 			cell = row.createCell(3);
-			cell.setCellValue("업무능률");
-
+			cell.setCellValue(workListMap.get(emails[i]).get(0).getTaskCnt()+"개");
+			cell = row.createCell(4);
+			cell.setCellValue(workListMap.get(emails[i]).get(0).getTaskCntDone()+"개");
+			cell = row.createCell(5);
+			cell.setCellValue(workListMap.get(emails[i]).get(0).getPerformance()+"%");
 		}
 
 		
@@ -722,5 +746,31 @@ public class ManagerController {
 		return null;
 	}	
 	
+	
+	@GetMapping("helpWork")
+	public String helpWork(HttpServletRequest request,Model model, String task_seq, @AuthenticationPrincipal UserDetails user) {
+		String calledValue = request.getServletPath();
+	     String[] splitedUrl = calledValue.split("/");
+	     String prj_domain = splitedUrl[1];
+	     
+		log.debug("업무요청:{}",task_seq);
+		
+		String id = user.getUsername();
+		
+		Projects project = pjService.searchOne(prj_domain);
+		ArrayList<Members> pjMemList = memberService.searchPjMem(prj_domain);
+
+		model.addAttribute("project", project);
+		model.addAttribute("list", pjMemList);
+
+
+		return "/managerView/helpWork";
+	}
+	@PostMapping("workRequest")
+	public String workRequest() {
+		
+		
+		return "redirect:/manager/work";
+	}
 	
 }

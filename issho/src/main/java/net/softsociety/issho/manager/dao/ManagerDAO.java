@@ -61,5 +61,11 @@ public interface ManagerDAO {
 
 	public TaskState taskState(String memEmail);
 
+	public ArrayList<MemberTemp> listWorkEx(String email);
+
+	public ArrayList<MemberTemp> taskStateMap(String memEmail);
+
+	public ArrayList<MemberTemp> mamberName(String memb_name);
+
 
 }

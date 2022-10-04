@@ -66,7 +66,8 @@
 										<div class="w3-right w3-btn" style="margin-left: 800px; margin-bottom: 10px;">
 											<a class="btn btn-primary btn-icon-split" id="newTask"
 												data-bs-toggle="modal" data-bs-target="exampleModal"> <span
-												class="icon text-white-50"> <i class="fas fa-check"></i>
+												class="icon text-white-50"> 
+												<i class="fa fa-solid fa-upload"></i>
 											</span> <span class="text">파일 업로드</span>
 											</a>
 										</div>
@@ -210,11 +211,12 @@
 				<div class="modal-body p-5 pt-0">
 		<form id="writeform" action="./manager/drive" method="post" 
 			enctype="multipart/form-data">
-					
-					<input type="file" name="upload" size="10">
-					<input type="submit" value="업로드">
-			
-	</form>
+					<div class="custom-file" >
+					<input type="file" name="upload" size="10" class="custom-file-input" id="customFile">
+    				<label class="custom-file-label" for="customFile">Choose file</label>
+					<input type="submit" value="Upload" class="btn btn-outline-secondary" style="margin-top: 5px; margin-left: 60px">
+		  </div>
+		</form>
 					
 				</div>
 			<!-- 	<div class="modal-footer">

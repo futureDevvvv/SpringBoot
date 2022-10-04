@@ -87,6 +87,7 @@
 						</div>
 					</div>
 
+							
 					<div class="row">
 						<div class="col-sm-12">
 							<!-- 체크박스 선택시 전송할 폼 -->
@@ -127,23 +128,16 @@
 													style="vertical-align: middle;"></td>
 												<td><a th:text=${l.memb_mail} th:id="newTask"
 													data-target="exampleModal" data-toggle="modal"
-													th:infoEmail="${l.memb_mail}"
+													th:infoEmail="${l.memb_mail}" 
 													onclick="openModal(this.getAttribute('infoEmail'))"
-													style="cursor: pointer;"></a></td>
+													style="cursor: pointer;"
+													
+													></a></td>
 												<td th:text=${l.memb_name}></td>
 
 
 												<td th:text=${l.pjmb_right}></td>
 												
-											<!-- 	<td>
-												<div class="progress" h:each="w:${workList}">
-												  <div class="progress-bar bg-danger" role="progressbar" style="width: 20%" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100">진행전</div>
-												  <div class="progress-bar bg-success" role="progressbar" style="width: 40%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100">진행중</div>
-												  <div class="progress-bar bg-info" role="progressbar" style="width: 20%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">완료</div>
-												  <div class="progress-bar bg-warning" role="progressbar" style="width: 20%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">보류</div>
-												</div>
-												
-												</td>  -->
 												
 												<td>
 												<div th:each="w:${workList}" style="text-align:center;">
@@ -207,36 +201,35 @@
 						정보</h5>
 
 				</div>
-				<div class="modal-body p-5 pt-0">
-					이름: <span class="name mt-3" id="modalMembName"></span> <br>
-					이메일: <span class="idd" id="modalMembMail"></span> <br>
-					<div
-						class="d-flex flex-row justify-content-center align-items-center gap-2">
-						<span class="idd1" id="modalMembRolename"></span>
-					</div>
-					<br>
-					<span>담당업무</span>
-					<div class="d-flex flex-row mt-3">
-						<span id="modalMembWork"> </span>
-
-					</div>
-					<!-- 차트 -->
-					<div class="container">
+				
+					
+					<div class="container" style="margin:0 auto">
 						<div class="row">
-							<div class="col-md-12">
-								<canvas id="myChartOne" width="200" height="200"></canvas>
-								
+							<div style="margin:0 auto" >
+								<canvas id="myChartOne" width="350" height="350" ></canvas>
 								<div id="taskStateChart"></div>
 							</div>
 						</div>
-					</div>
-
+					</div> 
+								
 					<div>
-						<br> <span>할당된 업무량: </span> <span id="modalTaskCnt"></span>개<br>
+						<div class="modal-body p-5 pt-0" style="text-align: center;">
+							이름: <span class="name mt-3" id="modalMembName"></span> <br>
+							이메일: <span class="idd" id="modalMembMail"></span> <br>
+							<div
+								class="d-flex flex-row justify-content-center align-items-center gap-2">
+								<span class="idd1" id="modalMembRolename"></span>
+							</div>
+							<br>
+								담당업무: <span id="modalMembWork"> </span>
+							<div class="d-flex flex-row mt-3">
+		
+							</div>
+						<span>할당된 업무량: </span> <span id="modalTaskCnt"></span>개<br>
 						 <span>달성한 업무량: </span> <span id="modalTaskCntDone"></span>개<br>
 						<br>
 					</div>
-
+					
 
 
 
@@ -279,7 +272,7 @@
 
 		//새로운 태스크 모달창 제어
 		function openModal(id) {
-			
+			var barChart;
 		    
 			let email = id;
 
@@ -291,32 +284,7 @@
 				},
 				dataType : 'json',
 				success : function(resultMap) {
-					/* 		console.log(resultMap);
-							console.log("resultMap.profileImg : " + resultMap.profileImg);
-							//http://localhost:9990/issho/savedImg/20220916.JPG
-							let insertImg = document.getElementById("insertImg");
-							
-							insertImg.innerHTML = '<img src="'+ resultMap.profileImg + '" class="rounded"  height="140" width="130" />';
-					 */
-					//$('#modalMembImg').text(resultMap.profileImg);
-					 
-					/*  let taskStateChart = document.getElementById("insertImg"); */
-					 
-/* 					//first page
-					 var requested = resultMap.taskState.requested;
-					 localStorage.setItem("requested", requested);
-					 var progress = resultMap.taskState.progress;
-					 localStorage.setItem("progress", progress);
-					 var done = resultMap.taskState.done;
-					 localStorage.setItem("done", done);
-					 var pending = resultMap.taskState.pending;
-					 localStorage.setItem("pending", pending);
-
-					 console.log(requested);
-					 console.log(progress);
-					 console.log(done);
-					 console.log(pending); */
-					 
+			
 					 
 					$('#modalTaskState').text(resultMap.taskState);
 					$('#modalTaskCntDone').text(resultMap.taskCntDone.taskCntDone);
@@ -327,42 +295,15 @@
 					$('#modalMembRolename').text(resultMap.members.pjmb_right);
 					$('#modalMembWork').text(resultMap.members.memb_work);
 					
-					
+					$("#exampleModal").modal({backdrop: 'static', keyboard: false}) ;
 					
 					$("#exampleModal").modal("show");
 					
-/* 					var requested = resultMap.taskState.requested;
-					 localStorage.setItem("requested", requested);
-					 var progress = resultMap.taskState.progress;
-					 localStorage.setItem("progress", progress);
-					 var done = resultMap.taskState.done;
-					 localStorage.setItem("done", done);
-					 var pending = resultMap.taskState.pending;
-					 localStorage.setItem("pending", pending); */
-					 
-						//차트
-						
-						
-
-						
-		/* 				 //second page
-						 var requested = localStorage.getItem("requested");
-						 var progress = localStorage.getItem("progress");
-						 var done = localStorage.getItem("done");
-						 var pending = localStorage.getItem("pending"); */
-	/* 					 
-						 console.log(requested);
-						 console.log(progress);
-						 console.log(done);
-						 console.log(pending);
-						
-						  */
-						
-						  
-						
+					
+			
 					let myChartOne = document.getElementById('myChartOne').getContext('2d');
 						 
-						var barChart = new Chart(myChartOne, {
+						barChart = new Chart(myChartOne, {
 							type : 'polarArea', //pir,line,doughnut,polarArea
 							data : {
 								labels : [ '진행전', '진행중', '완료', '보류' ],
@@ -390,6 +331,13 @@
 				error : function(e) {
 					alert(JSON.stringify(e));
 				}
+			});
+			
+			$("#closeNewTask").click(function(e) {
+				e.preventDefault();
+				barChart.destroy();
+				$("#exampleModal").modal("hide");
+
 			});
 		}
 		
@@ -468,12 +416,12 @@
 				});
 
 
-		$("#closeNewTask").click(function(e) {
+/* 		$("#closeNewTask").click(function(e) {
 			e.preventDefault();
 			barChart.destroy();
 			$("#exampleModal").modal("hide");
 
-		}) 
+		})  */
 
 		
 		
