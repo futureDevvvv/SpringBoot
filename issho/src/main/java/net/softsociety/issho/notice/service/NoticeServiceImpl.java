@@ -16,6 +16,7 @@ import net.softsociety.issho.notice.domain.Notice;
 import net.softsociety.issho.notice.domain.NoticeDetail;
 import net.softsociety.issho.util.PageNavigator;
 
+
 @Slf4j
 @Transactional
 @Service
@@ -37,19 +38,7 @@ public class NoticeServiceImpl implements NoticeService{
 		return noticeList;		
 	}
 
-//	@Override
-//	public int insertNotice(Notice notice) {
-//		int result = noticeDAO.insertNotice(notice); 
-//		return result;		
-//	}
 	
-	@Override
-	public NoticeDetail selectNotice(int notice_seq) {
-		
-		NoticeDetail noticeDetail = noticeDAO.selectNotice(notice_seq); 
-		return noticeDetail;		
-	}
-
 	@Override
 	public PageNavigator getNoticePageNavi(
 			int pagePerGroup, int countPerPage, int page, String type, String searchWord, String prj_domain) {
@@ -64,7 +53,16 @@ public class NoticeServiceImpl implements NoticeService{
 		
 		return navi;
 	}
+	
+	//Notice 정보 읽어오기(Hit count는 증가하지 않음)
+	@Override
+	public NoticeDetail selectNotice(int notice_seq) {
+		
+		NoticeDetail noticeDetail = noticeDAO.selectNotice(notice_seq); 
+		return noticeDetail;		
+	}
 
+	//Notice 정보 읽어오기(사용자가 읽을 때 Hit count는 증가)
 	@Override
 	public NoticeDetail readNotice(int notice_seq, boolean increaseHits) {
 		int result;
