@@ -161,3 +161,10 @@ function deleteComment(noticeCmt_seq) {
 	});
 }
 
+function showPop() {
+
+         console.log('showPop 실행');
+
+         window.open("multiRoom/chatHome", "메신저",
+               "width=500, height=700, top=10, left=10");
+}
