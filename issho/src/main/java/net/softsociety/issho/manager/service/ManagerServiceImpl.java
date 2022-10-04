@@ -155,8 +155,24 @@ public class ManagerServiceImpl implements ManagerService {
 		TaskState taskState = managerDAO.taskState(memEmail);
 		return taskState;
 	}
+
+	@Override
+	public ArrayList<MemberTemp> listWork(String email) {
+		ArrayList<MemberTemp> listWork = managerDAO.listWorkEx(email);
+		return listWork;
+	}
 	
-	
+	@Override
+	public ArrayList<MemberTemp> taskStateMap(String memEmail) {
+		ArrayList<MemberTemp> MemberTemp = managerDAO.taskStateMap(memEmail);
+		return MemberTemp;
+	}
+
+	@Override
+	public ArrayList<MemberTemp> memberName(String memb_name) {
+		ArrayList<MemberTemp> memberName = managerDAO.mamberName(memb_name);
+		return memberName;
+	}
 	
 	
 	

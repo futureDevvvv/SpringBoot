@@ -58,6 +58,12 @@ public interface ManagerService {
 
 	public TaskState taskState(String memEmail);
 
+	public ArrayList<MemberTemp> listWork(String email);
+
+	public ArrayList<MemberTemp> taskStateMap(String memEmail);
+
+	public ArrayList<MemberTemp> memberName(String memb_name);
+
 	
 
 
