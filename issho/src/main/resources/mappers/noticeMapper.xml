@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="net.softsociety.issho.notice.dao.NoticeDAO">
 
 <!-- 조건에 맞는 공지사항 목록 -->
@@ -201,5 +202,4 @@
 			noticeCmt_seq = #{noticeCmt_seq} 
 		AND noticeCmt_writer = #{noticeCmt_writer}
 </delete>
-
 </mapper>

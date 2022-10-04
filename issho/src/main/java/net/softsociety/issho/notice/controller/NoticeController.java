@@ -7,6 +7,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,15 +30,18 @@ import net.softsociety.issho.notice.domain.CommentDetail;
 import net.softsociety.issho.notice.domain.Notice;
 import net.softsociety.issho.notice.domain.NoticeDetail;
 import net.softsociety.issho.notice.service.NoticeService;
+import net.softsociety.issho.project.domain.Projects;
+import net.softsociety.issho.project.service.ProjectService;
 import net.softsociety.issho.util.FileService;
 import net.softsociety.issho.util.PageNavigator;
 
+
 @Slf4j
-@RequestMapping("notice")
+@RequestMapping("**/notice")
 @Controller
 public class NoticeController {
 	
-	//게시판 목록의 페이지당 글 수
+	 //게시판 목록의 페이지당 글 수
 	@Value("${user.manager.members.page}")
 	int countPerPage;
 	
@@ -52,17 +56,32 @@ public class NoticeController {
 	@Autowired
 	NoticeService noticeService;
 	
+	@Autowired
+	ProjectService projectService;
+	
 	//prj_seq는 나중에 반드시 프로젝트에 공통적으로 관리하고 읽을 수 있어야 함
-	String prj_domain = "scit41";
+	String prj_domain;
 	
 	@GetMapping("noticeList")
-	public String noticeList(@RequestParam(name = "page", defaultValue = "1") int page,
-								String type , String searchWord, Model model, 
+	public String noticeList(HttpServletRequest request, @RequestParam(name = "page", defaultValue = "1") int page,
+								String prj_domain, String type , String searchWord,  Model model, 
 								@AuthenticationPrincipal UserDetails user) {
 			log.debug("----- 진입 GET : notice/noticeList");
 			log.debug("-------------------- USER  : {}", user.getUsername());
 			log.debug("----- PARAM: {} | {} | {}", page, type, searchWord);
 			
+			// prj_domain 설정
+			String calledValue = request.getServletPath();
+			String[] splitedUrl = calledValue.split("/");
+			prj_domain = splitedUrl[1];
+			
+			log.debug("----- 찾아낸 prj_domain : {}", prj_domain);
+			
+			//project 정보 받아오기
+			Projects project = projectService.searchOne(prj_domain);
+			String prj_name = project.getPrj_name(); 
+			log.debug("----- 찾아낸 prj_name : {}", prj_name);
+
 			PageNavigator navi = noticeService.getNoticePageNavi(pagePerGroup, countPerPage, page, type, searchWord, prj_domain);
 			log.debug("----- PageNavigator | {}", navi);
 			
@@ -70,8 +89,9 @@ public class NoticeController {
 			log.debug("----- 검색된 noticeList : {}", noticeList);
 			
 			//!!!! 나중에 prj_domain는 받아와서 반드시 채워주어야 함!!!!
-			model.addAttribute("prj_domain", null); 
-			
+			model.addAttribute("prj_domain", prj_domain); 
+			model.addAttribute("prj_name", prj_name); 
+
 			model.addAttribute("navi", navi);
 			if(!noticeList.isEmpty())
 				model.addAttribute("noticeList", noticeList);
@@ -92,7 +112,8 @@ public class NoticeController {
 
 		NoticeDetail noticeDetail = noticeService.readNotice(notice_seq, true);
 		if (noticeDetail == null) {
-			return "redirect:/notice/noticeList"; //글이 없으면 목록으로
+			return "redirect:noticeList"; //글이 없으면 목록으로
+//			return "redirect:/notice/noticeList"; //글이 없으면 목록으로
 		}
 		
 		//현재 글에 달린 리플들
@@ -150,9 +171,9 @@ public class NoticeController {
 	public String writeNotice(
 			Notice notice
 			, @AuthenticationPrincipal UserDetails user
-			, MultipartFile upload) {
+			, MultipartFile upload, Model model) {
 		
-		notice.setPrj_domain(prj_domain);
+//		notice.setPrj_domain(prj_domain);
 		
 		log.debug("----- 진입 POST : notice/writeNotice");
 		log.debug("저장할 글정보 : {}", notice);
@@ -162,7 +183,7 @@ public class NoticeController {
 		notice.setNotice_writer(user.getUsername());
 		
 		//첨부파일이 있는 경우 지정된 경로에 저장하고, 원본 파일명과 저장된 파일명을 Board객체에 세팅
-		if (!upload.isEmpty()) {
+		if (upload != null && !upload.isEmpty()) {
 			String savedfile = FileService.saveFile(upload, uploadPath);
 			notice.setNotice_ogFilr(upload.getOriginalFilename());
 			notice.setNotice_saveFile(savedfile);
@@ -170,15 +191,22 @@ public class NoticeController {
 		
 		int result = noticeService.writeNotice(notice);
 		
+		model.addAttribute("prj_domain", notice.getPrj_domain()); 
+		log.debug("prj_domain : {}", notice.getPrj_domain());
+
 		log.debug("----- 호출 : notice/noticeList");	
-		return "redirect:/notice/noticeList";
+//OK		return "redirect:/" + notice.getPrj_domain() +"/notice/noticeList";
+		return "redirect:noticeList";
 	}
 
 	@GetMapping("writeNotice")
-	public String writeNotice() {
+	public String writeNotice(String prj_domain, Model model) {
 		log.debug("----- 진입 GET : notice/writeNotice");
-
-		log.debug("----- 호출 : notice/noticeList");	
+		
+		model.addAttribute("prj_domain", prj_domain);
+		log.debug("prj_domain 정보 : {}", prj_domain);
+		
+		log.debug("----- 호출 : noticeView/writeForm");	
 		return "/noticeView/writeForm";
 	}
 
@@ -190,7 +218,7 @@ public class NoticeController {
 
 		NoticeDetail noticeDetail = noticeService.readNotice(notice_seq, true);
 		if (noticeDetail == null) {
-			return "redirect:/notice/noticeList"; //글이 없으면 목록으로
+			return "redirect:noticeList"; //글이 없으면 목록으로
 		}
 		
 		//결과를 모델에 담아서 HTML에서 출력
@@ -239,7 +267,8 @@ public class NoticeController {
 		}
 		
 		log.debug("----- 호출 : notice/readNotice?notice_seq=notice.getNotice_seq()");
-		return "redirect:/notice/readNotice?notice_seq=" + notice.getNotice_seq();
+//		return "redirect:notice/readNotice?notice_seq=" + notice.getNotice_seq();
+		return "redirect:readNotice?notice_seq=" + notice.getNotice_seq();
 	}
 
 	@GetMapping ("deleteNotice")
@@ -251,7 +280,7 @@ public class NoticeController {
 		Notice notice = noticeService.readNotice(notice_seq, false);
 		
 		if (notice == null) {
-			return "redirect:/notice/noticeList";
+			return "redirect:noticeList";
 		}
 		
 		//첨부된 파일명 확인
@@ -271,11 +300,11 @@ public class NoticeController {
 		}
 
 		log.debug("----- 호출 : /notice/noticeList");
-		return "redirect:/notice/noticeList";
+		return "redirect:noticeList";
 	}
 
 	/*
-	 * @PostMapping("writeComment") public String writeComment(Notice notice,
+	 * @PostMapping("writeComment") public String write	ent(Notice notice,
 	 * Comment comment, @AuthenticationPrincipal UserDetails user) {
 	 * 
 	 * log.debug("----- 진입 POST : notice/writeComment");

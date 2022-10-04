@@ -11,6 +11,7 @@ import net.softsociety.issho.notice.domain.Comment;
 import net.softsociety.issho.notice.domain.CommentDetail;
 import net.softsociety.issho.notice.domain.NoticeDetail;
 
+
 @Mapper
 public interface NoticeDAO {
 	
