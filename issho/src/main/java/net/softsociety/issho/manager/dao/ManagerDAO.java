@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.session.RowBounds;
 
 import net.softsociety.issho.manager.domain.DriveFile;
+import net.softsociety.issho.manager.domain.Helper;
 import net.softsociety.issho.manager.domain.InvitationMember;
 import net.softsociety.issho.manager.domain.MemberTemp;
 import net.softsociety.issho.manager.domain.TaskCnt;
@@ -66,6 +67,8 @@ public interface ManagerDAO {
 	public ArrayList<MemberTemp> taskStateMap(String memEmail);
 
 	public ArrayList<MemberTemp> mamberName(String memb_name);
+
+	public void insertHelper(Helper helper);
 
 
 }

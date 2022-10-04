@@ -78,7 +78,7 @@ ul#memList li.mem-item:hover {
 
 	<div id="searchAjax" class="form-group">
 		<form th:action="@{../manager/workRequest}" method="POST"
-			id="newChatForm">
+			id="helperRequestForm">
 
 			<div id="mems">
 				<ul id="memList">
@@ -108,19 +108,30 @@ ul#memList li.mem-item:hover {
 				</table>
 
 			</div>
-						<input type="hidden" id="domain" name="prj_domain"
-				th:value="${project.prj_domain}"> <input type="hidden"
-				id="memList2" name="memList2" value="">
-
+				<input type="hidden" id="domain" name="prj_domain"th:value="${project.prj_domain}"> 
+				<input type="hidden" id="memList2" name="memList2" value="">
+				<input type="hidden" id="task_seq" name="task_seq" th:value="${task_seq}">
 		
 			<div class="col text-center">
-				<button type="submit" class="btn btn-primary">요청</button>
+				<button type="button" class="btn btn-primary" onclick="submitHelper()">요청</button>
 			</div>
 			
 			</form>
 			</div>
 
 <script>
+function submitHelper(){
+	$("#helperRequestForm").submit();
+	  setTimeout(function() {   
+          window.close();
+
+       }, 100);
+	
+}
+
+
+
+
 		$("#memSearch").keyup(function() {
 
 			let val = $(this).val();

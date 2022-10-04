@@ -435,4 +435,12 @@ FROM temp, requested, progress, don, pending, memb_name
 		where
 		memb_mail = #{memb_mail}
 	</select>
+	
+	
+	<insert id="insertHelper" parameterType="Helper">
+		INSERT INTO helper
+		(task_seq,memb_mail)
+		values
+		(#{task_seq},#{memb_mail})
+	</insert>
 </mapper>
