@@ -122,6 +122,7 @@ public class TaskController {
 		model.addAttribute("page", page);
 		model.addAttribute("pjmb", pjmb);
 		
+		
 		log.debug("TaskController [taskList] End");	
 
 		return "taskView/task_List";
