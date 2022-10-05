@@ -35,13 +35,10 @@ public class ChatHandler extends TextWebSocketHandler{
 		chatRoom.handleMessage(session, chatMessage, objectMapper);
 	}
 	
-	/*
+	
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
 		repository.remove(session);
 	}
-	*/
-
-	
 }
 

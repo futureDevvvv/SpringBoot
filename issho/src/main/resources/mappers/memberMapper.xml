@@ -32,7 +32,7 @@
 	</select>
 	
 	<select id="idSearchOne" parameterType="String" resultType="int">
-		SELECT count(*) 
+		SELECT COUNT(*)
 		FROM members
 		WHERE memb_mail = #{memb_mail}
 	</select>
@@ -58,9 +58,9 @@
 		#{memb_work}, #{memb_phone}, 1)
 	</insert>
 	
-	<!-- 관리자 페이지에서 멤버 삭제 -->
+	<!-- 관리자 페이지에서 해당멤버 프로젝트 탈퇴 -->
 	<delete id="deleteMember" parameterType="String">
-		DELETE FROM members
+		DELETE FROM projectmember
 		where
 		memb_mail=#{memb_mail}
 	</delete>
@@ -75,5 +75,15 @@
 		FROM members m, projectmember p
 		WHERE p.memb_mail = m.memb_mail AND p.prj_domain = #{prj_domain}
 	</select>
+
+	<!-- 아이디와 이름으로 멤버 검색 -->
+	<select id="memSearchByIdName" parameterType="String" resultType="Members">
+		SELECT * FROM members
+		WHERE memb_mail LIKE '%' || #{searchWord} || '%'
+		OR memb_name LIKE '%' || #{searchWord} || '%'
+	</select>
+	
+	
+	
 
 </mapper>

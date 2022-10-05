@@ -29,7 +29,8 @@ public class MailSenderService  {
 		h.setFrom(from);
 		h.setTo(memb_mail);
 		h.setSubject(prj_domain +" 프로젝트에 초대합니다.");
-		h.setText("http://localhost:/9990/issho/project/main/"+ prj_domain);
+		h.setText("http://localhost:/9990/issho/"+prj_domain+"/main");
+		
 		mailSender.send(m);
 	}
 

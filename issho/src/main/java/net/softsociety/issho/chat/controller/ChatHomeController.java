@@ -5,17 +5,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import lombok.extern.slf4j.Slf4j;
-import net.softsociety.issho.chat.domain.Chatroom;
+import net.softsociety.issho.chat.domain.ChatMsg;
+import net.softsociety.issho.chat.domain.Chatrooms;
 import net.softsociety.issho.chat.service.ChatService;
 import net.softsociety.issho.member.domain.Members;
 import net.softsociety.issho.member.service.MemberService;
@@ -46,27 +48,30 @@ public class ChatHomeController {
 	 * @return 프로젝트 도메인과 아이디 일치하는 채팅방 목록을 불러와 모델에 담은 뒤 chat_home.html로 리턴
 	 */
 	@GetMapping("/chatHome")
-	public String chatHome(Model model, @AuthenticationPrincipal UserDetails user, String domain) {
+	public String chatHome(HttpServletRequest request, Model model, @AuthenticationPrincipal UserDetails user) {
 
+		String calledValue = request.getServletPath();
+		String[] splitedUrl = calledValue.split("/");
+		String prj_domain = splitedUrl[1];
+		
 		String id = user.getUsername();
 
 		Map<String, String> map = new HashMap<String, String>();
 
 		map.put("chat_member", id);
-		map.put("prj_domain", domain);
+		map.put("prj_domain", prj_domain);
 
-		List<Chatroom> list = chatservice.chatList(map);
+		List<Chatrooms> list = chatservice.chatList(map);
 
-		/*
-		 * Collection<ChatRoom> chatRooms = ChatRoomRepository.chatRooms;
-		 * 
-		 * model.addAttribute("collection", chatRooms);
-		 */
+		List<ChatMsg> chatmsg = chatservice.recentMsgs();
+		
+		log.debug("chatmsg : {}", chatmsg);
 
-		Projects project = pjservice.searchOne(domain);
+		Projects project = pjservice.searchOne(prj_domain);
 
 		model.addAttribute("project", project);
 		model.addAttribute("list", list);
+		model.addAttribute("msg", chatmsg);
 
 		return "chat/chat_home";
 	}

@@ -5,21 +5,22 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import net.softsociety.issho.chat.domain.ChatMember;
 import net.softsociety.issho.chat.domain.ChatMsg;
-import net.softsociety.issho.chat.domain.Chatroom;
+import net.softsociety.issho.chat.domain.Chatrooms;
 import net.softsociety.issho.member.domain.Members;
 
 @Mapper
 public interface ChatDAO {
 
 	//현재 참여중인 채팅방 리스트
-	List<Chatroom> chatList(Map<String, String> map);
+	List<Chatrooms> chatList(Map<String, String> map);
 
 	//새로운 채팅방 오픈
-	void openNewChat(Chatroom chroom);
+	void openNewChat(Chatrooms chroom);
 
 	//채팅 멤버 추가
-	void addChatMem(Chatroom chatroom);
+	void addChatMem(Chatrooms chatroom);
 
 	//채팅 멤버 리스트
 	List<Members> chatMemList(String chatroom_seq);
@@ -28,6 +29,13 @@ public interface ChatDAO {
 	List<ChatMsg> chatMsgs(String chatroom_seq);
 	
 	//메시지 인서트
-	void insertMsg(ChatMsg msg);
+	int insertMsg(ChatMsg msg);
+
+	//최신 메시지 리스트
+	List<ChatMsg> recentMsgs();
+
+	Chatrooms chatroomInfo(String chatroom_seq);
+
+	void leaveChat(ChatMember chatmember);
 
 }

@@ -15,6 +15,10 @@ header {
 	align-items: center;
 }
 
+.eachRoom {
+	height: 100px;
+}
+
 #search {
 	padding: 20px;
 }
@@ -25,7 +29,7 @@ header {
 <body>
 	<header>
 		<div id="title">
-			<h3>메신저</h3>
+			<span><i class="fas fa-solid fa-comment"></i></span><span><h3>메신저</h3></span>
 
 		</div>
 
@@ -33,17 +37,19 @@ header {
 			onclick="openNewChat();">+</button>
 
 	</header>
-	<div class="form-group" id="search">
-		<input type="text" class="form-control form-control-user"
-			id="searchChat" name="searchChat" aria-describedby="emailHelp"
-			placeholder="채팅방명 또는 참여 멤버로 검색하세요.">
-	</div>
-
 	<table class="table table-hover">
 		<tr th:each="list : ${list}" th:id="${list.chatroom_seq}"
 			ondblclick="openChat(id)">
 
-			<td th:text="${list.chatroom_name}">
+			<td class="eachRoom">
+
+				<h5 style="color: black;">[[${list.chatroom_name}]]</h5> <br>
+				<h6 th:each="msg : ${msg}"
+					th:if="${list.chatroom_seq} == ${msg.chatroom_seq}">
+					<span>[[${msg.chatmsg_content}]]</span> <span style="float: right;">[[${msg.chatmsg_sendDate}]]</span>
+				</h6>
+
+			</td>
 		</tr>
 	</table>
 
@@ -53,14 +59,13 @@ header {
 
 <script>
 	function openNewChat() {
-		window.open("multiRoom/newChat?domain=[[${project.prj_domain}]]",
+		window.open("../multiRoom/newChat?domain=[[${project.prj_domain}]]",
 				"채팅방 오픈", "width=500, height=550, top=30, left=30");
 	}
 
 	function openChat(id) {
-
-		location.href = "room?roomid=" + id;
-
+		window.open("../multiRoom/room?roomid="+ id,
+				"채팅방", "width=500, height=700, top=10, left=10");
 	}
 </script>
 </html>

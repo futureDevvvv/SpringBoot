@@ -1,6 +1,9 @@
 package net.softsociety.issho.chat.controller;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -14,9 +17,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import net.softsociety.issho.chat.ChatRoomRepository;
+import net.softsociety.issho.chat.domain.ChatMember;
 import net.softsociety.issho.chat.domain.ChatMsg;
+import net.softsociety.issho.chat.domain.Chatrooms;
 import net.softsociety.issho.chat.service.ChatService;
 import net.softsociety.issho.member.domain.Members;
+import net.softsociety.issho.member.service.MemberService;
 
 @lombok.extern.slf4j.Slf4j
 @Controller
@@ -28,6 +34,9 @@ public class ChatRoomController {
 
 	@Autowired
 	ChatService chatService;
+
+	@Autowired
+	MemberService memservice;
 
 	/**
 	 * 
@@ -56,8 +65,16 @@ public class ChatRoomController {
 			chatService.addChatMem(roomid, list[i]);
 		}
 
+		Chatrooms chatroom2 = chatService.chatroomInfo(roomid);
+
+		log.debug("chatroom2 : {}", chatroom2);
+
 		model.addAttribute("list", list);
 		model.addAttribute("roomId", roomid);
+		model.addAttribute("id", id);
+		model.addAttribute("chatInfo", chatroom2);
+
+		log.debug("chatroom roomId", roomid);
 
 		return "chat/chat_room";
 	}
@@ -71,39 +88,78 @@ public class ChatRoomController {
 	 */
 
 	@GetMapping("/room")
-	public String roomController(Model model, String roomid) {
+	public String roomController(HttpServletRequest request, Model model, String roomid,
+			@AuthenticationPrincipal UserDetails user) {
 
 		// String roomId = request.getParameter("id");
 
-		//현재 repository에 등록된 chatroom인지 여부
-		if(repo.chatRoomMap.containsKey(roomid)) {
+		String calledValue = request.getServletPath();
+		String[] splitedUrl = calledValue.split("/");
+		String prj_domain = splitedUrl[1];
+
+		String id = user.getUsername();
+
+		// 현재 repository에 등록된 chatroom인지 여부
+		if (repo.chatRoomMap.containsKey(roomid)) {
 			repo.enterOpenedChatRoom(roomid);
 		} else {
 			repo.enterChatRoom(roomid);
 		}
-		
+
+		// 프로젝트 멤버 리스트 받아오기
+		ArrayList<Members> pjMemList = memservice.searchPjMem(prj_domain);
+
+		// 채팅방 정보 받아오기
+		Chatrooms chatroom = chatService.chatroomInfo(roomid);
+
 		// 참여자 목록 받아오기
 		List<Members> chatMems = chatService.chatMemList(roomid);
-		
+
 		// 기존 채팅 내역 받아오기
 		List<ChatMsg> chatMsgs = chatService.chatMsgs(roomid);
-		
+
+		log.debug("chatMsgs : {}", chatMsgs);
+
 		model.addAttribute("chatMsgs", chatMsgs);
 		model.addAttribute("chatMems", chatMems);
 		model.addAttribute("roomId", roomid);
+		model.addAttribute("chatInfo", chatroom);
+		model.addAttribute("id", id);
+		model.addAttribute("pjMemList", pjMemList);
+
+		log.debug("chatMems : {}", chatMems);
+
+		log.debug("chatroom roomId : {}", roomid);
+		log.debug("chatInfo : {}", chatroom);
+
 		return "chat/chat_room";
 	}
-	
+
+	/**
+	 * DB에 새로운 메시지 저장
+	 * 
+	 * @param user
+	 * @param msg  메시지 객체
+	 */
 	@ResponseBody
-	@RequestMapping(value="/insertMsg", method = {RequestMethod.POST})
-	public void insertMsg(@AuthenticationPrincipal UserDetails user, ChatMsg msg) {
-		
-		String id = user.getUsername();
-		msg.setChatmsg_recipient(id);
-		
+	@RequestMapping(value = "/insertMsg", method = { RequestMethod.POST })
+	public void insertMsg(ChatMsg msg) {
+
 		log.debug("msg : {}", msg);
-		
+
 		chatService.insertMsg(msg);
 	}
+
+	@ResponseBody
+	@RequestMapping(value = "/leaveChat", method = { RequestMethod.POST })
+	public void leaveChat(ChatMember chatmember) {
+
+		log.debug("chatmem 객체 : {}", chatmember);
+
+		chatService.leaveChat(chatmember);
+
+	}
+	
+	
 
 }

@@ -58,6 +58,12 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 	
+	//신승훈
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.4'
+	
+	//파일 업로드 관련
+	implementation 'commons-io:commons-io:2.6'
+
 	//Excel Download apache
 	implementation group: 'org.apache.poi', name: 'poi', version: '4.1.2'
 	implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '4.1.2'
@@ -66,10 +72,13 @@ dependencies {
 	implementation group: 'com.lowagie', name: 'itext', version: '2.1.7'
 	
 	implementation("org.xhtmlrenderer:flying-saucer-pdf:9.1.20")
-
-
-
 	
+	//SSE 알림
+	implementation 'org.infinispan:infinispan-core:12.0.1.Final'
+    implementation 'org.infinispan:infinispan-commons:12.0.1.Final'
+    implementation 'org.infinispan:infinispan-marshaller-protostuff:12.0.1.Final'
+    implementation 'org.jboss.marshalling:jboss-marshalling-osgi:2.0.10.Final'
+
 }
 
 tasks.named('test') {
