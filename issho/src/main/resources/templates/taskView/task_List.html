@@ -868,40 +868,37 @@ ul#memList li.mem-item:hover {
 				</ul>
 			</nav>
 
-			<nav class="navbar navbar-expand-lg"
+		<nav class="navbar navbar-expand-lg"
 				style="background-color: #f1f3f5; border-bottom: solid 2px black;">
 				<div>
 					<!-- 태스크 추가 modal trigger -->
-					<button class="mr-1 btn btn-info" id="newTask"
-						data-bs-toggle="modal" data-bs-target="exampleModal">
+					<button class="mr-1 btn btn-info" id="newTask" data-bs-toggle="modal"
+						data-bs-target="exampleModal">
 						<i class="fa fa-solid fa-plus"></i>태스크 추가
 					</button>
 
 					<div class="mr-1 btn">
-						<label class="mb-0"><input type="checkbox"
-							id="task_sender_checkbox"> 내가 할당</label> <label class="mb-0"><input
-							type="checkbox" id="task_staff_checkbox"> 내가 담당</label>
+						<label class="mb-0"><input type="checkbox" id="task_sender_checkbox">
+							내가 할당</label> <label class="mb-0"><input type="checkbox"
+							id="task_staff_checkbox"> 내가 담당</label>
 					</div>
-
-					<button class="mr-1 task_order_btn" do="task_rank">
+					
+					<button class="mr-1 btn btn task_order_btn" do="task_rank">
 						우선순위별</button>
-
-					<button class="mr-1 task_order_btn" do="task_state">
+					
+					<button class="mr-1 btn btn task_order_btn" do="task_state">
 						진행도별</button>
 
-					<button class="mr-1 task_order_btn" do="bookmark">
+					<button class="mr-1 btn btn task_order_btn" do="bookmark">
 						즐겨찾기별</button>
+
+					<input type="text" id="searchWord" name="searchWord"
+						th:value="${searchWord}">
+					<button class="btn btn-primary" type="button" id="searchBtn">
+						<i class="fas fa-search fa-sm"></i>
+					</button>
 				</div>
-				
-				<div class="ml-auto">
-					<div class="row">
-						<input type="text" class="form-control col" id="seasrchWord" name="searchWord"
-							th:value="${searchWord}">
-						<button class="ml-1 btn btn-light" type="button" id="searchBtn">
-							<i class="fas fa-search fa-sm"></i>
-						</button>
-					</div>
-				</div>
+			</nav>
 				
 									
 			</nav>
@@ -934,7 +931,7 @@ ul#memList li.mem-item:hover {
 
 
 			<!-- 페이지네이션 nav 시작 -->
-			<ul class="pagination" id="naviDiv">
+			<ul class="pagination mt-2" id="naviDiv">
 			</ul>
 			<!-- 페이지네이션nav 끝 -->
 
