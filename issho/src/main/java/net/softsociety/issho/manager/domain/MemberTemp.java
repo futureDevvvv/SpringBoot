@@ -12,4 +12,16 @@ public class MemberTemp {
 	String prj_domain;
 	String memb_mail;
 	int performance = 0;
+	
+	//
+	String memb_name;
+	
+	//
+	String taskCnt;
+	String taskCntDone;
+	//
+	int requested;
+	int progress;
+	int done;
+	int pending;
 }

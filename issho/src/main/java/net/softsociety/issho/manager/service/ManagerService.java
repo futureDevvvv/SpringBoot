@@ -3,6 +3,7 @@ package net.softsociety.issho.manager.service;
 import java.util.ArrayList;
 
 import net.softsociety.issho.manager.domain.DriveFile;
+import net.softsociety.issho.manager.domain.Helper;
 import net.softsociety.issho.manager.domain.InvitationMember;
 
 import net.softsociety.issho.manager.domain.MemberTemp;
@@ -57,6 +58,15 @@ public interface ManagerService {
 	public ArrayList<Members> listInvitation(String prj_domain, PageNavigator navi, String searchWord);
 
 	public TaskState taskState(String memEmail);
+
+	public ArrayList<MemberTemp> listWork(String email);
+
+	public ArrayList<MemberTemp> taskStateMap(String memEmail);
+
+	public ArrayList<MemberTemp> memberName(String memb_name);
+
+	public void insertHelper(Helper helper);
+
 
 	
 

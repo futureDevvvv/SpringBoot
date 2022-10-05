@@ -26,7 +26,8 @@ public interface ProjectService {
 	Projects getProjectsInfo(String domain);
 	
 	//* 신승훈 메인창 목록 (최신 공지사항)
-	List<Notice> selectMainNotice(String prj_domain);
+	//List<Notice> selectMainNotice(String prj_domain);
+	
 	//* 신승훈 메인창 목록 (내 일정)
 	List<Plans> selectMainPlan(String userid);
 	//* 신승훈 메인창 목록 (할당 태스크 현황, 담당 태스크 리스트)

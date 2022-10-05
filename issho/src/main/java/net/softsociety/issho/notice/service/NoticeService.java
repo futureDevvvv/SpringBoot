@@ -1,5 +1,6 @@
 package net.softsociety.issho.notice.service;
 
+
 import java.util.ArrayList;
 
 import net.softsociety.issho.notice.domain.Comment;
@@ -35,6 +36,5 @@ public interface NoticeService {
 	public int updateComment(Comment comment);
 	
 	public int deleteComment(Comment comment);
-
 
 }
