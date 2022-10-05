@@ -56,23 +56,40 @@
 	<!-- 신승훈 * 태스크 상세보기 -->
 	<select id="selectTaskByTaskSeq" parameterType="Integer" resultType="Task">
 		select
-			task_seq
-			,prj_domain
-			,task_name
-			,task_content
-			,task_sender
-			,task_rank
-			,task_state
-			,task_inputdate
-			,task_startdate
-			,task_enddate
-			,exp_startdate
-			,exp_enddate
-			,ptask_num
+			t.task_seq AS task_seq
+			,t.prj_domain AS prj_domain
+			,t.task_name AS task_name
+			,t.task_content AS task_content
+			,t.task_sender AS task_sender
+			,t.task_rank AS task_rank
+			,t.task_state AS task_state
+			,t.task_inputdate AS task_inputdate
+			,t.task_startdate AS task_startdate
+			,t.task_enddate AS task_enddate
+			,t.exp_startdate AS exp_startdate
+			,t.exp_enddate AS exp_enddate
+			,t.ptask_num AS ptask_num
+			,ROUND(AVG(ts.tsuper_perform)) AS performAvg
 		from
-			task
+			task t, taskstaff ts
 		where
-			task_seq = #{task_seq}			
+			t.task_seq = #{task_seq}
+			AND 
+			ts.task_seq = t.task_seq
+		GROUP BY 
+		 	t.task_seq
+		 	,t.prj_domain 
+		 	,t.task_name
+			,t.task_content
+			,t.task_sender
+			,t.task_rank
+			,t.task_state
+			,t.task_inputdate
+			,t.task_startdate
+			,t.task_enddate
+			,t.exp_startdate
+			,t.exp_enddate
+			,t.ptask_num				
 	</select>
 	
 	<!-- 신승훈 * 테스크 스태프 리스트 조회 -->
@@ -105,15 +122,14 @@
 			,t.ptask_num AS ptask_num
 			,bm.memb_mail AS bookmark_memb_mail
 			,m.memb_name AS memb_name
+			,ROUND(AVG(ts.tsuper_perform)) AS performAvg
 		FROM 
-			task t, bookmark bm, members m
+			task t, bookmark bm, members m, taskstaff ts
 		WHERE 
 			t.prj_domain = #{prj_domain}
 			AND bm.task_seq(+) = t.task_seq
 			AND t.task_sender = m.memb_mail
-			<if test="task_staff == null and task_sender == null and task_rank == null and task_state == null and bookmark == null and searchWord == null">
-				ORDER BY t.task_seq DESC
-			</if>
+			AND ts.task_seq = t.task_seq
 			<if test="bookmark != null">
 				AND t.task_seq IN (SELECT
                                        task_seq
@@ -125,7 +141,25 @@
 			<if test="searchWord != null">
 				AND (t.task_name LIKE '%' || #{searchWord} || '%' OR t.task_content LIKE '%' || #{searchWord} || '%' OR t.task_sender LIKE '%' || #{searchWord} || '%')
 			</if>
-		
+			GROUP BY 
+				 	t.task_seq
+				 	,t.prj_domain 
+				 	,t.task_name
+					,t.task_content
+					,t.task_sender
+					,t.task_rank
+					,t.task_state
+					,t.task_inputdate
+					,t.task_startdate
+					,t.task_enddate
+					,t.exp_startdate
+					,t.exp_enddate
+					,t.ptask_num
+					,bm.memb_mail
+					,m.memb_name
+			<if test="task_staff == null and task_sender == null and task_rank == null and task_state == null and bookmark == null and searchWord == null">
+				ORDER BY t.task_seq DESC
+			</if>
 			<if test="task_staff != null or task_sender != null or task_rank != null or task_state != null">
 				ORDER BY
 			</if>

@@ -30,6 +30,8 @@ public class Task {
 	private String memb_name;
 	private String bookmark_memb_mail;
 	private List<Taskstaff> taskStaffList;
+	//평균 수행도 attributes
+	private int performAvg;
 		
 	//담당자 attributes
 	private String memb_mail;

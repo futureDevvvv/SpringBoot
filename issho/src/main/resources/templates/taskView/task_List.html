@@ -25,7 +25,6 @@
 
 }
 
-
 #basicSelection, #basicSelection2, #basicSelection3, #basicSelection4,
 	#basicSelection5 {
 	margin-right: 10px;
@@ -58,6 +57,11 @@ ul#memList li.mem-item:hover {
 
 .taskCard {
 	width: 140%;
+	margin-left : -20%
+}
+
+#taskListDiv{
+	margin: 0 auto !important;
 }
 
 .bookmarked {
@@ -269,12 +273,12 @@ ul#memList li.mem-item:hover {
 									${task.task_name}
 								</div>
 								<div class="col-12 mb-0 font-weight-bold text-gray-800">
-									할당자 : ${task.memb_name}
+									@ ${task.memb_name}
 								</div>
 							</div>
 							<div class="col-2">`;
 							
-				taskHTML += '<div class="col-12 pl-4 mb-0 font-weight-bold text-gray-800">우선순위</div>';
+				//taskHTML += '<div class="col-12 pl-4 mb-0 font-weight-bold text-gray-800">우선순위</div>';
 							
 				if(task.task_rank == 0)
 					
@@ -286,12 +290,13 @@ ul#memList li.mem-item:hover {
 					
 					taskHTML += '<div class="h5 ml-4 mt-1 mb-2 font-weight-bold text-gray-800 btn btn-danger text-white">높음';
 				
-					
+					//<div class="col-12 mb-0 pl-1 font-weight-bold text-gray-800">진행도</div>
 					
 					taskHTML += `</div>
 							</div>
 						<div class="col-2">
-					<div class="col-12 mb-0 pl-1 font-weight-bold text-gray-800">진행도</div>`;
+					`;
+					
 				//<!-- 신승훈 진행상태 변경 -->
 				if(task.task_state == 0){
 					if(task.task_sender != [[${#authentication.name}]]){
@@ -336,12 +341,12 @@ ul#memList li.mem-item:hover {
 					}
 					taskHTML += '보류';	
 				}
+				
+				//<div class="col-12 mb-0 pl-1 font-weight-bold text-gray-800">담당자</div>
 				taskHTML += `</div>
 						</div>
-						<div class="col">
-							<div class="col-12 mb-0 pl-1 font-weight-bold text-gray-800">
-								담당자
-							</div>`;
+						<div class="col-3">
+							`;
 				let memberList = '<div>';
 				for(let member of pjMember){
 					if(member.task_seq == task.task_seq)
@@ -359,7 +364,12 @@ ul#memList li.mem-item:hover {
 				if(memberList === '<div>')
 					memberList += '<button type="button" class=" h5 mt-1 mb-2 btn btn-outline-danger">없음</button>';
 					taskHTML += memberList;
+					
+					
 				taskHTML += `</div>
+						</div>
+						<div class="col-1">
+							<input type="range" value="${task.performAvg}"style="width: 100px;" disabled>${task.performAvg}%
 						</div>
 					</div>
 				</div>
@@ -505,42 +515,46 @@ ul#memList li.mem-item:hover {
 				}
 				$('#view_staffInput').val(staffListStr);
 				
-				console.log('result.showTask.task_rank');
 				let viewRankId = $(':radio[name=view_task_rank][value="' + result.showTask.task_rank + '"]').attr('id');
 				$(`#${viewRankId}`).attr('checked', true);
 				$('.view_task_rank_label').removeClass("active");
 				$(`label[for='${viewRankId}']`).addClass("active");
 				
 				let viewRadioId2 = $(':radio[name=view_task_state][value="' + result.showTask.task_state + '"]').attr('id');
-				console.log(viewRadioId2);
+				
 				$(`#${viewRadioId2}`).attr('checked', true);
 				$('.view_task_state_label').removeClass("active");
 				$(`label[for='${viewRadioId2}']`).addClass("active");
 				
+				
 				let isEmptyStartDate;
-				if(result.showTask.exp_startdate == null)
+				if(result.showTask.exp_startdate == null && result.showTask.task_startDate == null)
 					isEmptyStartDate = 0;
 				else
-					isEmptyStartDate = 1;
+					isEmptyStartDate = 1;	
+				
 				
 				$(':radio[name=view_chk_startDate][value="' + isEmptyStartDate + '"]').attr('checked', true);
+				
 				if(isEmptyStartDate == 1){
 	/* 				$("#datepicker3").show();
 					$('#datepicker3').datepicker();
 					$(".gj-icon").show();
 					 */
-					let year = result.showTask.exp_startdate.substr(0, 4);
-					let month = result.showTask.exp_startdate.substr(5, 2);
-					let day = result.showTask.exp_startdate.substr(8, 2);
+					let temp = (result.showTask.exp_startdate == null ? result.showTask.task_startDate : result.showTask.exp_startdate)
+					let year = temp.substr(0, 4);
+					let month = temp.substr(5, 2);
+					let day = temp.substr(8, 2);
 					
 					$('#datepicker3').val(month+"/"+day+"/"+year);
-				}/* else {
-					$("#datepicker3").hide();
-					$(".gj-icon").hide();
-				} */
+				}else {
+					$('#datepicker3').val("");
+					/* $("#datepicker3").hide();
+					$(".gj-icon").hide(); */
+				} 
 				
 				let isEmptyEndDate;
-				if(result.showTask.exp_enddate == null)
+				if(result.showTask.exp_enddate == null && result.showTask.task_endDate == null)
 					isEmptyEndDate = 0;
 				else
 					isEmptyEndDate = 1;
@@ -551,19 +565,24 @@ ul#memList li.mem-item:hover {
 					$('#datepicker4').datepicker();
 					$(".gj-icon").show();
 					 */
-					let year = result.showTask.exp_enddate.substr(0, 4);
-					let month = result.showTask.exp_enddate.substr(5, 2);
-					let day = result.showTask.exp_enddate.substr(8, 2);
+					let temp = (result.showTask.exp_enddate == null ? result.showTask.task_endDate : result.showTask.exp_enddate)
+					
+					let year = temp.substr(0, 4);
+					let month = temp.substr(5, 2);
+					let day = temp.substr(8, 2);
 					
 					$('#datepicker4').val(month+"/"+day+"/"+year);
 				}else {
-/* 					$("#datepicker4").hide();
-					$(".gj-icon").hide(); */
+					$('#datepicker4').val("");
+				/* 	$("#datepicker4").hide();
+					$(".gj-icon").hide();  */
 				}
 				
 				$('#view_task_content').val(result.showTask.task_content);
 				
-				let performHTML = '<span class="input-group-text" style="justify-content:center; margin-left:15px; margin-bottom:10px; width:100px;">수행도</span> <ul>';
+			
+				
+				let performHTML = `<ul>`;
 				let performIndex = 0;
 				if(result.showStaff != null)
 					for(let staff of result.showStaff){
@@ -574,6 +593,10 @@ ul#memList li.mem-item:hover {
 						performIndex++;
 					}
 				performHTML += "</ul>";
+				
+				//수행도
+				$('#avgPerform').text (result.showTask.performAvg);
+				$('#inputPerform').val(result.showTask.performAvg);
 				
 				$('#view_perform_list').html(performHTML);
 				for(let i=0 ; i<performIndex ; i++){
@@ -602,6 +625,8 @@ ul#memList li.mem-item:hover {
 		let taskList = [[${tasklist}]];
 		let mList = [[${list}]];
 		let navi = [[${navi}]];
+		console.log(taskList);
+		
 		createTaskList(taskList);
 		createNavi(navi);
 		
@@ -866,13 +891,19 @@ ul#memList li.mem-item:hover {
 
 					<button class="mr-1 task_order_btn" do="bookmark">
 						즐겨찾기별</button>
-
-					<input type="text" id="searchWord" name="searchWord"
-						th:value="${searchWord}">
-					<button class="btn btn-light" type="button" id="searchBtn">
-						<i class="fas fa-search fa-sm"></i>
-					</button>
 				</div>
+				
+				<div class="ml-auto">
+					<div class="row">
+						<input type="text" class="form-control col" id="seasrchWord" name="searchWord"
+							th:value="${searchWord}">
+						<button class="ml-1 btn btn-light" type="button" id="searchBtn">
+							<i class="fas fa-search fa-sm"></i>
+						</button>
+					</div>
+				</div>
+				
+									
 			</nav>
 
 
@@ -1033,8 +1064,12 @@ ul#memList li.mem-item:hover {
 								</div>
 
 								<!-- 신승훈 * 수행도 -->
-								<div class="slidecontainer" id="view_perform_list"></div>
-
+								<div class="input-group m-0">
+									<span class="input-group-text mr-2" style="justify-content:center; margin-left:15px; margin-bottom:10px; width:100px;">수행도</span>
+									<span class="mt-2 mr-2">평균 수행도 : <input type="range" id="inputPerform" value="0" style="width: 250px;" disabled> <span id="avgPerform"></span>%</span>
+								</div>
+								<div id="view_perform_list"></div>
+								
 
 								<div class="input-group m-3">
 									<div class="input-group-prepend">
@@ -1045,7 +1080,7 @@ ul#memList li.mem-item:hover {
 
 								<div class="ml-5">
 									<ul id="fileList" class="ml-4" style="list-style: none;">
-										<li>어쩌구 저쩌구 파일</li>
+										<li>파일 확인</li>
 									</ul>
 								</div>
 
