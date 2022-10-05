@@ -121,6 +121,7 @@ public class HomeController {
 		log.debug("HomeController [enterPj] MainNoticelist : {}", MainNoticelist);
 		model.addAttribute("MainNoticelist", MainNoticelist);
 		
+		
 		List<Plans> MainPlanlist = pjservice.selectMainPlan(user.getUsername());
 		log.debug("HomeController [enterPj] MainPlanlist : {}", MainPlanlist);
 		model.addAttribute("MainPlanlist", MainPlanlist);
