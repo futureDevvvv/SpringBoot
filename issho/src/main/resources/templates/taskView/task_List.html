@@ -1557,10 +1557,52 @@ div#editor {
 			
 			let id = $(e).attr('id');
 			
-			
-			
-			
+			var list = document.querySelectorAll('li.mem-item');
+
+			let memLists = new Array();
+
+			for (var i = 0; i < list.length; i++) {
+				memLists[i] = list[i].id;
+			}
+
+			var li = $("#memList2").val();
+
+			if (memLists.includes(id)) {
+
+				alert('이미 추가된 멤버입니다.');
+
+			} else {
+
+				li += id + ",";
+
+				$("#memList2").val(li);
+
+
+				$.ajax({
+
+							url : "../../member/memSearch",
+							type : "POST",
+							data : {
+								memb_mail : id
+							},
+							success : function(result) {
+								
+								console.log(result);
+								
+								$("#memList")
+										.append(
+												"<li class='mem-item' id= "+ id +  ">"
+														+ "<span>"
+														+ result
+														+ "</span>"
+														+ "<span class='del-btn' idx='" + id + "'>&nbsp;x</span></li>");
+							}
+						});
+			}
 		}
+			
+			
+		
 	
 		
 		
