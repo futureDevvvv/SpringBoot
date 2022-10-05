@@ -131,7 +131,7 @@
  
                  
 								<div class="row">
-								<div th:each="l:${list}">
+								<div th:each="l:${list}" style="margin-bottom : 10px;">
 									<div class="card border-left shadow h-100 py-2" style="margin-left: 20px;margin-bottom: 5px; margin-right: 5px; ">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
@@ -247,7 +247,7 @@ function driveDownload(num) {
 	form.submit();
 	
 	
-
+	Swal.fire('파일 다운로드 완료 :)')
 
 }
 
@@ -302,6 +302,7 @@ success : function(result) {
 } 
 
 </script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 </body>
 </html>
