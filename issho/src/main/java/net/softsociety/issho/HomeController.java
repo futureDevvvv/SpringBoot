@@ -123,6 +123,7 @@ public class HomeController {
 		 * model.addAttribute("MainNoticelist", MainNoticelist);
 		 */
 		
+		
 		List<Plans> MainPlanlist = pjservice.selectMainPlan(user.getUsername());
 		log.debug("HomeController [enterPj] MainPlanlist : {}", MainPlanlist);
 		model.addAttribute("MainPlanlist", MainPlanlist);

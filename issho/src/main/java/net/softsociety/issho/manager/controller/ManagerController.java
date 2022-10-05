@@ -786,7 +786,7 @@ public class ManagerController {
 		String calledValue = request.getServletPath();
 	     String[] splitedUrl = calledValue.split("/");
 	     String prj_domain = splitedUrl[1];
-	     
+	  
 		log.debug("업무요청:{}",task_seq);
 		
 		
@@ -815,8 +815,12 @@ public class ManagerController {
 		String[] list = memList2.split(",");
 		
 		log.debug("list[0]:{}",list[0]); 
-		log.debug("list[1]:{}",list[1]); 
+		 
 		log.debug("task_seq:{}",task_seq); 
+		
+		   
+	    log.debug("helpworkRequest 도착 ----------------------------- " );
+		
 		
 		for(int i=0; i < list.length; i++) {
 		helper.setTask_seq(task_seq);
