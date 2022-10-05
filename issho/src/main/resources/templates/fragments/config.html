@@ -41,7 +41,7 @@ body {
 
 	<!-- 컨텐츠페이지의 스크립트 영역이 들어감 -->
 
-	<script>
+	<script th:inline="javascript">
 		$(function() {
 			$("#sidebarToggle, #sidebarToggleTop").on('click', function(e) {
 				$("body").toggleClass("sidebar-toggled");
@@ -49,10 +49,61 @@ body {
 				if ($(".sidebar").hasClass("toggled")) {
 					$('.sidebar .collapse').collapse('hide');
 				}
-				;
+				
 			});
-
-		})
+			
+			if([[${#authentication.principal != "anonymousUser"}]]){
+				console.log('subscribe 함수')
+				
+				let sseLink = [[@{/push/subscribe}]];
+				const eventSource = new EventSource(sseLink);
+				
+				eventSource.addEventListener("sse", function(event){
+					
+					console.log("event.data");
+					console.log(event.data);
+					
+					const data = JSON.parse(event.data);
+					
+					
+					if(data.content != 'subscribe 성공')
+						showNotification(data);
+					
+					/* (async () => {
+						
+						const showNotification = () => {
+							openNotification(data);
+						}
+						
+						let granted = false;
+						
+						if(Notification.permission === 'granted'){
+							granted = true;
+						} else if(Notification.permission !== 'denied'){
+							let permission = await Notification.requestPermission();
+							granted = permission === 'granted';
+						}
+						
+						if(granted){
+							showNotification();
+						}
+					}); */
+				});
+			}
+		});
+		
+		function showNotification(obj){
+			console.log('실행됨');
+				$('#notifi').text(obj.content);
+			
+			  $('.toast').toast('show');
+			
+			
+		}
+		
+	
+		
+		
 	</script>
 
 </th:block>

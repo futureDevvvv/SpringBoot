@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
 import net.softsociety.issho.manager.dao.ManagerDAO;
 import net.softsociety.issho.manager.domain.DriveFile;
+import net.softsociety.issho.manager.domain.Helper;
 import net.softsociety.issho.manager.domain.InvitationMember;
 
 import net.softsociety.issho.manager.domain.MemberTemp;
@@ -155,9 +156,30 @@ public class ManagerServiceImpl implements ManagerService {
 		TaskState taskState = managerDAO.taskState(memEmail);
 		return taskState;
 	}
+
+	@Override
+	public ArrayList<MemberTemp> listWork(String email) {
+		ArrayList<MemberTemp> listWork = managerDAO.listWorkEx(email);
+		return listWork;
+	}
 	
-	
-	
+	@Override
+	public ArrayList<MemberTemp> taskStateMap(String memEmail) {
+		ArrayList<MemberTemp> MemberTemp = managerDAO.taskStateMap(memEmail);
+		return MemberTemp;
+	}
+
+	@Override
+	public ArrayList<MemberTemp> memberName(String memb_name) {
+		ArrayList<MemberTemp> memberName = managerDAO.mamberName(memb_name);
+		return memberName;
+	}
+
+	@Override
+	public void insertHelper(Helper helper) {
+		managerDAO.insertHelper(helper);
+	}
+
 	
 	
 

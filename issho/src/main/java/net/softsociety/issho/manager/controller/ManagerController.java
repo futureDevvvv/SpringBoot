@@ -34,7 +34,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.extern.slf4j.Slf4j;
+import net.softsociety.issho.chat.service.ChatService;
 import net.softsociety.issho.manager.domain.DriveFile;
+import net.softsociety.issho.manager.domain.Helper;
 import net.softsociety.issho.manager.domain.InvitationMember;
 import net.softsociety.issho.manager.domain.MemberTemp;
 import net.softsociety.issho.manager.domain.TaskCnt;
@@ -52,6 +54,7 @@ import net.softsociety.issho.task.domain.Task;
 import net.softsociety.issho.task.service.TaskService;
 import net.softsociety.issho.util.FileService;
 import net.softsociety.issho.util.PageNavigator;
+import oracle.net.aso.h;
 
 @Slf4j
 @Controller
@@ -72,9 +75,16 @@ public class ManagerController {
 	
 	@Autowired
 	TaskService taskService;
+
+	@Autowired
+	ChatService chatservice;
+
+	
+
 	
 	@Autowired
 	MemberDAO memDao;
+	
 
 	/*
 	 * 메일 전송 서비스
@@ -154,7 +164,12 @@ public class ManagerController {
 		return "managerView/managerProjects";
 	}
 
-	
+	/**
+	 * 프로젝트 상세
+	 * @param domain
+	 * @param model
+	 * @return
+	 */
 	@ResponseBody
 	@PostMapping("/ProjectInfo")
 	public Map<String, Object> ProjectInfo( String domain, Model model) {
@@ -315,7 +330,7 @@ public class ManagerController {
 	}
 
 	/**
-	 * 멤버 탈퇴(삭제)
+	 * 프로젝트 멤버 탈퇴(삭제)
 	 * 
 	 * @param members
 	 * @return
@@ -334,7 +349,7 @@ public class ManagerController {
 	}
 	
 	/**
-	 * 권한변경
+	 * 멤버권한변경
 	 * @param email
 	 * @return
 	 */
@@ -350,6 +365,12 @@ public class ManagerController {
 		
 		return "redirect:./member";
 	}
+	
+	/**
+	 * PM권한 변경
+	 * @param email
+	 * @return
+	 */
 	@GetMapping("/editPMRight")
 	public String editPMRight(String email) {
 		
@@ -401,6 +422,13 @@ public class ManagerController {
 		return "managerView/managerWorks";
 	}
 	
+	/**
+	 * 업무 상세폼
+	 * @param domain
+	 * @param memEmail
+	 * @param model
+	 * @return
+	 */
 	@ResponseBody
 	@PostMapping("/workInfo")
 	public Map<String, Object> workInfo(String domain,String memEmail, Model model) {
@@ -478,10 +506,11 @@ public class ManagerController {
 	}
 
 	/**
-	 * 초대 이메일 중복체크
-	 * 
-	 * @param memb_mail
-	 * @return 결과값
+	 *  초대 이메일 중복체크
+	 * @param request
+	 * @param invitationMember
+	 * @param membInv_recipient
+	 * @return
 	 */
 	@ResponseBody
 	@PostMapping("mailIdCheck")
@@ -507,8 +536,10 @@ public class ManagerController {
 
 	/**
 	 * 관리자 업무페이지에서 엑셀 다운로드
-	 * 
+	 * @param request
 	 * @param response
+	 * @param members
+	 * @param email
 	 * @throws IOException
 	 */
 	@PostMapping("excelDownload")
@@ -527,17 +558,19 @@ public class ManagerController {
 		String[] emails = email.split(",");
 		
 		log.debug(emails[0]);
-		
+		 
 		//DB에 들려서 조인해서 데이터 불러오기
-		
-		
-		
-		ArrayList<WorkEmail> workEmail = new ArrayList<>();
-		
+		Map<String, ArrayList<MemberTemp>> workListMap = new HashMap<>();
+		Map<String, ArrayList<MemberTemp>> taskStateMap = new HashMap<>();
+		ArrayList<MemberTemp> workListTemp = new ArrayList<>();
 		for (int i = 0; i < emails.length; i++) {
-			workEmail.get(i).setMemb_mail(emails[i]);
-			log.debug("업무관리 엑셀 이메일:" ,workEmail.get(i).getMemb_mail());
+			workListTemp = service.listWork(emails[i]);
+			workListMap.put(emails[i], workListTemp);
 		}
+//		MemberTemp t = (MemberTemp) workListMap.get(emails[1]);
+//		System.out.println(t.getPerformance());
+//		System.out.println(workListMap.get(emails[1]).get(0).getPerformance());
+//		System.out.println("진행중:"+workListMap.get(emails[1]).get(0).getProgress());
 		
 		Workbook wb = new XSSFWorkbook();
 		Sheet sheet = wb.createSheet("업무리스트");
@@ -552,8 +585,12 @@ public class ManagerController {
 		cell = row.createCell(1);
 		cell.setCellValue("이름");
 		cell = row.createCell(2);
-		cell.setCellValue("작업진척도");
+		cell.setCellValue("업무진행도(평균)");
 		cell = row.createCell(3);
+		cell.setCellValue("할당된업무량");
+		cell = row.createCell(4);
+		cell.setCellValue("완료된업무량");
+		cell = row.createCell(5);
 		cell.setCellValue("업무능률");
 	
 
@@ -563,12 +600,19 @@ public class ManagerController {
 			cell = row.createCell(0);
 			cell.setCellValue(emails[i]);
 			cell = row.createCell(1);
-			cell.setCellValue(emails[i]);
+			cell.setCellValue(workListMap.get(emails[i]).get(0).getMemb_name());
 			cell = row.createCell(2);
-			cell.setCellValue("작업진척도");
+			cell.setCellValue("진행전:"+workListMap.get(emails[i]).get(0).getRequested()+"%,"
+			+"진행중:"+workListMap.get(emails[i]).get(0).getProgress()+"%,"
+			+"완료:"+workListMap.get(emails[i]).get(0).getDone()+"%,"
+			+"보류:"+workListMap.get(emails[i]).get(0).getProgress()+"%"
+					);
 			cell = row.createCell(3);
-			cell.setCellValue("업무능률");
-
+			cell.setCellValue(workListMap.get(emails[i]).get(0).getTaskCnt()+"개");
+			cell = row.createCell(4);
+			cell.setCellValue(workListMap.get(emails[i]).get(0).getTaskCntDone()+"개");
+			cell = row.createCell(5);
+			cell.setCellValue(workListMap.get(emails[i]).get(0).getPerformance()+"%");
 		}
 
 		
@@ -668,7 +712,10 @@ public class ManagerController {
 	}
 	
 
-	
+	/**
+	 * 차트 테스트
+	 * @return
+	 */
 	@GetMapping("/chart")
 	public String chart() {
 		return "managerView/chart";
@@ -676,8 +723,12 @@ public class ManagerController {
 	
 	
 
-	/*
-	 * 첨부파일 다운로드
+	/**
+	 * 파일 다운로드
+	 * @param driveFileNum
+	 * @param model
+	 * @param response
+	 * @return
 	 */
 	@RequestMapping(value = "download", method = RequestMethod.GET)
 	public String fileDownload(int driveFileNum, Model model, 
@@ -722,5 +773,60 @@ public class ManagerController {
 		return null;
 	}	
 	
+	/**
+	 * 협조요청 팝업창폼으로 이동
+	 * @param request
+	 * @param model
+	 * @param task_seq
+	 * @param user
+	 * @return
+	 */
+	@GetMapping("helpWork")
+	public String helpWork(HttpServletRequest request,Model model, String task_seq, @AuthenticationPrincipal UserDetails user) {
+		String calledValue = request.getServletPath();
+	     String[] splitedUrl = calledValue.split("/");
+	     String prj_domain = splitedUrl[1];
+	     
+		log.debug("업무요청:{}",task_seq);
+		
+		
+		Projects project = pjService.searchOne(prj_domain);
+		ArrayList<Members> pjMemList = memberService.searchPjMem(prj_domain);
+		
+		
+		model.addAttribute("task_seq", task_seq);
+		model.addAttribute("project", project);
+		model.addAttribute("list", pjMemList);
+
+
+		return "/managerView/helpWork";
+	}
+	
+	/**
+	 * 협조요청 helper테이블로 데이터입력
+	 * @param helper
+	 * @param memList2
+	 * @param task_seq
+	 * @return
+	 */
+	@PostMapping("workRequest")
+	public String workRequest(Helper helper, String memList2,int task_seq) {
+		
+		String[] list = memList2.split(",");
+		
+		log.debug("list[0]:{}",list[0]); 
+		log.debug("list[1]:{}",list[1]); 
+		log.debug("task_seq:{}",task_seq); 
+		
+		for(int i=0; i < list.length; i++) {
+		helper.setTask_seq(task_seq);
+		helper.setMemb_mail(list[i]);
+		service.insertHelper(helper);
+		log.debug("조력자 이메일:{}",helper.getMemb_mail());
+		System.out.println("조력자 태스크번호:"+helper.getTask_seq());
+		}
+		
+		return "redirect:./manager/work";
+	}
 	
 }

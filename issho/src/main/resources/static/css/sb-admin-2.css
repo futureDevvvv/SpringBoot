@@ -2324,6 +2324,8 @@ textarea.form-control {
   font-size: 1.0rem;
   line-height: 1.5;
   border-radius: 0.35rem;
+  margin-left: 5px;
+  margin-right: 5px;
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 

@@ -117,9 +117,11 @@ public class HomeController {
 		model.addAttribute("project", project);
 		
 		//* 신승훈 메인창 목록 (최신 공지사항, 내 일정, 할당 태스크 현황, 담당 태스크 리스트)
-		List<Notice> MainNoticelist = pjservice.selectMainNotice(prj_domain);
-		log.debug("HomeController [enterPj] MainNoticelist : {}", MainNoticelist);
-		model.addAttribute("MainNoticelist", MainNoticelist);
+		/*
+		 * List<Notice> MainNoticelist = pjservice.selectMainNotice(prj_domain);
+		 * log.debug("HomeController [enterPj] MainNoticelist : {}", MainNoticelist);
+		 * model.addAttribute("MainNoticelist", MainNoticelist);
+		 */
 		
 		List<Plans> MainPlanlist = pjservice.selectMainPlan(user.getUsername());
 		log.debug("HomeController [enterPj] MainPlanlist : {}", MainPlanlist);
