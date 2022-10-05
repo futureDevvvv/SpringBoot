@@ -2,6 +2,7 @@ package net.softsociety.issho.notice.dao;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.session.RowBounds;
@@ -50,4 +51,7 @@ public interface NoticeDAO {
 	
 	// 댓글 삭제
 	public int deleteComment(Comment comment);
+	
+	//* 신승훈 메인창 목록 (최신 공지사항)
+	public List<Notice> selectMainNotice(String prj_domain);
 }

@@ -85,18 +85,20 @@ public class ProjectServiceImpl implements ProjectService{
 		return projects;
 	}
 	
-	/*
-	 * //* 신승훈 메인창 목록 (최신 공지사항)
-	 * 
-	 * @Override public List<Notice> selectMainNotice(String prj_domain) {
-	 * log.debug("ProjectServiceImpl [selectMainNotice] Start");
-	 * 
-	 * List<Notice> list = noticeDAO.selectMainNotice(prj_domain);
-	 * log.debug("ProjectServiceImpl selectMainNotice list : {}", list);
-	 * 
-	 * log.debug("ProjectServiceImpl [selectMainNotice] End"); return list; }
-	 */
 	
+	//* 신승훈 메인창 목록 (최신 공지사항)
+	
+	  @Override public List<Notice> selectMainNotice(String prj_domain) {
+	  log.debug("ProjectServiceImpl [selectMainNotice] Start");
+	  
+	  List<Notice> list = noticeDAO.selectMainNotice(prj_domain);
+	  log.debug("ProjectServiceImpl selectMainNotice list : {}", list);
+	  
+	  log.debug("ProjectServiceImpl [selectMainNotice] End"); 
+	  return list; 
+	  }
+	 
+ 
 	//* 신승훈 메인창 목록 (내 일정)
 	@Override
 	public List<Plans> selectMainPlan(String userid) {
