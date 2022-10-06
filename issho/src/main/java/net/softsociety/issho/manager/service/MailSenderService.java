@@ -29,7 +29,11 @@ public class MailSenderService  {
 		h.setFrom(from);
 		h.setTo(memb_mail);
 		h.setSubject(prj_domain +" 프로젝트에 초대합니다.");
-		h.setText("http://localhost:/9990/issho/"+prj_domain+"/main");
+		h.setText("안녕하십니까!"+prj_domain+"프로젝트에 초대되었습니다.\n 진심으로 환영합니다. :)\n"
+				+ "하기에 제공된 사이트로 접속하시면 간단한 회원가입 후 프로젝트의 일원이 될수있습니다.\n\n"
+				+"URL:"
+				+ "http://localhost:/9990/issho/"+prj_domain+"/main" 
+				+"\n\n감사합니다!");
 		
 		mailSender.send(m);
 	}

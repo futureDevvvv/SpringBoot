@@ -84,14 +84,20 @@
 	</select>
 
 
-	<insert id="insertAttendant" parameterType="InvitationMember">
-		INSERT INTO
-		invitation
-		(membInv_seq,prj_domain,membInv_recipient)
-		VALUES
-		(membInv_seq.nextval,#{prj_domain},#{membInv_recipient})
+	<insert id="insertAttendant" parameterType="Members">
+	INSERT INTO projectmember
+     (prj_domain,memb_mail,pjmb_right)
+     values
+     (#{prj_domain},#{memb_mail},'member')
 	</insert>
-
+	
+	<insert id="insertInvitaion" parameterType="InvitationMember">
+		INSERT INTO invitation
+		(membInv_seq,prj_domain,membInv_recipient,membinv_accept)
+		VALUES
+		(membInv_seq.nextval,#{prj_domain},#{membInv_recipient},'')
+	</insert>
+	
 
 	<!-- 초대 멤버 검색 -->
 	<select id="invitationIdSearchOne"

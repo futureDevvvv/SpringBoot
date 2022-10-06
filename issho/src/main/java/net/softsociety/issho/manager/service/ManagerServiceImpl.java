@@ -72,8 +72,8 @@ public class ManagerServiceImpl implements ManagerService {
 	}
 
 	@Override
-	public void insertAttendant(InvitationMember invitation) {
-		managerDAO.insertAttendant(invitation);
+	public void insertAttendant(Members members) {
+		managerDAO.insertAttendant(members);
 	}
 
 	@Override
@@ -192,6 +192,11 @@ public class ManagerServiceImpl implements ManagerService {
 		Task task= taskDAO.selectTaskByTaskSeq(helper.getTask_seq());
 		sseService.send(helper.getMemb_mail(), task.getTask_name() + "-Request for Work", null);
 		
+	}
+
+	@Override
+	public void insertInvitaion(InvitationMember invitation) {
+		managerDAO.insertInvitaion(invitation);
 	}
 
 	

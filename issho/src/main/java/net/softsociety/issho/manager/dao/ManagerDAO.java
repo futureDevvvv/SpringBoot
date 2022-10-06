@@ -25,7 +25,7 @@ public interface ManagerDAO {
 
 	public Members getMemberInfo(String domain);
 
-	public void insertAttendant(InvitationMember invitation);
+	public void insertAttendant(Members members);
 
 	public int invitationIdSearchOne(InvitationMember invitationMember);
 
@@ -69,6 +69,8 @@ public interface ManagerDAO {
 	public ArrayList<MemberTemp> mamberName(String memb_name);
 
 	public void insertHelper(Helper helper);
+
+	public void insertInvitaion(InvitationMember invitation);
 
 
 }
