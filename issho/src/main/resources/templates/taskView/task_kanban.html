@@ -424,7 +424,7 @@ a:hover  {
 								<input type="hidden" id="m_mail" th:value="${member.memb_mail}">
 								<input type="hidden" id="m_name" th:value="${member.memb_name}">
 								<div class="profileBox">
-									<img class="profilePic" src="${member.memb_ogfile}"
+									<img class="profilePic" th:src="@{/savedImg/}+${member.memb_ogfile}"
 										onerror="this.src='../../img/profile.png'">
 								</div>
 							</div>
@@ -452,7 +452,7 @@ a:hover  {
 								<input type="hidden" id="m_mail" th:value="${member.memb_mail}">
 								<input type="hidden" id="m_name" th:value="${member.memb_name}">
 								<div class="profileBox">
-									<img class="profilePic" src="${member.memb_ogfile}"
+									<img class="profilePic" th:src="@{/savedImg/}+${member.memb_ogfile}"
 										onerror="this.src='../../img/profile.png'">
 								</div>
 							</div>
@@ -479,7 +479,7 @@ a:hover  {
 								<input type="hidden" id="m_mail" th:value="${member.memb_mail}">
 								<input type="hidden" id="m_name" th:value="${member.memb_name}">
 								<div class="profileBox">
-									<img class="profilePic" src="${member.memb_ogfile}"
+									<img class="profilePic" th:src="@{/savedImg/}+${member.memb_ogfile}"
 										onerror="this.src='../../img/profile.png'">
 								</div>
 							</div>

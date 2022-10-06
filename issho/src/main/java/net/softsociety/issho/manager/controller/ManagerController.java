@@ -830,7 +830,7 @@ public class ManagerController {
 		System.out.println("조력자 태스크번호:"+helper.getTask_seq());
 		}
 		
-		return "redirect:./manager/work";
+		return "redirect:/";
 	}
 	
 }
