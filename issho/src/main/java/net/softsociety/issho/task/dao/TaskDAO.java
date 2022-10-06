@@ -13,9 +13,9 @@ import net.softsociety.issho.task.domain.Bookmark;
 import net.softsociety.issho.manager.util.PageNavigator;
 import net.softsociety.issho.project.domain.ProjectMember;
 import net.softsociety.issho.task.domain.GanttTask;
-
+import net.softsociety.issho.task.domain.Mention;
 import net.softsociety.issho.task.domain.Task;
-
+import net.softsociety.issho.task.domain.TaskReply;
 import net.softsociety.issho.task.domain.Taskfile;
 import net.softsociety.issho.task.domain.Taskstaff;
 
@@ -72,6 +72,12 @@ public interface TaskDAO {
 	public void changeDate(GanttTask task);
 	
 	public List<Task> SelectAllTask(String prj_domain);
+	
+	public void insertComment(TaskReply reply);
+	
+	public void insertMention(Mention mention);
+	
+	public ArrayList<TaskReply> replyList();
 	
 	
 	

@@ -4,8 +4,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.sql.Date;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +15,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -35,13 +32,17 @@ import lombok.extern.slf4j.Slf4j;
 import net.softsociety.issho.member.dao.MemberDAO;
 import net.softsociety.issho.member.domain.Members;
 import net.softsociety.issho.member.service.MemberService;
+import net.softsociety.issho.sse.SSEService;
+import net.softsociety.issho.task.dao.TaskDAO;
 import net.softsociety.issho.task.domain.Bookmark;
+import net.softsociety.issho.task.domain.Mention;
 import net.softsociety.issho.task.domain.Task;
+import net.softsociety.issho.task.domain.TaskReply;
 import net.softsociety.issho.task.domain.Taskfile;
 import net.softsociety.issho.task.domain.Taskstaff;
 import net.softsociety.issho.task.service.TaskService;
-import net.softsociety.issho.util.PageNavigator;
 import net.softsociety.issho.util.FileService;
+import net.softsociety.issho.util.PageNavigator;
 
 @Controller
 @Slf4j
@@ -69,6 +70,12 @@ public class TaskController {
 	@Autowired
 	MemberDAO memDao;
 
+	@Autowired
+	TaskDAO taskDao;
+
+	@Autowired
+	SSEService sseService;
+	
 	/**
 	 * 태스크 리스트 이동
 	 * 
@@ -79,13 +86,13 @@ public class TaskController {
 	 * 
 	 * @author 윤영혜, 신승훈
 	 */
-	
+
 	@GetMapping("/taskList")
-	public String taskList(HttpServletRequest request, @AuthenticationPrincipal UserDetails user, 
-			@RequestParam(name = "page", defaultValue = "1") int page, String searchWord,
-			Model model, String domain) {
+	public String taskList(HttpServletRequest request, @AuthenticationPrincipal UserDetails user,
+			@RequestParam(name = "page", defaultValue = "1") int page, String searchWord, Model model, String domain, String isMentioned) {
 		log.debug("TaskController [taskList] Start");
-	
+		
+
 		String id = user.getUsername();
 
 		// 신승훈 * prj_domain 설정
@@ -114,16 +121,18 @@ public class TaskController {
 		// 신승훈 * 메인 화면 첫 진입시 테스크 전체 검색
 		List<Task> tasklist = taskservice.SelectAlltask(navi, prj_domain, searchWord);
 		log.debug("TaskController [taskList] tasklist : {}", tasklist);
-		
+
 		List<Taskstaff> pjmb = taskservice.projectMembers(prj_domain);
 		log.debug("TaskController [taskList] pjmb : {}", pjmb);
 
 		model.addAttribute("tasklist", tasklist);
 		model.addAttribute("page", page);
 		model.addAttribute("pjmb", pjmb);
-		
-		
-		log.debug("TaskController [taskList] End");	
+
+		// 윤영혜
+		model.addAttribute("isMentioned", isMentioned);
+
+		log.debug("TaskController [taskList] End");
 
 		return "taskView/task_List";
 	}
@@ -146,6 +155,8 @@ public class TaskController {
 
 	public Map<String, Object> showTaskModal(String taskSeq) {
 		log.debug("TaskController [showTaskModal] Start");
+		
+		log.debug("taskSeq : {}", taskSeq);
 
 		Task showTask = taskservice.selectTaskByTaskSeq(Integer.parseInt(taskSeq));
 		log.debug("TaskController [showTaskModal] showTask : {}", showTask);
@@ -156,12 +167,16 @@ public class TaskController {
 		// 신승훈 * 상세보기 첨부파일 확인
 		List<Taskfile> taskFileList = taskservice.selectTaskFile(taskSeq);
 		log.debug("TaskController [showTaskModal] taskFileList : {}", taskFileList);
-		
+
+		List<TaskReply> replyList = taskDao.replyList();
+		log.debug("TaskController [showTaskModal] replyList: {}", replyList);
+
 		Map<String, Object> result = new HashMap<>();
 		result.put("showTask", showTask);
 		result.put("showStaff", showTaskstaff);
 		result.put("taskFileList", taskFileList);
-		
+		result.put("replyList", replyList);
+
 		log.debug("TaskController [showTaskModal] End");
 
 		return result;
@@ -324,16 +339,16 @@ public class TaskController {
 
 		// 담당자가 없다면 할당자를 담당자로 설정해주고, 담당자가 있는 경우 split하여 담는다.
 		if (memList2.length() == 0 || memList2.equals("")) {
-			
+
 			log.debug("memList2.length == 0");
-			
+
 			memList2 = id;
-			
+
 			log.debug("staffs : {}", memList2);
-			
+
 		} else {
 			staffList = memList2.split(",");
-		
+
 			log.debug("staffs : {}", memList2);
 		}
 
@@ -374,42 +389,40 @@ public class TaskController {
 		log.debug("task 객체 처리 후 : {}", task);
 		return "redirect:/" + prj_domain + "/task/taskList";
 	}
-	
+
 	// * 신승훈 첨부파일 다운로드
 	@GetMapping(value = "/download")
-	public String getDownload(@RequestParam("fileSeq") String tfileSeq, 
-						HttpServletResponse response) {
-		
+	public String getDownload(@RequestParam("fileSeq") String tfileSeq, HttpServletResponse response) {
+
 		log.debug("TaskController [getDownload] Start");
 		// * 신승훈 첨부파일 다운로드
 		Taskfile file = taskservice.selectTaskFileByTfileSeq(tfileSeq);
-		
-		//원래의 파일명
+
+		// 원래의 파일명
 		String originalfile = new String(file.getTfile_ogfile());
 		try {
-			response.setHeader("Content-Disposition", 
-					" attachment;filename="+ URLEncoder.encode(originalfile, "UTF-8"));
+			response.setHeader("Content-Disposition",
+					" attachment;filename=" + URLEncoder.encode(originalfile, "UTF-8"));
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		
-		//저장된 파일 경로
+
+		// 저장된 파일 경로
 		String fullPath = uploadPath + "/" + file.getTfile_savefile();
-		
-		
+
 		log.debug("fullPath: " + fullPath);
-		
-		//서버의 파일을 읽을 입력 스트림과 클라이언트에게 전달할 출력스트림
+
+		// 서버의 파일을 읽을 입력 스트림과 클라이언트에게 전달할 출력스트림
 		FileInputStream filein = null;
 		ServletOutputStream fileout = null;
-		
+
 		try {
 			filein = new FileInputStream(fullPath);
 			fileout = response.getOutputStream();
-			
-			//Spring의 파일 관련 유틸 이용하여 출력
+
+			// Spring의 파일 관련 유틸 이용하여 출력
 			FileCopyUtils.copy(filein, fileout);
-			
+
 			filein.close();
 			fileout.close();
 		} catch (IOException e) {
@@ -417,5 +430,37 @@ public class TaskController {
 		}
 
 		return null;
-	}	
+	}
+
+	// 댓글 작성
+	@PostMapping("/insertComment")
+	@ResponseBody
+	public void insertComment(@AuthenticationPrincipal UserDetails user, TaskReply reply, String mentionTo) {
+
+		String id = user.getUsername();
+
+		reply.setTreply_writer(id);
+
+		log.debug("댓글 객체 : {}", reply);
+		log.debug("mentionTo : {}", mentionTo);
+
+		taskDao.insertComment(reply);
+
+		log.debug("insert 후 댓글 객체 : {}", reply);
+
+		if (mentionTo.length() != 0 || !mentionTo.equals("")) {
+			Mention mention = new Mention(0, reply.getTreply_seq(), mentionTo);
+
+			taskDao.insertMention(mention);
+
+			log.debug("mention 객체 : {}", mention);
+			
+			Members member = memDao.getUserById(mentionTo);
+			
+			log.debug("member : {}", member);
+			
+					
+			 sseService.send(mentionTo, member.getMemb_name() + "mentioned you : " + reply.getTreply_content() , Integer.toString(reply.getTask_seq()));
+		}
+	}
 }

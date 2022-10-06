@@ -33,6 +33,23 @@
 	margin-left: 10px;
 }
 
+ul#menList li.men-item {
+	padding: 4px 8px 5px;
+	background-color: #4CD3E3;
+	color: white;
+	border-radius: 30px;
+	margin: 10px 5px 0 0;
+	display: inline-block;
+	font-size: 14px;
+	letter-spacing: -.5px;
+}
+
+ul#menList li.men-item:hover {
+	background-color: white;
+	color: #4CD3E3;
+	border: 1px solid #4CD3E3;
+}
+
 ul#memList li.mem-item {
 	padding: 4px 8px 5px;
 	background-color: #4CD3E3;
@@ -142,13 +159,37 @@ div#editor {
 	margin-right: 10px;
 }
 
+.replyTable {
+	border-bottom: 1px solid gray;
+	width: 90%;
+	height: 50px;
+}
+
+.replyTd {
+	width: 60px;
+	font-weight: bold;
+	font-size: 18px;
+}
+
+.replyTd2 {
+	width: 60px;
+}
+
+.mentionDiv {
+	background-color : #4CD3E3;
+  	border-radius: 30px;
+}
 </style>
+
+
+
 <script type="text/javascript" th:inline="javascript">
 	let page = [[${page}]];
 	let task_state = '';
 	let task_rank = '';
 	let bookmark = '';
 	let pjMember = [[${pjmb}]];
+	let replyList = [[${replyList}]];
 	
 	function showPop() {
 
@@ -497,6 +538,10 @@ div#editor {
 			success: function(result) {
 				console.log(result);
 				console.log(members.get(result.showTask.task_sender));
+				console.log(result.replyList);
+				
+				$("#taskseq").val(result.showTask.task_seq);
+				
 				// 신승훈 * 태스크 상세보기 정보 세팅
 				$('#view_task_sender').val(members.get(result.showTask.task_sender).memb_name + " " + result.showTask.task_sender);
 				$('#view_task_name').val(result.showTask.task_name);
@@ -597,12 +642,60 @@ div#editor {
 				$('.view_tsuper_perform').change(tsuper_perform_change);
 				
 				// 첨부파일 $("#basic_addon_8").val(result.showTask.);
+				
+				//댓글
+				
+				
+				let reply_list = $("#reply_list");
+				let replyList = '';
+				let mentionReceiver = '';
+				let commentWriter = '';
+				
+				$.each(result.replyList, function(i, el){
+					
+					/*if(el.ment_sender != '' || el.ment_sender != null){
+	
+					
+					$.ajax({
+
+						url : "../../member/memSearch",
+						type : "POST",
+						data : {
+							memb_mail : el.ment_sender
+						},
+						success : function(result) {
+							
+							console.log(result);
+							
+							mentionReceiver = result;
+							
+						}
+					});
+					
+					}*/
+					
+					if(el.ment_sender == '' || el.ment_sender == null){
+						replyList+=`<table class='replyTable' border='0'><tr><td class='replyTd'>${el.treply_writer}</td><td class='replyTd2'></td><td>${el.treply_content}</td></tr></table>`;
+					} else {
+						replyList+=`<table class='replyTable' border='0'><tr><td class='replyTd'>${el.treply_writer}</td><td class='replyTd2'><div class='mentionDiv'>${el.ment_sender}</div></td><td>${el.treply_content}</td></tr></table>`;
+					}
+					
+					
+					
+				});
+				
+				
+				reply_list.html(replyList);
+				
+				
 			},
 			error: function() {
 				alert('showTaskModal error');
 			}
 		});
 	}
+
+	
 	
 	// 신승훈 * html 로딩 끝났을때
 	$(document).ready(function () {
@@ -940,6 +1033,7 @@ div#editor {
 									data-bs-dismiss="modal" aria-label="Close"></button>
 							</div>
 							<div class="modal-body">
+								<input type="hidden" id="taskseq">
 
 								<!-- 신승훈 * 할당자 -->
 								<div class="input-group m-3">
@@ -1071,9 +1165,16 @@ div#editor {
 								<hr>
 								<h5 style="margin-left: 10px;">댓글</h5>
 
-								<!-- 댓글 -->
-								<div class="input-group m-3">
 
+								<div class="input-group m-3" id="reply_list"></div>
+
+								<!-- 댓글 -->
+								<div class="input-group m-3" style="position: relative">
+									<div>
+										<ul id="menList"
+											style="position: absolute; top: 5px; left: -20px;">
+										</ul>
+									</div>
 									<div id="editor" contenteditable="true"></div>
 									<div id="mentionTo"
 										style="overflow: auto; width: 100%; height: 200px; margin: 10px;">
@@ -1097,7 +1198,8 @@ div#editor {
 
 
 
-									<button type="button" class="btn btn-primary">작성</button>
+									<button type="button" class="btn btn-primary"
+										onclick="writeComment();">작성</button>
 								</div>
 							</div>
 						</div>
@@ -1520,7 +1622,8 @@ div#editor {
 			if(val.includes('@')){
 				$("#mentionTo").show();
 				
-				let newVal = val.replace('@', '');
+				let temp = val.trim();
+				let newVal = temp.replace('@', '');
 				
 				console.log(newVal);
 				
@@ -1554,21 +1657,22 @@ div#editor {
 		});
 		
 		
+		
 		function appendMem2(e){
 			
 			let id = $(e).attr('id');
 			
-			var list = document.querySelectorAll('li.mem-item');
+			var list = document.querySelectorAll('li.men-item');
 
-			let memLists = new Array();
+			let menLists = new Array();
 
 			for (var i = 0; i < list.length; i++) {
-				memLists[i] = list[i].id;
+				menLists[i] = list[i].id;
 			}
 
-			var li = $("#memList2").val();
+			var li = $("#menList2").val();
 
-			if (memLists.includes(id)) {
+			if (menLists.includes(id)) {
 
 				alert('이미 추가된 멤버입니다.');
 
@@ -1576,7 +1680,7 @@ div#editor {
 
 				li += id + ",";
 
-				$("#memList2").val(li);
+				$("#menList2").val(li);
 
 
 				$.ajax({
@@ -1590,9 +1694,9 @@ div#editor {
 								
 								console.log(result);
 								
-								$("#memList")
+								$("#menList")
 										.append(
-												"<li class='mem-item' id= "+ id +  ">"
+												"<li class='men-item' id= "+ id +  ">"
 														+ "<span>"
 														+ result
 														+ "</span>"
@@ -1601,10 +1705,75 @@ div#editor {
 						});
 			}
 		}
-			
-			
 		
-	
+		function writeComment(){
+			
+			let mentionTo = '';
+			var list = document.querySelectorAll('li.men-item');
+			
+			console.log(list.length);
+			
+			let content = $("#editor").text();
+			let task_seq = $("#taskseq").val();
+			
+			let memb_mail = [[${#authentication.name}]]
+			
+			if(list.length != 0){
+				mentionTo = $(".men-item")[0].id;
+				content = content.replace('@김', '');
+			}
+			
+			console.log(task_seq);
+			console.log(mentionTo);
+			console.log(content);
+			
+			let comment = '';
+			let reply_list = $("#reply_list");
+			
+			$.ajax({
+				url : "insertComment",
+				type : "POST",
+				data : {
+					mentionTo : mentionTo,
+					treply_content : content,
+					task_seq : task_seq
+				},
+				success : function() {
+					
+					reply = `<table class='replyTable' border='0'>`;
+					
+					if(mentionTo == ''){
+						reply+=`<tr><td class='replyTd'>${memb_mail}</td><td class='replyTd2'></td><td>${content}</td></tr>`;
+					} else {
+						
+						console.log('여기로 옴!');
+						
+						reply+=`<tr><td class='replyTd'>${memb_mail}</td><td class='replyTd2'><div class='mentionDiv'>${mentionTo}</div></td><td>${content}</td></tr>`;
+					}
+					
+					reply += `</table>`;
+					
+					console.log(reply);
+					
+					reply_list.append(reply);
+					
+					$("#editor").text('');
+					
+					if(mentionTo != ''){
+						console.log('mentionTo 삭제');
+						
+						var list = $('.men-item');
+						console.log(list);
+						
+						console.log(list[0]);
+						
+						list[0].remove();
+					}
+				}
+			});
+			
+			
+		}
 		
 		
 		
