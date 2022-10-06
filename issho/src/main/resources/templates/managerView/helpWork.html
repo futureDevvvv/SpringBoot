@@ -123,8 +123,9 @@ ul#memList li.mem-item:hover {
 function submitHelper(){
 	$("#helperRequestForm").submit();
 	  setTimeout(function() {   
-          window.close();
+		   window.close();
        }, 500);
+	  Swal.fire('요청 되었습니다 :)')
 }
 
 
@@ -206,5 +207,7 @@ function submitHelper(){
 			$(this).parent().remove();
 		});
 	</script>
+	<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	
 </body>
 </html>

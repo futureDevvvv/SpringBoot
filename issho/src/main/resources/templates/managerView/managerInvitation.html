@@ -259,14 +259,16 @@
 					 setTimeout(function() {   
 				           window.close();
 				          }, 500); 
+					 Swal.fire('메일이 전송되었습니다 :)')
 				
 			} else {
-				alert("이미 초대한 이메일입니다.")
+				Swal.fire('이미 초대한 이메일입니다 :)')
 			}
 		}
 	});
 } 
 	</script>
+	<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 	
 </body>

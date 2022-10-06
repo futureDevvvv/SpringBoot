@@ -127,6 +127,17 @@ public class ManagerController {
 		log.debug("list 결과: {}", list);
 		
 		ArrayList<Task> taskList = taskService.SelectAlltaskMG(prj_domain, navi, searchWord);
+		String[] membName = null ;
+		String[] membNameP;
+		
+		for(int i =0; i < taskList.size(); i++) {
+			membName = taskList.get(i).getTastMembList().split(prj_domain);
+			membNameP =membName.toString().split(",");
+		}
+		
+		
+		log.debug("프로젝트별 참가자: {}", membName[0]);
+		
 		
 		for(int i = 0; i < taskList.size(); i++) {
 			if(taskList.get(i).getTask_rank().equals("0")) {
@@ -235,7 +246,7 @@ public class ManagerController {
 		
 		for(int i = 0; i < list.size(); i++) {
 			if(list.get(i).getMembInv_accept() == null) {
-				list.get(i).setMembInv_accept("초대중");
+				list.get(i).setMembInv_accept("초대전");
 			} else {
 				list.get(i).setMembInv_accept("초대완료");
 			}
@@ -495,12 +506,20 @@ public class ManagerController {
 	     
 		mailSenderService.mailSend(invitation.getMembInv_recipient(), prj_domain);
 		log.debug("메일샌더 실행");
-		invitation.setPrj_domain(prj_domain);
 		
-		service.insertAttendant(invitation);
+		invitation.setPrj_domain(prj_domain);
+		//invitation.setPrj_domain(prj_domain);
+		log.debug("메일멤버찾기:{}",invitation.getMembInv_recipient());
+		
+		Members members = memDao.getUserById(invitation.getMembInv_recipient());
+		
+		members.setPrj_domain(prj_domain);
+		log.debug("메일초대 도메인" + members.getPrj_domain());
+		log.debug("메일초대인 메일" + members.getMemb_mail());
+		
+		service.insertAttendant(members);
+		service.insertInvitaion(invitation);
 
-		log.debug("메일초대 도메인" + invitation.getPrj_domain());
-		log.debug("메일초대인 메일" + invitation.getMembInv_recipient());
 
 		return "redirect:./manager/invitation";
 	}
@@ -830,7 +849,7 @@ public class ManagerController {
 		System.out.println("조력자 태스크번호:"+helper.getTask_seq());
 		}
 		
-		return "redirect:/";
+		return "/managerView/helpWork";
 	}
 	
 }

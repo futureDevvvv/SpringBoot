@@ -29,7 +29,7 @@ public interface ManagerService {
 	public Members getMemberInfo(String domain);
 	
 	//초대테이블에 초대인 메일 추가생성
-	public void insertAttendant(InvitationMember invitation);
+	public void insertAttendant(Members members);
 
 	//초대 메일 중복 확인
 	public int invitationIdSearchOne(InvitationMember invitationMember);
@@ -66,6 +66,8 @@ public interface ManagerService {
 	public ArrayList<MemberTemp> memberName(String memb_name);
 
 	public void insertHelper(Helper helper);
+
+	public void insertInvitaion(InvitationMember invitation);
 
 
 	
