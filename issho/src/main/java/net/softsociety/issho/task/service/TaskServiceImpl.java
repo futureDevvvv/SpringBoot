@@ -121,7 +121,7 @@ public class TaskServiceImpl implements TaskService {
 	// 신승훈 * 테스크 스태프 리스트 조회
 	@Override
 	public ArrayList<Taskstaff> selectStaff(int taskSeq) {
-		log.debug("SelectStaff() called");
+		log.debug("TaskServiceImpl [selectStaff] Start");
 		return taskDAO.selectStaff(taskSeq);
 	}
 	
@@ -194,7 +194,6 @@ public class TaskServiceImpl implements TaskService {
 		return taskfile;
 	}
 
-	
 	
 	@Override
 	public void addNewTask(Task task) {

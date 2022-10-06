@@ -414,7 +414,7 @@ public class TaskController {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
+		log.debug("TaskController [getDownload] End");
 		return null;
 	}	
 }
