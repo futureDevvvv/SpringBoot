@@ -14,9 +14,7 @@
 	crossorigin="anonymous">
 	
 	<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-	
-</script>
+
 
 <style>
 </style>
@@ -107,15 +105,18 @@
 										aria-describedby="dataTable_info" style="width: 100%;">
 										<thead>
 											<tr role="row">
+												
 												<th class="sorting sorting_asc" tabindex="0"
 													aria-controls="dataTable" rowspan="1" colspan="1"
-													aria-sort="ascending" style="width: 60px;">이름</th>
+													aria-sort="ascending" style="width: 30px; text-align: center;">프로필사진</th>
+												<th class="sorting" tabindex="0" aria-controls="dataTable"
+													rowspan="1" colspan="1" style="width: 50px; ">이름</th>
 												<th class="sorting" tabindex="0" aria-controls="dataTable"
 													rowspan="1" colspan="1" style="width: 30px;">권한</th>
 												<th class="sorting" tabindex="0" aria-controls="dataTable"
 													rowspan="1" colspan="1" style="width: 40px;">이메일</th>
 												<th class="sorting" tabindex="0" aria-controls="dataTable"
-													rowspan="1" colspan="1" style="width: 80px;">담당 업무</th>
+													rowspan="1" colspan="1" style="width: 90px;">담당 업무</th>
 												<th class="sorting" tabindex="0" aria-controls="dataTable"
 													rowspan="1" colspan="1" style="width: 50px;">휴대전화</th>
 												<th class="sorting" tabindex="0" aria-controls="dataTable"
@@ -126,16 +127,19 @@
 										</thead>
 										<tbody>
 											<tr class="odd" th:each="l:${list}">
-												<td class="sorting_1"><a th:text=${l.memb_name}
+												<td style="text-align: center;">
+												<img th:src="@{/savedImg/}+${l.memb_ogfile}"
+													onerror="this.src='../../img/profile.png'" class="rounded" height="50" width="50"></td>
+												<td><a th:text=${l.memb_name}
 													class="newTask" th:id=${l.memb_mail} data-toggle="modal"
 													data-target="exampleModal"
 													onclick="openModal(this.getAttribute('id'))"
-													style="cursor: pointer;"></a></td>
-												<td th:text=${l.pjmb_right}></td>
-												<td th:text=${l.memb_mail} id="memb_mail" name="memb_mail"></td>
-												<td th:text=${l.memb_work}></td>
-												<td th:text=${l.memb_phone}></td>
-												<td><input class="btn btn-outline-primary"
+													style="cursor: pointer; line-height: 50px; "></a></td>
+												<td th:text=${l.pjmb_right} style="line-height: 50px;"></td>
+												<td th:text=${l.memb_mail} id="memb_mail" name="memb_mail"  style="line-height: 50px;"></td>
+												<td th:text=${l.memb_work}  style="line-height: 50px;"></td>
+												<td th:text=${l.memb_phone} style="line-height: 50px;"></td>
+												<td  style="line-height: 50px;"><input class="btn btn-outline-primary"
 													type="button" value="Member" th:Memail="${l.memb_mail}"
 													th:onclick="editMembRight(this.getAttribute('Memail'))">
 													<input class="btn btn-outline-success" type="button"
@@ -292,7 +296,6 @@
 
 				swalWithBootstrapButtons.fire({
 				  title: '해당 회원을 탈퇴 합니까??',
-				  text: "되돌릴수 없습니다!",
 				  icon: 'warning',
 				  showCancelButton: true,
 				  confirmButtonText: '탈퇴 시킵니다!',
@@ -313,7 +316,7 @@
 				  ) {
 				    swalWithBootstrapButtons.fire(
 				      '취소 되었습니다.',
-				      '해당 멤버의 데이터가 정상적으로 저장되어있습니다. :)',
+				      '해당 멤버의 데이터가 변경없이 저장되었습니다 :)',
 				      'error'
 				    )
 				  }
@@ -356,7 +359,7 @@
 				  ) {
 				    swalWithBootstrapButtons.fire(
 				      '취소 되었습니다.',
-				      '해당 멤버의 데이터가 변경없이 저장되었습니다. :)',
+				      '해당 멤버의 데이터가 변경없이 저장되었습니다 :)',
 				    )
 				  }
 				})
@@ -401,7 +404,7 @@
 				  ) {
 				    swalWithBootstrapButtons.fire(
 				      '취소 되었습니다.',
-				      '해당 멤버의 데이터가 변경없이 저장되었습니다. :)',
+				      '해당 멤버의 데이터가 변경없이 저장되었습니다 :)',
 				    )
 				  }
 				})

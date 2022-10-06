@@ -50,6 +50,9 @@ public class SSEService {
 		Alarm alarm = new Alarm(receiverId, content, url);
 		String id = String.valueOf(receiverId);
 		
+		log.debug("send 도착");
+		log.debug("alarm 객체 : {}", alarm);
+		
 		Map<String, SseEmitter> sseEmitters = emitterRepository.findAllEmitterStartWithByMember(id);
 		log.debug("sseEmitter : {}", sseEmitters);
 		

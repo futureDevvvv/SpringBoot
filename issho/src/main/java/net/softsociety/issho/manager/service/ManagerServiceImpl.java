@@ -18,6 +18,9 @@ import net.softsociety.issho.manager.domain.TaskCnt;
 import net.softsociety.issho.manager.domain.TaskCntDone;
 import net.softsociety.issho.manager.domain.TaskState;
 import net.softsociety.issho.member.domain.Members;
+import net.softsociety.issho.sse.SSEService;
+import net.softsociety.issho.task.dao.TaskDAO;
+import net.softsociety.issho.task.domain.Task;
 import net.softsociety.issho.util.PageNavigator;
 
 @Slf4j
@@ -27,6 +30,11 @@ public class ManagerServiceImpl implements ManagerService {
 	@Autowired
 	private ManagerDAO managerDAO;
 	
+	@Autowired
+	private SSEService sseService;
+	
+	@Autowired
+	private TaskDAO taskDAO;
 	
 	
 	@Override
@@ -177,7 +185,13 @@ public class ManagerServiceImpl implements ManagerService {
 
 	@Override
 	public void insertHelper(Helper helper) {
+		
+		log.debug("insert helper 실행");
+		
 		managerDAO.insertHelper(helper);
+		Task task= taskDAO.selectTaskByTaskSeq(helper.getTask_seq());
+		sseService.send(helper.getMemb_mail(), task.getTask_name() + "-Request for Work", null);
+		
 	}
 
 	

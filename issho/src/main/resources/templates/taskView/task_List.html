@@ -20,8 +20,9 @@
 <meta charset="UTF-8">
 <style>
 .task_order_btn {
-	border: none;
-	background-color: transparent;
+	border : none;
+	background-color : transparent;
+
 }
 
 #basicSelection, #basicSelection2, #basicSelection3, #basicSelection4,
@@ -73,6 +74,11 @@ ul#memList li.mem-item:hover {
 
 .taskCard {
 	width: 140%;
+	margin-left : -20%
+}
+
+#taskListDiv{
+	margin: 0 auto !important;
 }
 
 .bookmarked {
@@ -150,6 +156,7 @@ ul#memList li.mem-item:hover {
 	border-color: transparent transparent #404040 transparent;
 }
 
+
 div#editor {
 	padding: 16px 24px;
 	border: 1px solid #D6D6D6;
@@ -179,6 +186,7 @@ div#editor {
 	background-color : #4CD3E3;
   	border-radius: 30px;
 }
+
 </style>
 
 
@@ -317,12 +325,12 @@ div#editor {
 									${task.task_name}
 								</div>
 								<div class="col-12 mb-0 font-weight-bold text-gray-800">
-									할당자 : ${task.memb_name}
+									@ ${task.memb_name}
 								</div>
 							</div>
 							<div class="col-2">`;
 							
-				taskHTML += '<div class="col-12 pl-4 mb-0 font-weight-bold text-gray-800">우선순위</div>';
+				//taskHTML += '<div class="col-12 pl-4 mb-0 font-weight-bold text-gray-800">우선순위</div>';
 							
 				if(task.task_rank == 0)
 					
@@ -334,12 +342,13 @@ div#editor {
 					
 					taskHTML += '<div class="h5 ml-4 mt-1 mb-2 font-weight-bold text-gray-800 btn btn-danger text-white">높음';
 				
-					
+					//<div class="col-12 mb-0 pl-1 font-weight-bold text-gray-800">진행도</div>
 					
 					taskHTML += `</div>
 							</div>
 						<div class="col-2">
-					<div class="col-12 mb-0 pl-1 font-weight-bold text-gray-800">진행도</div>`;
+					`;
+					
 				//<!-- 신승훈 진행상태 변경 -->
 				if(task.task_state == 0){
 					if(task.task_sender != [[${#authentication.name}]]){
@@ -384,12 +393,12 @@ div#editor {
 					}
 					taskHTML += '보류';	
 				}
+				
+				//<div class="col-12 mb-0 pl-1 font-weight-bold text-gray-800">담당자</div>
 				taskHTML += `</div>
 						</div>
-						<div class="col">
-							<div class="col-12 mb-0 pl-1 font-weight-bold text-gray-800">
-								담당자
-							</div>`;
+						<div class="col-3">
+							`;
 				let memberList = '<div>';
 				for(let member of pjMember){
 					if(member.task_seq == task.task_seq)
@@ -397,8 +406,12 @@ div#editor {
 											<input type="hidden" id="m_mail" value="${member.memb_mail}">
 											<input type="hidden" id="m_name" value="${member.memb_name}">
 											<div class="profileBox2">
+
+											
+
 												<div class="profilePicBox">
-													<img class="profilePic" src="${member.memb_ogfile}"
+
+													<img class="profilePic" src="http://localhost:9990/issho/savedImg/${member.memb_ogfile}"
 														onerror="this.src='../../img/profile.png'">
 												</div>
 											</div>
@@ -407,7 +420,12 @@ div#editor {
 				if(memberList === '<div>')
 					memberList += '<button type="button" class=" h5 mt-1 mb-2 btn btn-outline-danger">없음</button>';
 					taskHTML += memberList;
+					
+					
 				taskHTML += `</div>
+						</div>
+						<div class="col-1">
+							<input type="range" value="${task.performAvg}"style="width: 100px;" disabled>${task.performAvg}%
 						</div>
 					</div>
 				</div>
@@ -557,42 +575,46 @@ div#editor {
 				}
 				$('#view_staffInput').val(staffListStr);
 				
-				console.log('result.showTask.task_rank');
 				let viewRankId = $(':radio[name=view_task_rank][value="' + result.showTask.task_rank + '"]').attr('id');
 				$(`#${viewRankId}`).attr('checked', true);
 				$('.view_task_rank_label').removeClass("active");
 				$(`label[for='${viewRankId}']`).addClass("active");
 				
 				let viewRadioId2 = $(':radio[name=view_task_state][value="' + result.showTask.task_state + '"]').attr('id');
-				console.log(viewRadioId2);
+				
 				$(`#${viewRadioId2}`).attr('checked', true);
 				$('.view_task_state_label').removeClass("active");
 				$(`label[for='${viewRadioId2}']`).addClass("active");
 				
+				
 				let isEmptyStartDate;
-				if(result.showTask.exp_startdate == null)
+				if(result.showTask.exp_startdate == null && result.showTask.task_startDate == null)
 					isEmptyStartDate = 0;
 				else
-					isEmptyStartDate = 1;
+					isEmptyStartDate = 1;	
+				
 				
 				$(':radio[name=view_chk_startDate][value="' + isEmptyStartDate + '"]').attr('checked', true);
+				
 				if(isEmptyStartDate == 1){
 	/* 				$("#datepicker3").show();
 					$('#datepicker3').datepicker();
 					$(".gj-icon").show();
 					 */
-					let year = result.showTask.exp_startdate.substr(0, 4);
-					let month = result.showTask.exp_startdate.substr(5, 2);
-					let day = result.showTask.exp_startdate.substr(8, 2);
+					let temp = (result.showTask.exp_startdate == null ? result.showTask.task_startDate : result.showTask.exp_startdate)
+					let year = temp.substr(0, 4);
+					let month = temp.substr(5, 2);
+					let day = temp.substr(8, 2);
 					
 					$('#datepicker3').val(month+"/"+day+"/"+year);
-				}/* else {
-					$("#datepicker3").hide();
-					$(".gj-icon").hide();
-				} */
+				}else {
+					$('#datepicker3').val("");
+					/* $("#datepicker3").hide();
+					$(".gj-icon").hide(); */
+				} 
 				
 				let isEmptyEndDate;
-				if(result.showTask.exp_enddate == null)
+				if(result.showTask.exp_enddate == null && result.showTask.task_endDate == null)
 					isEmptyEndDate = 0;
 				else
 					isEmptyEndDate = 1;
@@ -603,19 +625,24 @@ div#editor {
 					$('#datepicker4').datepicker();
 					$(".gj-icon").show();
 					 */
-					let year = result.showTask.exp_enddate.substr(0, 4);
-					let month = result.showTask.exp_enddate.substr(5, 2);
-					let day = result.showTask.exp_enddate.substr(8, 2);
+					let temp = (result.showTask.exp_enddate == null ? result.showTask.task_endDate : result.showTask.exp_enddate)
+					
+					let year = temp.substr(0, 4);
+					let month = temp.substr(5, 2);
+					let day = temp.substr(8, 2);
 					
 					$('#datepicker4').val(month+"/"+day+"/"+year);
 				}else {
-/* 					$("#datepicker4").hide();
-					$(".gj-icon").hide(); */
+					$('#datepicker4').val("");
+				/* 	$("#datepicker4").hide();
+					$(".gj-icon").hide();  */
 				}
 				
 				$('#view_task_content').val(result.showTask.task_content);
 				
-				let performHTML = '<span class="input-group-text" style="justify-content:center; margin-left:15px; margin-bottom:10px; width:100px;">수행도</span> <ul>';
+			
+				
+				let performHTML = `<ul>`;
 				let performIndex = 0;
 				if(result.showStaff != null)
 					for(let staff of result.showStaff){
@@ -626,6 +653,10 @@ div#editor {
 						performIndex++;
 					}
 				performHTML += "</ul>";
+				
+				//수행도
+				$('#avgPerform').text (result.showTask.performAvg);
+				$('#inputPerform').val(result.showTask.performAvg);
 				
 				$('#view_perform_list').html(performHTML);
 				for(let i=0 ; i<performIndex ; i++){
@@ -699,16 +730,11 @@ div#editor {
 	
 	// 신승훈 * html 로딩 끝났을때
 	$(document).ready(function () {
-		
-		
-		$("#mentionTo").hide();
-		
-		
-		
-		
 		let taskList = [[${tasklist}]];
 		let mList = [[${list}]];
 		let navi = [[${navi}]];
+		console.log(taskList);
+		
 		createTaskList(taskList);
 		createNavi(navi);
 		
@@ -724,8 +750,6 @@ div#editor {
 		});
 		
 		$('#searchBtn').click(selectTask);
-		
-		
 	});
 	
 	
@@ -952,33 +976,39 @@ div#editor {
 				</ul>
 			</nav>
 
-			<nav class="navbar navbar-expand-lg"
+		<nav class="navbar navbar-expand-lg"
 				style="background-color: #f1f3f5; border-bottom: solid 2px black;">
 				<div>
 					<!-- 태스크 추가 modal trigger -->
-					<button class="mr-1 btn btn-info" id="newTask"
-						data-bs-toggle="modal" data-bs-target="exampleModal">
+					<button class="mr-1 btn btn-info" id="newTask" data-bs-toggle="modal"
+						data-bs-target="exampleModal">
 						<i class="fa fa-solid fa-plus"></i>태스크 추가
 					</button>
 
 					<div class="mr-1 btn">
-						<label class="mb-0"><input type="checkbox"
-							id="task_sender_checkbox"> 내가 할당</label> <label class="mb-0"><input
-							type="checkbox" id="task_staff_checkbox"> 내가 담당</label>
+						<label class="mb-0"><input type="checkbox" id="task_sender_checkbox">
+							내가 할당</label> <label class="mb-0"><input type="checkbox"
+							id="task_staff_checkbox"> 내가 담당</label>
 					</div>
+					
+					<button class="mr-1 btn btn task_order_btn" do="task_rank">
+						우선순위별</button>
+					
+					<button class="mr-1 btn btn task_order_btn" do="task_state">
+						진행도별</button>
 
-					<button class="mr-1 task_order_btn" do="task_rank">우선순위별</button>
-
-					<button class="mr-1 task_order_btn" do="task_state">진행도별</button>
-
-					<button class="mr-1 task_order_btn" do="bookmark">즐겨찾기별</button>
+					<button class="mr-1 btn btn task_order_btn" do="bookmark">
+						즐겨찾기별</button>
 
 					<input type="text" id="searchWord" name="searchWord"
 						th:value="${searchWord}">
-					<button class="btn btn-light" type="button" id="searchBtn">
+					<button class="btn btn-secondary" type="button" id="searchBtn">
 						<i class="fas fa-search fa-sm"></i>
 					</button>
 				</div>
+			</nav>
+				
+									
 			</nav>
 
 
@@ -1009,7 +1039,7 @@ div#editor {
 
 
 			<!-- 페이지네이션 nav 시작 -->
-			<ul class="pagination" id="naviDiv">
+			<ul class="pagination mt-2" id="naviDiv">
 			</ul>
 			<!-- 페이지네이션nav 끝 -->
 
@@ -1140,8 +1170,12 @@ div#editor {
 								</div>
 
 								<!-- 신승훈 * 수행도 -->
-								<div class="slidecontainer" id="view_perform_list"></div>
-
+								<div class="input-group m-0">
+									<span class="input-group-text mr-2" style="justify-content:center; margin-left:15px; margin-bottom:10px; width:100px;">수행도</span>
+									<span class="mt-2 mr-2">평균 수행도 : <input type="range" id="inputPerform" value="0" style="width: 250px;" disabled> <span id="avgPerform"></span>%</span>
+								</div>
+								<div id="view_perform_list"></div>
+								
 
 								<div class="input-group m-3">
 									<div class="input-group-prepend">
@@ -1152,7 +1186,7 @@ div#editor {
 
 								<div class="ml-5">
 									<ul id="fileList" class="ml-4" style="list-style: none;">
-										<li>어쩌구 저쩌구 파일</li>
+										<li>파일 확인</li>
 									</ul>
 								</div>
 
@@ -1200,7 +1234,7 @@ div#editor {
 
 									<button type="button" class="btn btn-primary"
 										onclick="writeComment();">작성</button>
-								</div>
+
 							</div>
 						</div>
 					</div>
@@ -1410,7 +1444,7 @@ div#editor {
 
 
 
-	<script th:inline="javascript">
+	<script>
 		console.log($("#datepicker"));
 	
 		//파일 업로드 개수
@@ -1613,6 +1647,7 @@ div#editor {
 
 			$("#exampleModal").modal("hide");
 		}
+
 		
 		
 		$('#editor').keyup(function(){
@@ -1776,7 +1811,7 @@ div#editor {
 		}
 		
 		
-		
+
 	</script>
 </body>
 </html>

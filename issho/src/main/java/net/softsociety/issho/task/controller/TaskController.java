@@ -152,7 +152,6 @@ public class TaskController {
 	// 신승훈 * 테스크 상세보기
 	@ResponseBody
 	@PostMapping("/showTaskModal")
-
 	public Map<String, Object> showTaskModal(String taskSeq) {
 		log.debug("TaskController [showTaskModal] Start");
 		
@@ -293,7 +292,7 @@ public class TaskController {
 		log.debug("TaskController [stateChange] End");
 		return task;
 	}
-
+	
 	/**
 	 * 새로운 프로젝트 추가
 	 * 
@@ -428,7 +427,7 @@ public class TaskController {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
+		log.debug("TaskController [getDownload] End");
 		return null;
 	}
 
