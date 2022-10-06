@@ -354,7 +354,11 @@ ul#memList li.mem-item:hover {
 											<input type="hidden" id="m_mail" value="${member.memb_mail}">
 											<input type="hidden" id="m_name" value="${member.memb_name}">
 											<div class="profileBox2">
+
+											
+
 												<div class="profilePicBox">
+
 													<img class="profilePic" src="http://localhost:9990/issho/savedImg/${member.memb_ogfile}"
 														onerror="this.src='../../img/profile.png'">
 												</div>
@@ -894,7 +898,7 @@ ul#memList li.mem-item:hover {
 
 					<input type="text" id="searchWord" name="searchWord"
 						th:value="${searchWord}">
-					<button class="btn btn-primary" type="button" id="searchBtn">
+					<button class="btn btn-secondary" type="button" id="searchBtn">
 						<i class="fas fa-search fa-sm"></i>
 					</button>
 				</div>

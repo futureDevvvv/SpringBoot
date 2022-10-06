@@ -86,17 +86,17 @@ public class ProjectServiceImpl implements ProjectService{
 	}
 	
 	
-	//* 신승훈 메인창 목록 (최신 공지사항)
-	
-	  @Override public List<Notice> selectMainNotice(String prj_domain) {
-	  log.debug("ProjectServiceImpl [selectMainNotice] Start");
-	  
-	  List<Notice> list = noticeDAO.selectMainNotice(prj_domain);
-	  log.debug("ProjectServiceImpl selectMainNotice list : {}", list);
-	  
-	  log.debug("ProjectServiceImpl [selectMainNotice] End"); 
-	  return list; 
-	  }
+	  //* 신승훈 메인창 목록 (최신 공지사항)
+	  @Override 
+	  public List<Notice> selectMainNotice(String prj_domain) {
+		log.debug("ProjectServiceImpl [selectMainNotice] Start");
+		  
+		List<Notice> list = noticeDAO.selectMainNotice(prj_domain);
+		log.debug("ProjectServiceImpl selectMainNotice list : {}", list);
+		  
+	  	log.debug("ProjectServiceImpl [selectMainNotice] End"); 
+	  	return list; 
+	}
 	 
  
 	//* 신승훈 메인창 목록 (내 일정)
@@ -110,6 +110,7 @@ public class ProjectServiceImpl implements ProjectService{
 		log.debug("ProjectServiceImpl [selectMainPlan] End");
 		return list;
 	}
+	
 	//* 신승훈 메인창 목록 (할당 태스크 현황) 담당 태스크 리스트)
 	@Override
 	public List<Task> selectMainMysender(String prj_domain, String userid) {
